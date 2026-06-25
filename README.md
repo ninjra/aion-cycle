@@ -273,28 +273,32 @@ only when these risks are handled.
 17. Groth16 verification is required.
 18. `PASS` is allowed only after Groth16 verification passes.
 
-## The real Groth16 circuit
+## The two real Groth16 circuits
 
-The project includes a real minimal closure circuit. It does not fake Groth16
-and it does not return a constant. It constrains the closure relation over public
-field elements. The SHA-256 receipts are computed outside the circuit, and their
-field-reduced roots are public circuit inputs.
+The project includes two real minimal closure circuits. Neither circuit fakes
+Groth16, returns a constant, or pretends to prove SHA-256 internally.
+
+The first circuit is the **field-root closure gate**. It gates the public
+field-reduced transcript commitments used by the local verifier:
 
 ```circom
 pragma circom 2.1.6;
 
-template AionClosure(n) {
+template AionClosureRoot(n) {
     signal input expected_root;
     signal input final_root;
     signal input selected_hash;
     signal input output_hash;
     signal input replay_root;
+    signal input canonical_transcript_root;
+    signal input tamper_transcript_root;
     signal input tamper_failed;
     signal input child_passed[n];
 
     final_root === expected_root;
     selected_hash === output_hash;
     replay_root === final_root;
+    canonical_transcript_root === final_root;
     tamper_failed === 1;
 
     for (var i = 0; i < n; i++) {
@@ -308,23 +312,101 @@ component main { public [
     final_root,
     selected_hash,
     output_hash,
-    replay_root
-] } = AionClosure(6);
+    replay_root,
+    canonical_transcript_root,
+    tamper_transcript_root
+] } = AionClosureRoot(8);
 ```
 
-Production systems may add in-circuit hashing or a ZK-friendly hash layer. This
-minimal circuit is still a real Groth16 closure gate, and the path requires it
-to compile, prove, and verify.
+The second circuit is the **digest-limb closure gate**. It checks full SHA-256
+digest equality as four 64-bit limbs, so the equality statement is not only
+"equal modulo the BN254 field prime." The SHA-256 computation still happens on
+the host; this circuit constrains the host-computed digest limbs.
+
+```circom
+pragma circom 2.1.6;
+
+template Bits64() {
+    signal input value;
+    signal input bits[64];
+    var acc = 0;
+    var pow = 1;
+    for (var i = 0; i < 64; i++) {
+        bits[i] * (bits[i] - 1) === 0;
+        acc += bits[i] * pow;
+        pow *= 2;
+    }
+    value === acc;
+}
+
+template DigestEq4() {
+    signal input left[4];
+    signal input right[4];
+    signal input left_bits[4][64];
+    signal input right_bits[4][64];
+
+    for (var j = 0; j < 4; j++) {
+        left[j] === right[j];
+    }
+}
+
+template AionDigestLimbClosure(n) {
+    signal input expected_root_limbs[4];
+    signal input final_root_limbs[4];
+    signal input selected_hash_limbs[4];
+    signal input output_hash_limbs[4];
+    signal input replay_root_limbs[4];
+    signal input tamper_failed;
+    signal input child_passed[n];
+
+    for (var i = 0; i < 4; i++) {
+        expected_root_limbs[i] === final_root_limbs[i];
+        selected_hash_limbs[i] === output_hash_limbs[i];
+        replay_root_limbs[i] === final_root_limbs[i];
+    }
+
+    tamper_failed === 1;
+    for (var j = 0; j < n; j++) {
+        child_passed[j] * (child_passed[j] - 1) === 0;
+        child_passed[j] === 1;
+    }
+}
+
+component main { public [
+    expected_root_limbs,
+    final_root_limbs,
+    selected_hash_limbs,
+    output_hash_limbs,
+    replay_root_limbs
+] } = AionDigestLimbClosure(8);
+```
+
+The README shows the short version of the second circuit. The repository also
+includes `aion_digest_limb_closure.circom`, which adds explicit 64-bit bitness
+constraints for each digest limb. The path requires both circuits to compile,
+prove, verify, and reject tampered public inputs.
+
+The circuits prove closure over transcript commitments. The host verifier still
+proves byte equality, deterministic replay, tamper failure, receipt composition,
+toolchain binding, and artifact binding before those commitments enter the
+circuits.
 
 ## Copy-paste prompt
 
 Paste the following into a coding agent that can write and run local files.
 
 ```text
-Build a single local AION project with exactly two files:
+Build a single local AION project with these files:
 
   aion_cycle.py
-  aion_closure.circom
+  aion_closure_root.circom
+  aion_digest_limb_closure.circom
+  fixtures/canonical.json
+  fixtures/tampered.json
+  expected_root.txt
+  toolchain.lock
+  tests/test_redteam.py
+  aion.statement.json
 
 Goal:
 Run one laminar closed path and prove it:
@@ -400,27 +482,33 @@ Determinism and integrity constraints:
 
 Groth16 proof step (required, not optional):
 
-21. Reduce each required hash to a circuit field element by taking
-    int(hexdigest, 16) modulo the BN254 scalar field prime
-    21888242871839275222246405745257275088548364400416034343698204186575808495617
-    and pass it as a decimal string input.
-22. Build the circuit input from the canonical run:
-    expected_root, final_root, selected_hash, output_hash, replay_root,
-    tamper_failed = 1, child_passed = [1, 1, 1, 1, 1, 1].
-23. Write aion_closure.circom exactly as the AionClosure(6) template that asserts:
-        final_root === expected_root
-        selected_hash === output_hash
-        replay_root === final_root
-        tamper_failed === 1
-        each child_passed bit is boolean and equals 1
-    with public inputs expected_root, final_root, selected_hash, output_hash,
-    replay_root.
-24. Compile the circuit with circom, run a Groth16 setup, generate a proof with
-    snarkjs groth16 fullprove (or prove), and verify it with snarkjs groth16
-    verify, all through subprocess in a temporary working directory.
+21. Build two circuit inputs from the canonical run:
+    a. field-reduced inputs for aion_closure_root.circom using each SHA-256
+       digest reduced modulo the BN254 scalar field prime
+       21888242871839275222246405745257275088548364400416034343698204186575808495617.
+    b. four 64-bit limbs for each SHA-256 digest for
+       aion_digest_limb_closure.circom, plus bit witnesses proving each limb is
+       exactly 64 bits.
+22. Write aion_closure_root.circom as the AionClosureRoot(8) template that gates:
+        final_root == expected_root
+        selected_hash == output_hash
+        replay_root == final_root
+        canonical_transcript_root == final_root
+        tamper_failed == 1
+        all eight child_passed bits are boolean and equal 1.
+23. Write aion_digest_limb_closure.circom as the AionDigestLimbClosure(8)
+    template that gates full digest equality over four 64-bit limbs for:
+        expected_root == final_root
+        selected_hash == output_hash
+        replay_root == final_root
+    and also gates tamper_failed and all eight child_passed bits.
+24. Compile both circuits with circom, run a Groth16 setup for each circuit,
+    generate proofs with snarkjs, and verify both proofs with snarkjs, all
+    through subprocess in a temporary working directory.
 25. The project prints PASS only if: the canonical run passed, replay matched,
-    the tamper run failed, the final root equals EXPECTED_ROOT, the circuit
-    compiled, the proof generated, and the verifier returned OK. Otherwise FAIL.
+    the tamper run failed, the final root equals EXPECTED_ROOT, both circuits
+    compiled, both proofs generated, both verifiers returned OK, and both
+    verifier-negative checks rejected tampered public inputs. Otherwise FAIL.
 26. Record a toolchain receipt containing the resolved paths and version outputs
     for circom, snarkjs, and node. Include its receipt hash in the final root.
 27. Record artifact receipts for the circuit source, compiled circuit, setup
@@ -439,6 +527,14 @@ Groth16 proof step (required, not optional):
     receipt hashes, failed checks, proof status, and the relevant toolchain or
     artifact receipt hash. A receipt not included in the parent root has no
     authority.
+32. Emit aion.statement.json with: cycle_id, expected_root, final_root,
+    selected_hash, output_hash, proof_system, both circuit hashes, both
+    verification-key hashes, toolchain receipt hash, and final root. This is a
+    portable statement suitable for later signing or transparency-log anchoring.
+33. Include tests/test_redteam.py with negative tests for byte changes, score
+    mutation, receipt mutation, circuit public input mutation, missing tools,
+    duplicate field hash, corpus order permutation, hidden label changes,
+    built-in hash() absence, and EXPECTED_ROOT not being recomputed at runtime.
 
 Canonical fixture:
 
@@ -505,8 +601,8 @@ It does not leave out Groth16. Groth16 is part of the path.
 
 The local map keeps the rest small:
 
-- local demo setup instead of a public ceremony,
-- local proof artifacts instead of production artifact storage,
+- local demo setup artifacts with hashes instead of a public ceremony,
+- local proof artifacts committed or emitted with hashes instead of production artifact storage,
 - byte histograms instead of optimized field geometry,
 - one scoring surface instead of advanced scoring surfaces,
 - an in-memory ledger instead of production mapback storage,
@@ -550,6 +646,15 @@ Recovery is proven by the ledger, not by descriptive complexity.
 - Oppenheim, A. V., and Schafer, R. W. (2009). Discrete-Time Signal Processing, 3rd ed. Pearson.
 - Shannon, C. E. (1948). "A Mathematical Theory of Communication." Bell System Technical Journal, 27(3): 379-423.
 - Strang, G. (2016). Introduction to Linear Algebra, 5th ed. Wellesley-Cambridge Press.
+
+
+## Where this fits
+
+AION is not another manifest format. It is a fail-closed verifier policy around
+bytes, fields, receipts, transformations, proof artifacts, and final output.
+Other systems can say a manifest is well formed. AION asks whether the whole
+route coheres. If any byte, receipt, replay, toolchain artifact, or proof no
+longer agrees, the answer is `FAIL`.
 
 ## Patent and license
 
