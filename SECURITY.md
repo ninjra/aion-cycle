@@ -15,3 +15,18 @@ a project built from the prompt passes when it should fail, please open an issue
 or contact us through https://mushku.com.
 
 Do not include private keys, secrets, or sensitive data in reports.
+
+## Known non-goals
+
+The public README is a local integrity map. It is not a production security
+claim. In particular, it does not claim:
+
+- production-safe trusted setup,
+- in-circuit SHA-256,
+- toolchain integrity,
+- objective truth,
+- semantic understanding,
+- protection for sensitive data or critical infrastructure.
+
+Reports are especially useful if they show that a generated project prints
+`PASS` when one of the documented invariants is broken.
