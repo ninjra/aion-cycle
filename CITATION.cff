@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "AION Apex: The One-Prompt Closed Loop"
+message: "If you use or reference this work, please cite it."
+type: software
+authors:
+  - name: "Mushku Nobleworks"
+repository-code: "https://github.com/ninjra/aion-cycle"
+url: "https://mushku.com"
+abstract: >-
+  AION is a small closed loop you can build on your own machine: turn bytes into
+  bounded numbers, compare the numbers without names, keep receipts, map the
+  chosen field back, prove the closure relation with Groth16, and accept only if
+  the final bytes match. It prints PASS or FAIL. There is no halfway status.
+keywords:
+  - aion
+  - closed-loop
+  - deterministic
+  - receipt-chain
+  - groth16
+  - zero-knowledge
+  - local-first
+license: "Apache-2.0"
+version: "1.0.0"
+date-released: "2026-06-25"

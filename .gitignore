@@ -1,0 +1,14 @@
+# Local artifacts from building/running the AION loop
+__pycache__/
+*.pyc
+*.r1cs
+*.sym
+*.wasm
+*.wtns
+*.zkey
+*.ptau
+proof.json
+public.json
+verification_key.json
+witness.wtns
+build/
