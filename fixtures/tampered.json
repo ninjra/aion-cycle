@@ -1,0 +1,9 @@
+{
+  "query": "need contract renewal approvals",
+  "corpus": [
+    "contract renewal requires finance approval",
+    "weather report says rain tomorrow",
+    "lunch menu includes soup"
+  ],
+  "expected_selected": "contract renewal requires finance approval"
+}

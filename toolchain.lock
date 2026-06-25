@@ -1,0 +1,6 @@
+# Toolchain expected by the reference implementation.
+# The script records the actual resolved paths and version output at runtime.
+python >= 3.11
+circom 2.x
+snarkjs 0.7.x
+node >= 18
