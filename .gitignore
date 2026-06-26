@@ -13,3 +13,4 @@ verification_key.json
 witness.wtns
 build/
 node_modules/
+.aion/
