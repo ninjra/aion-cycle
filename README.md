@@ -96,8 +96,8 @@ AION makes one narrow promise:
 
 > If the generated project prints `PASS`, then the canonical route closed end to
 > end: the selected bytes were mapped back and emitted exactly, the receipts
-> composed, replay matched, tampering failed, the final root matched the frozen
-> expected root, and a real Groth16 proof of the entire canonical cycle
+> composed, replay matched, tampering failed, the transcript root matched the frozen
+> expected transcript root, and a real Groth16 proof of the entire canonical cycle
 > (route logic plus in-circuit SHA-256 of the transcript) was generated and
 > verified.
 
@@ -232,10 +232,10 @@ are not future hardening notes. They are requirements for `PASS`.
   for the untampered proof and rejects a tampered public input.
 - **Toolchain binding:** the paths and versions (or `--version` output) for
   `circom`, `snarkjs`, and `node` must be recorded in a toolchain receipt. The
-  toolchain receipt hash is a child of the final root.
+  toolchain receipt hash is a child of the transcript root.
 - **Artifact binding:** the circuit source hash, compiled artifacts, proving key,
   verification key, proof, public inputs, and verifier result are all receipts.
-  A missing or changed artifact fails the final root.
+  A missing or changed artifact fails the transcript root.
 - **Receipt binding:** every receipt is meaningful only because it is generated
   by the step it describes and included in the parent root. The project must bind
   receipts to phase name, input hash, output hash, child receipt hashes, toolchain
@@ -252,6 +252,21 @@ are not future hardening notes. They are requirements for `PASS`.
 The point is not to describe risks. The point is to make the local path close
 only when these risks are handled.
 
+
+## The three roots
+
+AION uses three roots so the proof is not circular:
+
+| Root | What it binds | How it is checked |
+|---|---|---|
+| `transcript_root` | the canonical bytes and emitted answer | computed by the host and by in-circuit SHA-256 |
+| `proof_root` | toolchain, circuit source, compiled artifacts, keys, proof, public inputs, verifier result | computed from proof/artifact receipts |
+| `cycle_root` | the final statement: transcript root + proof root + policy | recomputed from `aion.statement.json` |
+
+`EXPECTED_TRANSCRIPT_ROOT` is frozen. The generated `cycle_root` is not a magic
+constant; it is the hash of the emitted statement for that run. `PASS` requires
+all three roots to cohere.
+
 ## The safety rules
 
 1. Bytes are the source authority.
@@ -266,7 +281,7 @@ only when these risks are handled.
 10. A parent receipt fails if any child failed.
 11. Replay verifies; it does not mutate twice.
 12. Final bytes must match directly, not only by hash.
-13. The expected root is frozen in the project.
+13. The expected transcript root is frozen in the project.
 14. The tamper run must fail.
 15. The Groth16 circuit must be real: no stub, no static boolean, no fake verifier.
 16. Groth16 proof generation is required.
@@ -345,7 +360,8 @@ The project must run with:
 It must print exactly PASS and exit 0 only if the entire path closes, including
 real Groth16 proof generation and verification.
 It must print exactly FAIL and exit 1 otherwise.
-Print nothing else. Do not print the expected root. Do not print tracebacks
+It must write aion.statement.json containing transcript_root, proof_root, and cycle_root.
+Print nothing else. Do not print the expected transcript root. Do not print tracebacks
 during normal failure handling. Do not write debug logs.
 
 Use only the Python standard library for the loop. For the proof step, call real
@@ -358,8 +374,8 @@ Required constants in aion_cycle.py:
   MIN_Q15 = -32768
   MAX_Q15 = 32767
   FIELD_SIZE = 256
-  BOOTSTRAP_EXPECTED_ROOT = False
-  EXPECTED_ROOT = "<concrete sha256 hex string>"
+  BOOTSTRAP_EXPECTED_TRANSCRIPT_ROOT = False
+  EXPECTED_TRANSCRIPT_ROOT = "<concrete sha256 hex string>"
 
 Determinism and integrity constraints:
 
@@ -398,12 +414,12 @@ Determinism and integrity constraints:
     hide a red child.
 17. Compose all receipts into a final composite root.
 18. Replay: run the canonical fixture twice. Selected bytes, output bytes, and
-    final root must match. Track an event_id = sha256_bytes(canonical input);
+    transcript root must match. Track an event_id = sha256_bytes(canonical input);
     a repeated event_id is replay verification only and must not mutate twice.
 19. Tamper: run a copied fixture with one byte, one score, or the selected
     record changed. That run must fail its root or byte-exact check.
-20. The final composite root must equal the literal EXPECTED_ROOT. Do not compute
-    EXPECTED_ROOT at runtime in the final file and do not update it at runtime.
+20. The final composite root must equal the literal EXPECTED_TRANSCRIPT_ROOT. Do not compute
+    EXPECTED_TRANSCRIPT_ROOT at runtime in the final file and do not update it at runtime.
 
 Groth16 proof step (required, not optional):
 
@@ -425,7 +441,7 @@ Groth16 proof step (required, not optional):
     must reject. If it accepts, FAIL.
 26. The project prints PASS only if: the host cycle selected the strict winner,
     the emitted bytes equal the winner, replay matched, tampering changed the
-    digest, the transcript digest equals the frozen EXPECTED_ROOT, the circuit
+    digest, the transcript digest equals the frozen EXPECTED_TRANSCRIPT_ROOT, the circuit
     compiled, the proof generated, the verifier returned OK, and the negative
     check rejected the tampered public input. Otherwise FAIL.
 
@@ -442,11 +458,11 @@ Canonical fixture:
   expected selected record:
     b"contract renewal requires finance approval"
 
-Bootstrap then freeze EXPECTED_ROOT:
+Bootstrap then freeze EXPECTED_TRANSCRIPT_ROOT:
 
-- While writing the project you may compute the canonical final root once.
-- The final saved aion_cycle.py must contain a concrete EXPECTED_ROOT string and
-  BOOTSTRAP_EXPECTED_ROOT = False.
+- While writing the project you may compute the canonical transcript root once.
+- The final saved aion_cycle.py must contain a concrete EXPECTED_TRANSCRIPT_ROOT string and
+  BOOTSTRAP_EXPECTED_TRANSCRIPT_ROOT = False.
 - The final file must compare the current computed root against that literal and
   must never overwrite it at runtime.
 
@@ -466,6 +482,7 @@ and verifies the ptau:
 ```bash
 make setup        # or: bash scripts/setup.sh
 make verify       # or: python3 aion_cycle.py
+python3 aion_cycle.py --verify-statement aion.statement.json
 ```
 
 Output:

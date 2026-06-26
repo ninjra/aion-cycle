@@ -16,7 +16,7 @@ def test_no_builtin_hash_call() -> None:
 
 def test_expected_root_is_frozen() -> None:
     assert len(EXPECTED) == 64 and all(c in "0123456789abcdef" for c in EXPECTED)
-    assert f'EXPECTED_ROOT = "{EXPECTED}"' in SOURCE
+    assert f'EXPECTED_TRANSCRIPT_ROOT = "{EXPECTED}"' in SOURCE
     assert "computed-by-" not in SOURCE
 
 
