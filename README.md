@@ -5,10 +5,16 @@ SPDX-License-Identifier: Apache-2.0 OR LicenseRef-Commercial
 
 Apex version: v1.0
 
-AION v1 is a reference implementation, not a production provenance service.
-It exists to make a truth route visible: source bytes, metadata-free comparison,
-exact output, in-circuit transcript commitment, proof artifacts, receipts, and
-fail-closed verification.
+AION v1 is an RFC-style theoretical architecture with an executable reference
+implementation. It is not a production provenance service and not a product
+manual.
+
+The purpose of this repository is to make a truth route visible: source bytes,
+metadata-free comparison, exact output, in-circuit transcript commitment, proof
+artifacts, receipts, and fail-closed verification. Review the core mechanics:
+the route, the constraints, the proof, and the receipt bundle. Production user
+interfaces, deployment ceremonies, and environment-specific integrations are
+outside this public reference boundary.
 
 AION is a small closed loop you can build on your own machine. Turn bytes into
 bounded numbers, compare the numbers without names, keep receipts, map the
@@ -52,6 +58,35 @@ PASS
 `make setup` installs the local proof toolchain and fetches the pinned Powers of
 Tau file. `make verify` runs the route and verifies the statement. `make test`
 runs the red-team checks.
+
+
+## RFC boundary
+
+This repository defines a public reference architecture and a canonical proof
+fixture. It is meant to be read like an RFC: exact enough to build and verify the
+core route, narrow enough to avoid pretending to solve every deployment detail.
+
+In scope:
+
+- the fixed canonical route,
+- the public circuit,
+- the proof bundle,
+- the receipt and statement model,
+- the positive and negative clamps,
+- the failure behavior.
+
+Out of scope:
+
+- production user interface,
+- hosted service operations,
+- arbitrary input generalization,
+- deployment-specific key ceremonies,
+- private implementation details,
+- private operational recovery records.
+
+If a critique is about the route, proof, receipt model, or clamps, it is in
+scope. If a critique is about production packaging beyond this fixed reference,
+it belongs to a later implementation profile, not to the core RFC.
 
 ## The whole map
 
