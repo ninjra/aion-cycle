@@ -26,10 +26,10 @@ if ! command -v circom >/dev/null; then
 fi
 echo "[setup] circom: $(command -v circom || echo "$BIN/circom")"
 
-PTAU="$ROOT/powersOfTau28_hez_final_17.ptau"
+PTAU="$ROOT/powersOfTau28_hez_final_18.ptau"
 if [ ! -f "$PTAU" ]; then
   echo "[setup] fetching powers of tau (2^10)"
-  curl -fsSL "https://storage.googleapis.com/zkevm/ptau/powersOfTau28_hez_final_17.ptau" -o "$PTAU"
+  curl -fsSL "https://storage.googleapis.com/zkevm/ptau/powersOfTau28_hez_final_18.ptau" -o "$PTAU"
 fi
 echo "[setup] verifying powers of tau"
 snarkjs powersoftau verify "$PTAU"

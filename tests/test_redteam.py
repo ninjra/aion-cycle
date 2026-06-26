@@ -45,7 +45,7 @@ def test_expected_transcript_root_is_frozen() -> None:
 
 def test_single_full_cycle_circuit_present() -> None:
     circuit = (ROOT / "aion.circom").read_text(encoding="utf-8")
-    assert "Sha256(1368)" in circuit
+    assert "Sha256(1480)" in circuit
     assert "corpus0" in circuit and "emitted" in circuit
     assert "component main" in circuit
 
@@ -167,3 +167,35 @@ def test_stored_public_bad_is_not_trusted() -> None:
         assert result.returncode == 0
     finally:
         path.write_text(original, encoding="utf-8")
+
+
+def test_missing_snarkjs_fails(monkeypatch) -> None:
+    import aion_cycle
+    original = aion_cycle.shutil.which
+    def fake_which(name: str):
+        if name == "snarkjs":
+            return None
+        return original(name)
+    monkeypatch.setattr(aion_cycle.shutil, "which", fake_which)
+    try:
+        aion_cycle.verify_statement(ROOT / "aion.statement.json")
+    except RuntimeError as exc:
+        assert "missing_snarkjs" in str(exc)
+    else:
+        raise AssertionError("missing snarkjs did not fail")
+
+
+def test_missing_circom_fails(monkeypatch) -> None:
+    import aion_cycle
+    original = aion_cycle.shutil.which
+    def fake_which(name: str):
+        if name == "circom":
+            return None
+        return original(name)
+    monkeypatch.setattr(aion_cycle.shutil, "which", fake_which)
+    try:
+        aion_cycle.execute()
+    except RuntimeError as exc:
+        assert "missing_circom" in str(exc)
+    else:
+        raise AssertionError("missing circom did not fail")

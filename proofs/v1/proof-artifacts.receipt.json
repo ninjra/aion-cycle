@@ -1,21 +1,21 @@
 {
   "child_receipt_hashes": [
-    "65c4ef1b3e93a9e9e9be852d7a3633f1d3529f18bf838aeb1beb5fa6a766b198",
-    "b3771edeb8a75f66c8d5d5e9dbe7338aec687f01fd275374848ca7367f98cdb5"
+    "25ae4f66e9a8c8d9e1c4df8c0c84c6539bfb243626ed64c9eb7e08dfbc7b736c",
+    "af8dd3c0da77060222bb9b02e0a5db0a155ba593e7b8af568aaa04dfe2da67a9"
   ],
-  "circuit_source_sha256": "55c9d360ff57b159e76b3405c22cab4a1da870d7e97b232c19ef2e07a3efcdb0",
+  "circuit_source_sha256": "54b508824ff2a71c16aac98fe3ee739272d5f7f66fe68586f5a06ef2456d5107",
   "failed_checks": [],
-  "generation_trace_receipt_hash": "b3771edeb8a75f66c8d5d5e9dbe7338aec687f01fd275374848ca7367f98cdb5",
-  "input_sha256": "977add617a8c934efdf46ee61a0a635ce26c9206c3d24d4c32ea621d6204fc82",
+  "generation_trace_receipt_hash": "af8dd3c0da77060222bb9b02e0a5db0a155ba593e7b8af568aaa04dfe2da67a9",
+  "input_sha256": "16a1187b0a1f762a4180dbd17b2d7c15680baabfc613638cba6d10746ca4f0cd",
   "proof_passed": true,
-  "proof_sha256": "b6e7425e61533960785398b89d477b74f30e746d3ada81548d3e6a56c0e7a0a2",
-  "public_sha256": "4ae6b797829f134ac72d4fc7909c94dbe7e37591fda644a53304348535f21884",
-  "r1cs_sha256": "c190bf8c9c5fb1c593eda02422e4785034029dc00b59180b6befbcb95b7c3630",
-  "receipt_hash": "1735c36b839f80ce6e9139219d8d8ec6dfb37801d93acd99cf31902298be7b46",
+  "proof_sha256": "9fc18e5016b60008ccb607907a88bc7eed4fa79776700128e775ef55898c79fd",
+  "public_sha256": "d9c6f3d022ab69758336911b7fe09171e9e6964ad13d1257b47f3c3179df58a9",
+  "r1cs_sha256": "69c4713b1c6c27476416c70d6272893c4c8e0e04c05132f46ea4416376ad5556",
+  "receipt_hash": "d6b7c45b5b25aed803e88836884c0ddf03bcff79e5511e6feb05c6bfffdf8a00",
   "schema_version": "aion-proof-artifacts-receipt-v1",
-  "sym_sha256": "65beaa7e9d8c047bd0324e1118c0b650e0451bcb68064c84cbf43afde3a115a9",
-  "verification_key_sha256": "979ec1d783623d70e834bf12c07ed8dbc7f7d65b47507740de9924598bf2eddc",
-  "wasm_sha256": "9538ffe0b10d85e7a87e682b0a439a7a994c4ce94f3da36ac88d3724e61f6f0c",
-  "zkey0_sha256": "3c6e69d8b664a27abe10ae4498ee41ae6fbc4359866af4ee4cc2b7da323fcbfb",
-  "zkey_sha256": "c647e8de9b6b0c199722b087da217068d8415cfab4b04fa3b9183fd79b316451"
+  "sym_sha256": "b3670e4fa13603cbe56b6455d7bc26d262f727cbb1c4ad5230af3d879a5236c2",
+  "verification_key_sha256": "6bb482752f5cdf85adb61ac414259395d044c2c4fec95fca911c88c1a040d116",
+  "wasm_sha256": "1827fcccfb6844517cafdfc57b4aede98b56cd3992960968a47c2aa8776f0d67",
+  "zkey0_sha256": "537f9f5a88e2820fe4e7faf13c086e80f2e861ccf851ebfcf7df23d65fd0df3b",
+  "zkey_sha256": "c6a1f5c6e3959d5bc59161e1193c332c8f1592bded717812c96ce05c6f5b3c73"
 }

@@ -1,14 +1,14 @@
 {
-  "circuit_hash": "55c9d360ff57b159e76b3405c22cab4a1da870d7e97b232c19ef2e07a3efcdb0",
+  "circuit_hash": "54b508824ff2a71c16aac98fe3ee739272d5f7f66fe68586f5a06ef2456d5107",
   "cycle_id": "aion.one_prompt_closed_loop.v1",
-  "cycle_root": "07c77aabb15e88f6bb42910a6dd33caa11786b9977a98d13c48da16dc771cff7",
-  "expected_transcript_root": "4fe55b20021791ebb3ca62b2773ea689e59deab6f68c3ecdea36ae37ab3a47a7",
+  "cycle_root": "e116e517bfe59d6257884f439db6123288a90af9aa91bb86976b39652925cda6",
+  "expected_transcript_root": "9f6071ca3e5b314fd295cb7a4461a38ef14573a4395352e288f84304f5aa8756",
   "policy": "aion.cycle.v1",
-  "proof_hash": "b6e7425e61533960785398b89d477b74f30e746d3ada81548d3e6a56c0e7a0a2",
-  "proof_root": "1735c36b839f80ce6e9139219d8d8ec6dfb37801d93acd99cf31902298be7b46",
+  "proof_hash": "9fc18e5016b60008ccb607907a88bc7eed4fa79776700128e775ef55898c79fd",
+  "proof_root": "d6b7c45b5b25aed803e88836884c0ddf03bcff79e5511e6feb05c6bfffdf8a00",
   "proof_system": "groth16",
-  "public_input_hash": "4ae6b797829f134ac72d4fc7909c94dbe7e37591fda644a53304348535f21884",
+  "public_input_hash": "d9c6f3d022ab69758336911b7fe09171e9e6964ad13d1257b47f3c3179df58a9",
   "schema_version": "aion-cycle-statement-v1",
-  "transcript_root": "4fe55b20021791ebb3ca62b2773ea689e59deab6f68c3ecdea36ae37ab3a47a7",
-  "verification_key_hash": "979ec1d783623d70e834bf12c07ed8dbc7f7d65b47507740de9924598bf2eddc"
+  "transcript_root": "9f6071ca3e5b314fd295cb7a4461a38ef14573a4395352e288f84304f5aa8756",
+  "verification_key_hash": "6bb482752f5cdf85adb61ac414259395d044c2c4fec95fca911c88c1a040d116"
 }

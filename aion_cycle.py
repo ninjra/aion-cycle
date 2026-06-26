@@ -11,8 +11,9 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-EXPECTED_TRANSCRIPT_ROOT = "4fe55b20021791ebb3ca62b2773ea689e59deab6f68c3ecdea36ae37ab3a47a7"
-PTAU = "powersOfTau28_hez_final_17.ptau"
+EXPECTED_TRANSCRIPT_ROOT = "9f6071ca3e5b314fd295cb7a4461a38ef14573a4395352e288f84304f5aa8756"
+DOMAIN = b"AION-CYCLE-V1|"
+PTAU = "powersOfTau28_hez_final_18.ptau"
 ROOT = Path(__file__).resolve().parent
 BUNDLE_DIR = ROOT / "proofs" / "v1"
 LENS = {"query": 30, "corpus0": 42, "corpus1": 33, "corpus2": 24, "emitted": 42}
@@ -195,7 +196,7 @@ def prove(circuit_input: dict[str, Any]) -> dict[str, Any]:
 def cycle(query: bytes, corpus: list[bytes]) -> tuple[bytes, str]:
     winner = select_winner(query, corpus)
     emitted = bytes(corpus[winner])
-    return emitted, sha256_hex(query + corpus[0] + corpus[1] + corpus[2] + emitted)
+    return emitted, sha256_hex(DOMAIN + query + corpus[0] + corpus[1] + corpus[2] + emitted)
 
 
 def statement(transcript_root: str, proof_root: str, artifact: dict[str, Any]) -> dict[str, Any]:

@@ -181,10 +181,10 @@ winner is ambiguous, the run fails instead of guessing.
 ### Keep receipts
 
 ```text
-receipt = SHA256(canonical(input, output, checks))
+receipt = SHA256(domain || canonical(input, output, checks))
 ```
 
-Hash each step's record. This is a hash commitment.
+Hash each step's record. This is a domain-separated hash commitment.
 
 ### A green light cannot hide a red light
 
@@ -319,7 +319,7 @@ The circuit proves, in-circuit:
   byte pairs (the byte-histogram inner product, computed inside the circuit),
 - corpus record 0 is the strict winner over records 1 and 2,
 - the emitted output bytes equal the winning record byte for byte,
-- the SHA-256 of the transcript `query || corpus0 || corpus1 || corpus2 ||
+- the SHA-256 of the domain-separated transcript `AION-CYCLE-V1| || query || corpus0 || corpus1 || corpus2 ||
   emitted` equals a public 256-bit digest commitment.
 
 The SHA-256 is computed inside the circuit using the widely used circomlib
@@ -340,7 +340,7 @@ ge01 === sum(ge01_bits[k] * 2^k);
 emitted[i] === corpus0[i];
 
 // in-circuit SHA-256 of the transcript, bound to the public commitment
-sha = Sha256(1368);   sha.in[...] <== transcript_bits;   sha.out[k] === expected_digest_bits[k];
+sha = Sha256(1480);   sha.in[...] <== transcript_bits;   sha.out[k] === expected_digest_bits[k];
 ```
 
 Public inputs are the emitted answer bytes and the 256-bit digest commitment. A
@@ -454,7 +454,7 @@ Groth16 proof step (required, not optional):
        digest commitment.
 22. Public inputs are the emitted answer bytes and the 256-bit digest commitment.
 23. Install circomlib and compile with circom using the circomlib include path.
-    Use a powers-of-tau large enough for the circuit (about 2^17).
+    Use a powers-of-tau large enough for the domain-separated circuit (2^18).
 24. Run a Groth16 setup, generate the proof with snarkjs, and verify it.
 25. Run a verifier-negative check: flip one public digest bit; the real verifier
     must reject. If it accepts, FAIL.

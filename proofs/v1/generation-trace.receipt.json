@@ -15,7 +15,7 @@
       ],
       "returncode": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "2ceed3ca201005eac0cce1d6ec2ed590174ac2968ec0a998a56bb65f3aed5f40"
+      "stdout_sha256": "0ca5557ae725d17a4321774d4e030432a610d51b7a1a4af6c8451f6c3751620c"
     },
     {
       "cmd": [
@@ -23,12 +23,12 @@
         "groth16",
         "setup",
         "aion.r1cs",
-        "powersOfTau28_hez_final_17.ptau",
+        "powersOfTau28_hez_final_18.ptau",
         "aion_0.zkey"
       ],
       "returncode": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "1066f0590c72709c6e52544f6721f865c116ac935a42af539ce9e5a9291dd860"
+      "stdout_sha256": "3c58182dec8827d1cd4ca32bca3a72b4ca8e18a2f11f0c1bc127dd44c66b0191"
     },
     {
       "cmd": [
@@ -42,7 +42,7 @@
       ],
       "returncode": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "8d3aba0e532536d7a33594626529087f79dfe639ce91326055ca09679b3ebc57"
+      "stdout_sha256": "2eef24fe799de30682e9ca95a84d1585fa78d50a04c772547012d8a241ac69b4"
     },
     {
       "cmd": [
@@ -89,6 +89,6 @@
   "failed_checks": [],
   "negative_verify_returncode": 1,
   "proof_passed": true,
-  "receipt_hash": "b3771edeb8a75f66c8d5d5e9dbe7338aec687f01fd275374848ca7367f98cdb5",
+  "receipt_hash": "af8dd3c0da77060222bb9b02e0a5db0a155ba593e7b8af568aaa04dfe2da67a9",
   "schema_version": "aion-generation-trace-receipt-v1"
 }
