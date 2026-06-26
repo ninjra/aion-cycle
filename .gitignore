@@ -14,3 +14,8 @@ witness.wtns
 build/
 node_modules/
 .aion/
+proofs/v1/*.tmp
+proofs/v1/*.log
+!proofs/
+!proofs/v1/
+!proofs/v1/**

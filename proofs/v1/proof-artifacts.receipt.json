@@ -1,0 +1,106 @@
+{
+  "child_receipt_hashes": [
+    "56830d83b9b0730fea5f31b3ee15162a64d1e0e3ec4a98f575fb0c255c209c72"
+  ],
+  "circuit_source_sha256": "55c9d360ff57b159e76b3405c22cab4a1da870d7e97b232c19ef2e07a3efcdb0",
+  "commands": [
+    {
+      "cmd": [
+        "/home/justi/.local/bin/circom",
+        "/home/justi/projects/aion-cycle/aion.circom",
+        "--r1cs",
+        "--wasm",
+        "--sym",
+        "-l",
+        "/home/justi/projects/aion-cycle/node_modules/circomlib/circuits",
+        "-o",
+        "/home/justi/projects/aion-cycle/proofs/v1"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "2ceed3ca201005eac0cce1d6ec2ed590174ac2968ec0a998a56bb65f3aed5f40"
+    },
+    {
+      "cmd": [
+        "/home/justi/.local/bin/snarkjs",
+        "groth16",
+        "setup",
+        "aion.r1cs",
+        "/home/justi/projects/aion-cycle/powersOfTau28_hez_final_17.ptau",
+        "aion_0.zkey"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "1066f0590c72709c6e52544f6721f865c116ac935a42af539ce9e5a9291dd860"
+    },
+    {
+      "cmd": [
+        "/home/justi/.local/bin/snarkjs",
+        "zkey",
+        "contribute",
+        "aion_0.zkey",
+        "aion.zkey",
+        "--name=aion",
+        "-e=aion-local-entropy"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "4dc4585eedb7b5454f8c6e9cf30f3e3d6dfaebf9848670e6f261267cd81fcdc6"
+    },
+    {
+      "cmd": [
+        "/home/justi/.local/bin/snarkjs",
+        "zkey",
+        "export",
+        "verificationkey",
+        "aion.zkey",
+        "verification_key.json"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "57bca22cad5e2ec3a63d65c7ea79659ee9edad950d989c3c005e997ab3839a72"
+    },
+    {
+      "cmd": [
+        "/home/justi/.local/bin/snarkjs",
+        "groth16",
+        "fullprove",
+        "input.json",
+        "aion_js/aion.wasm",
+        "aion.zkey",
+        "proof.json",
+        "public.json"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "cmd": [
+        "/home/justi/.local/bin/snarkjs",
+        "groth16",
+        "verify",
+        "verification_key.json",
+        "public.json",
+        "proof.json"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "268f2a0657e006c47dbf5b700288f39f1f1608dff46553e99bf7353f840bb2bd"
+    }
+  ],
+  "failed_checks": [],
+  "input_sha256": "977add617a8c934efdf46ee61a0a635ce26c9206c3d24d4c32ea621d6204fc82",
+  "negative_verify_returncode": 1,
+  "proof_passed": true,
+  "proof_sha256": "4b10c11cfd650a877e1e2be38ebc869a29cef65d94e43ecaacc206b6158c7fff",
+  "public_sha256": "4ae6b797829f134ac72d4fc7909c94dbe7e37591fda644a53304348535f21884",
+  "r1cs_sha256": "c190bf8c9c5fb1c593eda02422e4785034029dc00b59180b6befbcb95b7c3630",
+  "receipt_hash": "fcc645d015023ccd97735704b5755e69ba0306e3df61c429a9f72cad04eee38e",
+  "schema_version": "aion-proof-artifacts-receipt-v1",
+  "sym_sha256": "65beaa7e9d8c047bd0324e1118c0b650e0451bcb68064c84cbf43afde3a115a9",
+  "verification_key_sha256": "f75b77a28fa5e45356af9907fb7dac478a4438dd998b926f3302b49cba93f43e",
+  "wasm_sha256": "9538ffe0b10d85e7a87e682b0a439a7a994c4ce94f3da36ac88d3724e61f6f0c",
+  "zkey0_sha256": "3c6e69d8b664a27abe10ae4498ee41ae6fbc4359866af4ee4cc2b7da323fcbfb",
+  "zkey_sha256": "e1fff429ff47bc5e6fae419dab542cfc715d15e21797341617967ef1edee7c5d"
+}

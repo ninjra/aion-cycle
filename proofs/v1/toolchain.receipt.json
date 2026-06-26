@@ -1,0 +1,26 @@
+{
+  "child_receipt_hashes": [],
+  "failed_checks": [],
+  "package_lock_sha256": "3a8360888e58625f91bc6830ebd184e2ecf4e852bd9f0fb35cfe07f95d74d842",
+  "proof_passed": true,
+  "ptau": {
+    "path": "powersOfTau28_hez_final_17.ptau",
+    "sha256": "6b662a324867139fb1a20a324d90b6ff61856dfb23f59326909f14b0e2483ae0"
+  },
+  "receipt_hash": "56830d83b9b0730fea5f31b3ee15162a64d1e0e3ec4a98f575fb0c255c209c72",
+  "schema_version": "aion-toolchain-receipt-v1",
+  "toolchain": {
+    "circom": {
+      "path": "/home/justi/.local/bin/circom",
+      "version": "circom compiler 2.2.3"
+    },
+    "node": {
+      "path": "/home/justi/.nvm/versions/node/v22.22.0/bin/node",
+      "version": "v22.22.0"
+    },
+    "snarkjs": {
+      "path": "/home/justi/.local/bin/snarkjs",
+      "version": "snarkjs@0.7.6\n        Copyright (C) 2018  0kims association\n        This program comes with ABSOLUTELY NO WARRANTY;\n        This is free software, and you are welcome to redistribute it\n        under certain conditions; see the COPYING file in the official\n        repo directory at  https://github.com/iden3/snarkjs \n\nUsage:\n        snarkjs <full command> ...  <options>\n   or   snarkjs <shortcut> ...  <options>\n\nType snarkjs <command> --help to get more information for that command\n\nFull Command "
+    }
+  }
+}
