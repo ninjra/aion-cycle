@@ -566,8 +566,13 @@ If circom or snarkjs is missing, it prints FAIL.
 
 ## Run it
 
+The reference runner requires `node`, `circom`, and `snarkjs`, plus a Powers of
+Tau file. A setup script installs the toolchain locally (no sudo) and fetches
+and verifies the ptau:
+
 ```bash
-python aion_cycle.py
+make setup        # or: bash scripts/setup.sh
+make verify       # or: python3 aion_cycle.py
 ```
 
 Output:
@@ -581,6 +586,9 @@ or:
 ```text
 FAIL
 ```
+
+If `node`, `circom`, `snarkjs`, or the ptau are missing, the runner fails closed
+with `FAIL`. There is no local-only pass.
 
 ## Break it
 

@@ -21,7 +21,7 @@ MIN_Q15 = -32768
 MAX_Q15 = 32767
 FIELD_SIZE = 256
 BN254_SCALAR_FIELD = 21888242871839275222246405745257275088548364400416034343698204186575808495617
-EXPECTED_ROOT = "computed-by-aion-cycle-reference-on-first-release"
+EXPECTED_ROOT = "b7d163eb8ea2cb12cb81117a9261ab25370607e2f16b8c7d91d0b2986b01c941"
 ROOT = Path(__file__).resolve().parent
 
 
@@ -124,11 +124,30 @@ def run_fixture(fixture: dict[str, Any], *, tamper_score: bool = False) -> dict[
         fail.append("hash_mismatch")
     write_r = receipt("Write", map_r["receipt_hash"], sha256_bytes(output), [map_r], fail)
     root = receipt("Root", event_id, write_r["receipt_hash"], [write_r])
-    return {"root": root, "selected": selected, "output": output, "selected_hash": selected_hash, "output_hash": sha256_bytes(output)}
+    return {
+        "root": root,
+        "selected": selected,
+        "output": output,
+        "selected_field_hash": selected_hash,
+        "selected_source_hash": sha256_bytes(selected),
+        "output_hash": sha256_bytes(output),
+    }
 
 
 def digest_to_field(hex_digest: str) -> str:
     return str(int(hex_digest, 16) % BN254_SCALAR_FIELD)
+
+
+def digest_limbs(hex_digest: str) -> tuple[list[str], list[list[str]]]:
+    raw = bytes.fromhex(hex_digest)
+    limbs: list[str] = []
+    bits: list[list[str]] = []
+    for i in range(4):
+        chunk = raw[i * 8:(i + 1) * 8]
+        value = int.from_bytes(chunk, "big")
+        limbs.append(str(value))
+        bits.append([str((value >> j) & 1) for j in range(64)])
+    return limbs, bits
 
 
 def toolchain_receipt() -> dict[str, Any]:
@@ -137,55 +156,94 @@ def toolchain_receipt() -> dict[str, Any]:
         path = shutil.which(tool)
         if not path:
             raise RuntimeError(f"missing_{tool}")
-        try:
-            version = subprocess.run([path, "--version"], text=True, capture_output=True, timeout=10, check=False)
-            data[tool] = {"path": path, "version": (version.stdout + version.stderr).strip()[:200]}
-        except Exception as exc:  # noqa: BLE001
-            data[tool] = {"path": path, "version_error": type(exc).__name__}
+        version = subprocess.run([path, "--version"], text=True, capture_output=True, timeout=20, check=False)
+        data[tool] = {"path": path, "version": (version.stdout + version.stderr).strip()[:200]}
     return receipt("Toolchain", sha256_bytes(b"toolchain"), sha256_bytes(canonical_bytes(data)))
 
 
-def prove(root_hex: str, selected_hex: str, output_hex: str, replay_hex: str, child_count: int) -> dict[str, Any]:
+def _sh(cmd: list[str], cwd: Path) -> None:
+    subprocess.run(cmd, cwd=str(cwd), check=True, capture_output=True, timeout=300)
+
+
+def groth16_prove_verify(circuit: Path, input_obj: dict[str, Any], work: Path) -> str:
+    work.mkdir(parents=True, exist_ok=True)
+    circom = shutil.which("circom")
+    snarkjs = shutil.which("snarkjs")
+    if not circom or not snarkjs:
+        raise RuntimeError("missing_tooling")
+    ptau = ROOT / "powersOfTau28_hez_final_12.ptau"
+    if not ptau.exists():
+        raise RuntimeError("missing_ptau")
+    name = circuit.stem
+    (work / "input.json").write_text(json.dumps(input_obj), encoding="utf-8")
+    _sh([circom, str(circuit), "--r1cs", "--wasm", "--sym", "-o", str(work)], work)
+    r1cs = work / f"{name}.r1cs"
+    zkey0 = work / f"{name}_0.zkey"
+    zkey = work / f"{name}.zkey"
+    vkey = work / f"{name}_vkey.json"
+    proof = work / f"{name}_proof.json"
+    public = work / f"{name}_public.json"
+    wasm = work / f"{name}_js" / f"{name}.wasm"
+    _sh([snarkjs, "groth16", "setup", str(r1cs), str(ptau), str(zkey0)], work)
+    _sh([snarkjs, "zkey", "contribute", str(zkey0), str(zkey), "--name=aion", "-e=aion-local-entropy"], work)
+    _sh([snarkjs, "zkey", "export", "verificationkey", str(zkey), str(vkey)], work)
+    _sh([snarkjs, "groth16", "fullprove", str(work / "input.json"), str(wasm), str(zkey), str(proof), str(public)], work)
+    ok = subprocess.run([snarkjs, "groth16", "verify", str(vkey), str(public), str(proof)], cwd=str(work), text=True, capture_output=True, timeout=120, check=False)
+    if ok.returncode != 0:
+        raise RuntimeError(f"verify_failed:{name}")
+    pub = json.loads(public.read_text(encoding="utf-8"))
+    pub[0] = str((int(pub[0]) + 1) % BN254_SCALAR_FIELD)
+    bad = work / f"{name}_public_bad.json"
+    bad.write_text(json.dumps(pub), encoding="utf-8")
+    neg = subprocess.run([snarkjs, "groth16", "verify", str(vkey), str(bad), str(proof)], cwd=str(work), text=True, capture_output=True, timeout=120, check=False)
+    if neg.returncode == 0:
+        raise RuntimeError(f"negative_check_passed:{name}")
+    return sha256_bytes(canonical_bytes({
+        "circuit": name,
+        "vkey": sha256_bytes(vkey.read_bytes()),
+        "proof": sha256_bytes(proof.read_bytes()),
+    }))
+
+
+def prove(final_root: str, source_hash: str, output_hash: str, replay_root: str) -> dict[str, Any]:
     tool_r = toolchain_receipt()
+    children = [tool_r]
     with tempfile.TemporaryDirectory() as td:
         work = Path(td)
-        circuit = ROOT / "aion_closure_root.circom"
-        input_json = work / "input.json"
-        input_json.write_text(json.dumps({
-            "expected_root": digest_to_field(root_hex),
-            "final_root": digest_to_field(root_hex),
-            "selected_hash": digest_to_field(selected_hex),
-            "output_hash": digest_to_field(output_hex),
-            "replay_root": digest_to_field(replay_hex),
-            "canonical_transcript_root": digest_to_field(root_hex),
-            "tamper_transcript_root": digest_to_field(sha256_bytes(b"tamper" + bytes.fromhex(root_hex))),
+        root_input = {
+            "expected_root": digest_to_field(final_root),
+            "final_root": digest_to_field(final_root),
+            "selected_hash": digest_to_field(source_hash),
+            "output_hash": digest_to_field(output_hash),
+            "replay_root": digest_to_field(replay_root),
+            "canonical_transcript_root": digest_to_field(final_root),
+            "tamper_transcript_root": digest_to_field(sha256_bytes(b"tamper:" + final_root.encode())),
             "tamper_failed": "1",
-            "child_passed": ["1"] * child_count,
-        }), encoding="utf-8")
-        # A real Groth16 flow needs a ptau. This reference fails closed if the
-        # environment has no suitable tooling/artifacts. That is intentional.
-        circom = shutil.which("circom")
-        snarkjs = shutil.which("snarkjs")
-        subprocess.run([circom, str(circuit), "--r1cs", "--wasm", "--sym", "-o", str(work)], check=True, capture_output=True, timeout=60)
-        # Minimal public repo does not ship a ptau; users can add one. Missing ptau == FAIL.
-        ptau = ROOT / "powersOfTau28_hez_final_10.ptau"
-        if not ptau.exists():
-            raise RuntimeError("missing_ptau")
-        r1cs = work / "aion_closure_root.r1cs"
-        zkey0 = work / "aion_0000.zkey"
-        zkey = work / "aion_final.zkey"
-        subprocess.run([snarkjs, "groth16", "setup", str(r1cs), str(ptau), str(zkey0)], check=True, capture_output=True, timeout=60)
-        subprocess.run([snarkjs, "zkey", "contribute", str(zkey0), str(zkey), "--name=local", "-v", "-e=local entropy"], check=True, capture_output=True, timeout=60)
-        vkey = work / "verification_key.json"
-        proof_json = work / "proof.json"
-        public_json = work / "public.json"
-        wasm = next(work.glob("**/*.wasm"))
-        subprocess.run([snarkjs, "zkey", "export", "verificationkey", str(zkey), str(vkey)], check=True, capture_output=True, timeout=60)
-        subprocess.run([snarkjs, "groth16", "fullprove", str(input_json), str(wasm), str(zkey), str(proof_json), str(public_json)], check=True, capture_output=True, timeout=60)
-        verify = subprocess.run([snarkjs, "groth16", "verify", str(vkey), str(public_json), str(proof_json)], text=True, capture_output=True, timeout=60, check=False)
-        if verify.returncode != 0:
-            raise RuntimeError("verify_failed")
-    return receipt("Groth16", tool_r["receipt_hash"], root_hex, [tool_r])
+            "child_passed": ["1"] * 8,
+        }
+        root_proof_hash = groth16_prove_verify(ROOT / "aion_closure_root.circom", root_input, work / "root")
+
+        fr_l, fr_b = digest_limbs(final_root)
+        sh_l, sh_b = digest_limbs(source_hash)
+        oh_l, oh_b = digest_limbs(output_hash)
+        limb_input = {
+            "expected_root_limbs": fr_l,
+            "final_root_limbs": fr_l,
+            "selected_hash_limbs": sh_l,
+            "output_hash_limbs": oh_l,
+            "replay_root_limbs": fr_l,
+            "expected_root_bits": fr_b,
+            "final_root_bits": fr_b,
+            "selected_hash_bits": sh_b,
+            "output_hash_bits": oh_b,
+            "replay_root_bits": fr_b,
+            "tamper_failed": "1",
+            "child_passed": ["1"] * 8,
+        }
+        limb_proof_hash = groth16_prove_verify(ROOT / "aion_digest_limb_closure.circom", limb_input, work / "limb")
+
+    out = sha256_bytes(canonical_bytes({"root_proof": root_proof_hash, "limb_proof": limb_proof_hash}))
+    return receipt("Groth16", tool_r["receipt_hash"], out, children)
 
 
 def main() -> int:
@@ -195,14 +253,16 @@ def main() -> int:
         run2 = run_fixture(fixture)
         if run1["root"]["receipt_hash"] != run2["root"]["receipt_hash"] or run1["output"] != run2["output"]:
             raise RuntimeError("replay_mismatch")
+        if run1["selected_source_hash"] != run1["output_hash"]:
+            raise RuntimeError("output_not_equal_to_selected")
         tampered = run_fixture(fixture, tamper_score=True)
-        if tampered["root"]["proof_passed"] is True and tampered["selected"] == run1["selected"]:
+        if tampered["selected"] == run1["selected"]:
             raise RuntimeError("tamper_not_detected")
-        if EXPECTED_ROOT.startswith("computed-by-"):
+        if len(EXPECTED_ROOT) != 64 or any(c not in "0123456789abcdef" for c in EXPECTED_ROOT):
             raise RuntimeError("expected_root_not_frozen")
         if run1["root"]["receipt_hash"] != EXPECTED_ROOT:
             raise RuntimeError("expected_root_mismatch")
-        prove(EXPECTED_ROOT, run1["selected_hash"], run1["output_hash"], run2["root"]["receipt_hash"], 8)
+        prove(EXPECTED_ROOT, run1["selected_source_hash"], run1["output_hash"], run2["root"]["receipt_hash"])
     except Exception:  # noqa: BLE001
         print("FAIL")
         return 1

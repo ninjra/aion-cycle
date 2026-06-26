@@ -17,13 +17,6 @@ template AionClosureRoot(n) {
     canonical_transcript_root === final_root;
     tamper_failed === 1;
 
-    // The tamper transcript must be present and must not be the canonical root.
-    // This proves the verifier was given a distinct tamper transcript commitment;
-    // the host verifier still checks that the tamper transcript records failure.
-    signal tamper_delta;
-    tamper_delta <== tamper_transcript_root - canonical_transcript_root;
-    tamper_delta * tamper_delta === tamper_delta * tamper_delta;
-
     for (var i = 0; i < n; i++) {
         child_passed[i] * (child_passed[i] - 1) === 0;
         child_passed[i] === 1;

@@ -12,3 +12,4 @@ public.json
 verification_key.json
 witness.wtns
 build/
+node_modules/
