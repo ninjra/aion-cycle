@@ -139,3 +139,31 @@ def test_public_receipts_do_not_leak_local_absolute_paths() -> None:
         text = (ROOT / rel).read_text(encoding="utf-8")
         assert "/home/" not in text
         assert "/usr/bin" not in text
+
+
+def test_generation_trace_receipt_mutation_fails() -> None:
+    path = ROOT / "proofs" / "v1" / "generation-trace.receipt.json"
+    original = path.read_text(encoding="utf-8")
+    data = json.loads(original)
+    data["commands"][0]["returncode"] = 99
+    try:
+        path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        _assert_verify_fails()
+    finally:
+        path.write_text(original, encoding="utf-8")
+
+
+def test_stored_public_bad_is_not_trusted() -> None:
+    path = ROOT / "proofs" / "v1" / "public_bad.json"
+    original = path.read_text(encoding="utf-8")
+    data = json.loads(original)
+    # Make the stored public_bad equal to public.json. Verifier must ignore it and
+    # regenerate public_bad_reverify.json from public.json, so verification still passes.
+    data = json.loads((ROOT / "proofs" / "v1" / "public.json").read_text(encoding="utf-8"))
+    try:
+        path.write_text(json.dumps(data), encoding="utf-8")
+        result = _run_verify()
+        assert result.stdout.strip() == "PASS"
+        assert result.returncode == 0
+    finally:
+        path.write_text(original, encoding="utf-8")

@@ -170,6 +170,11 @@ def prove(circuit_input: dict[str, Any]) -> dict[str, Any]:
     if neg.returncode == 0:
         raise RuntimeError("negative_check_passed")
     (work / "toolchain.receipt.json").write_text(json.dumps(tc, indent=2, sort_keys=True) + "\n")
+    trace = receipt("generation-trace", {
+        "commands": commands,
+        "negative_verify_returncode": neg.returncode,
+    })
+    (work / "generation-trace.receipt.json").write_text(json.dumps(trace, indent=2, sort_keys=True) + "\n")
     art = receipt("proof-artifacts", {
         "circuit_source_sha256": file_sha(ROOT / "aion.circom"),
         "input_sha256": file_sha(work / "input.json"),
@@ -181,9 +186,8 @@ def prove(circuit_input: dict[str, Any]) -> dict[str, Any]:
         "verification_key_sha256": file_sha(work / "verification_key.json"),
         "proof_sha256": file_sha(work / "proof.json"),
         "public_sha256": file_sha(work / "public.json"),
-        "negative_verify_returncode": neg.returncode,
-        "commands": commands,
-    }, [tc])
+        "generation_trace_receipt_hash": trace["receipt_hash"],
+    }, [tc, trace])
     (work / "proof-artifacts.receipt.json").write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
     return art
 
@@ -252,7 +256,7 @@ def load_verified_receipt(path: Path) -> dict[str, Any]:
     return obj
 
 
-def recompute_artifact_receipt(tool: dict[str, Any], existing: dict[str, Any]) -> dict[str, Any]:
+def recompute_artifact_receipt(tool: dict[str, Any], existing: dict[str, Any], trace: dict[str, Any]) -> dict[str, Any]:
     payload = {
         "circuit_source_sha256": file_sha(ROOT / "aion.circom"),
         "input_sha256": file_sha(BUNDLE_DIR / "input.json"),
@@ -264,10 +268,9 @@ def recompute_artifact_receipt(tool: dict[str, Any], existing: dict[str, Any]) -
         "verification_key_sha256": file_sha(BUNDLE_DIR / "verification_key.json"),
         "proof_sha256": file_sha(BUNDLE_DIR / "proof.json"),
         "public_sha256": file_sha(BUNDLE_DIR / "public.json"),
-        "negative_verify_returncode": existing.get("negative_verify_returncode"),
-        "commands": existing.get("commands"),
+        "generation_trace_receipt_hash": trace["receipt_hash"],
     }
-    return receipt("proof-artifacts", payload, [tool])
+    return receipt("proof-artifacts", payload, [tool, trace])
 
 
 def bits_to_hex(bits: list[Any]) -> str:
@@ -293,10 +296,11 @@ def verify_statement(path: Path) -> None:
         raise RuntimeError("transcript_root_mismatch")
 
     tool = load_verified_receipt(BUNDLE_DIR / "toolchain.receipt.json")
+    trace = load_verified_receipt(BUNDLE_DIR / "generation-trace.receipt.json")
     existing_artifact = load_verified_receipt(BUNDLE_DIR / "proof-artifacts.receipt.json")
-    if existing_artifact.get("child_receipt_hashes") != [tool["receipt_hash"]]:
+    if existing_artifact.get("child_receipt_hashes") != [tool["receipt_hash"], trace["receipt_hash"]]:
         raise RuntimeError("artifact_child_hash_mismatch")
-    recomputed = recompute_artifact_receipt(tool, existing_artifact)
+    recomputed = recompute_artifact_receipt(tool, existing_artifact, trace)
     if recomputed["receipt_hash"] != existing_artifact["receipt_hash"]:
         raise RuntimeError("artifact_receipt_recompute_mismatch")
     if recomputed["receipt_hash"] != data.get("proof_root"):
@@ -320,7 +324,11 @@ def verify_statement(path: Path) -> None:
     verify = run([snarkjs, "groth16", "verify", "verification_key.json", "public.json", "proof.json"], BUNDLE_DIR, 300)
     if verify.returncode != 0:
         raise RuntimeError("portable_verify_failed")
-    neg = run([snarkjs, "groth16", "verify", "verification_key.json", "public_bad.json", "proof.json"], BUNDLE_DIR, 300)
+    bad_public = list(public_inputs)
+    bad_public[LENS["emitted"]] = "0" if bad_public[LENS["emitted"]] == "1" else "1"
+    bad_reverify = BUNDLE_DIR / "public_bad_reverify.json"
+    bad_reverify.write_text(json.dumps(bad_public), encoding="utf-8")
+    neg = run([snarkjs, "groth16", "verify", "verification_key.json", bad_reverify.name, "proof.json"], BUNDLE_DIR, 300)
     if neg.returncode == 0:
         raise RuntimeError("portable_negative_verify_passed")
 

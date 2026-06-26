@@ -243,8 +243,10 @@ are not future hardening notes. They are requirements for `PASS`.
   receipt hash is a child of `proof_root`. Public receipts use normalized command
   names and path hashes, not local absolute paths.
 - **Artifact binding:** the circuit source hash, compiled artifacts, proving key,
-  verification key, proof, public inputs, and verifier result are all receipts.
-  A missing or changed artifact fails `proof_root`, which changes `cycle_root`.
+  verification key, proof, public inputs, and verifier result are receipts.
+  Historical command metadata is kept in a separate generation trace receipt.
+  A missing or changed artifact or trace fails `proof_root`, which changes
+  `cycle_root`.
 - **Receipt binding:** every receipt is meaningful only because it is generated
   by the step it describes and included in the parent root. The project must bind
   receipts to phase name, input hash, output hash, child receipt hashes, toolchain
@@ -278,7 +280,9 @@ all three roots to cohere.
 
 The portable verifier also parses `public.json` and reconstructs the 256 public
 digest bits. Those bits must equal `EXPECTED_TRANSCRIPT_ROOT`, not merely hash to
-the same `public.json` file.
+the same `public.json` file. For the negative verifier check, it regenerates a
+fresh bad public input from `public.json` and does not trust a stored
+`public_bad.json`.
 
 ## The safety rules
 

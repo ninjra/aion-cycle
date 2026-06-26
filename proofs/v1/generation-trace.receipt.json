@@ -1,0 +1,94 @@
+{
+  "child_receipt_hashes": [],
+  "commands": [
+    {
+      "cmd": [
+        "circom",
+        "aion.circom",
+        "--r1cs",
+        "--wasm",
+        "--sym",
+        "-l",
+        "node_modules/circomlib/circuits",
+        "-o",
+        "proofs/v1"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "2ceed3ca201005eac0cce1d6ec2ed590174ac2968ec0a998a56bb65f3aed5f40"
+    },
+    {
+      "cmd": [
+        "snarkjs",
+        "groth16",
+        "setup",
+        "aion.r1cs",
+        "powersOfTau28_hez_final_17.ptau",
+        "aion_0.zkey"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "1066f0590c72709c6e52544f6721f865c116ac935a42af539ce9e5a9291dd860"
+    },
+    {
+      "cmd": [
+        "snarkjs",
+        "zkey",
+        "contribute",
+        "aion_0.zkey",
+        "aion.zkey",
+        "--name=aion",
+        "-e=aion-local-entropy"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "8d3aba0e532536d7a33594626529087f79dfe639ce91326055ca09679b3ebc57"
+    },
+    {
+      "cmd": [
+        "snarkjs",
+        "zkey",
+        "export",
+        "verificationkey",
+        "aion.zkey",
+        "verification_key.json"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "57bca22cad5e2ec3a63d65c7ea79659ee9edad950d989c3c005e997ab3839a72"
+    },
+    {
+      "cmd": [
+        "snarkjs",
+        "groth16",
+        "fullprove",
+        "input.json",
+        "aion_js/aion.wasm",
+        "aion.zkey",
+        "proof.json",
+        "public.json"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "cmd": [
+        "snarkjs",
+        "groth16",
+        "verify",
+        "verification_key.json",
+        "public.json",
+        "proof.json"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "268f2a0657e006c47dbf5b700288f39f1f1608dff46553e99bf7353f840bb2bd"
+    }
+  ],
+  "failed_checks": [],
+  "negative_verify_returncode": 1,
+  "proof_passed": true,
+  "receipt_hash": "b3771edeb8a75f66c8d5d5e9dbe7338aec687f01fd275374848ca7367f98cdb5",
+  "schema_version": "aion-generation-trace-receipt-v1"
+}
