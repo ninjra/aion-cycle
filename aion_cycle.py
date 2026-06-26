@@ -171,7 +171,7 @@ def groth16_prove_verify(circuit: Path, input_obj: dict[str, Any], work: Path) -
     snarkjs = shutil.which("snarkjs")
     if not circom or not snarkjs:
         raise RuntimeError("missing_tooling")
-    ptau = ROOT / "powersOfTau28_hez_final_12.ptau"
+    ptau = ROOT / "powersOfTau28_hez_final_14.ptau"
     if not ptau.exists():
         raise RuntimeError("missing_ptau")
     name = circuit.stem
@@ -205,11 +205,61 @@ def groth16_prove_verify(circuit: Path, input_obj: dict[str, Any], work: Path) -
     }))
 
 
-def prove(final_root: str, source_hash: str, output_hash: str, replay_root: str) -> dict[str, Any]:
+def byte_bits(value: int, width: int) -> list[str]:
+    return [str((int(value) >> i) & 1) for i in range(width)]
+
+
+def inverse_or_zero(diff: int) -> str:
+    v = int(diff) % BN254_SCALAR_FIELD
+    if v == 0:
+        return "0"
+    return str(pow(v, -1, BN254_SCALAR_FIELD))
+
+
+def full_cycle_input(fixture: dict[str, Any], selected: bytes) -> dict[str, Any]:
+    query = list(fixture["query"].encode("utf-8", "strict"))
+    corpus = [list(item.encode("utf-8", "strict")) for item in fixture["corpus"]]
+    emitted = list(selected)
+    if len(query) != 30 or len(corpus[0]) != 42 or len(corpus[1]) != 33 or len(corpus[2]) != 24 or len(emitted) != 42:
+        raise RuntimeError("fixture_length_mismatch")
+    eq0_inv = [inverse_or_zero(a - b) for a in query for b in corpus[0]]
+    eq1_inv = [inverse_or_zero(a - b) for a in query for b in corpus[1]]
+    eq2_inv = [inverse_or_zero(a - b) for a in query for b in corpus[2]]
+    # Score deltas for canonical fixture: corpus0 must win.
+    from collections import Counter
+    cq = Counter(query)
+    scores = [sum(cq[k] * Counter(c)[k] for k in cq) for c in corpus]
+    ge01 = scores[0] - scores[1]
+    ge02 = scores[0] - scores[2]
+    if ge01 < 0 or ge02 < 0:
+        raise RuntimeError("canonical_selection_not_winner")
+    return {
+        "query": [str(x) for x in query],
+        "corpus0": [str(x) for x in corpus[0]],
+        "corpus1": [str(x) for x in corpus[1]],
+        "corpus2": [str(x) for x in corpus[2]],
+        "emitted": [str(x) for x in emitted],
+        "query_bits": [[str((x >> i) & 1) for i in range(8)] for x in query],
+        "corpus0_bits": [[str((x >> i) & 1) for i in range(8)] for x in corpus[0]],
+        "corpus1_bits": [[str((x >> i) & 1) for i in range(8)] for x in corpus[1]],
+        "corpus2_bits": [[str((x >> i) & 1) for i in range(8)] for x in corpus[2]],
+        "emitted_bits": [[str((x >> i) & 1) for i in range(8)] for x in emitted],
+        "ge01_bits": byte_bits(ge01, 16),
+        "ge02_bits": byte_bits(ge02, 16),
+        "eq0_inv": eq0_inv,
+        "eq1_inv": eq1_inv,
+        "eq2_inv": eq2_inv,
+    }
+
+
+def prove(final_root: str, source_hash: str, output_hash: str, replay_root: str, fixture: dict[str, Any], selected: bytes) -> dict[str, Any]:
     tool_r = toolchain_receipt()
     children = [tool_r]
     with tempfile.TemporaryDirectory() as td:
         work = Path(td)
+        full_input = full_cycle_input(fixture, selected)
+        full_proof_hash = groth16_prove_verify(ROOT / "aion_full_cycle.circom", full_input, work / "full_cycle")
+
         root_input = {
             "expected_root": digest_to_field(final_root),
             "final_root": digest_to_field(final_root),
@@ -242,7 +292,7 @@ def prove(final_root: str, source_hash: str, output_hash: str, replay_root: str)
         }
         limb_proof_hash = groth16_prove_verify(ROOT / "aion_digest_limb_closure.circom", limb_input, work / "limb")
 
-    out = sha256_bytes(canonical_bytes({"root_proof": root_proof_hash, "limb_proof": limb_proof_hash}))
+    out = sha256_bytes(canonical_bytes({"full_cycle_proof": full_proof_hash, "root_proof": root_proof_hash, "limb_proof": limb_proof_hash}))
     return receipt("Groth16", tool_r["receipt_hash"], out, children)
 
 
@@ -262,7 +312,7 @@ def main() -> int:
             raise RuntimeError("expected_root_not_frozen")
         if run1["root"]["receipt_hash"] != EXPECTED_ROOT:
             raise RuntimeError("expected_root_mismatch")
-        prove(EXPECTED_ROOT, run1["selected_source_hash"], run1["output_hash"], run2["root"]["receipt_hash"])
+        prove(EXPECTED_ROOT, run1["selected_source_hash"], run1["output_hash"], run2["root"]["receipt_hash"], fixture, run1["selected"])
     except Exception:  # noqa: BLE001
         print("FAIL")
         return 1
