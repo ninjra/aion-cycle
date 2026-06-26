@@ -27,11 +27,13 @@ fi
 echo "[setup] circom: $(command -v circom || echo "$BIN/circom")"
 
 PTAU="$ROOT/powersOfTau28_hez_final_18.ptau"
+PTAU_SHA256="e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694"
 if [ ! -f "$PTAU" ]; then
   echo "[setup] fetching powers of tau (2^10)"
   curl -fsSL "https://storage.googleapis.com/zkevm/ptau/powersOfTau28_hez_final_18.ptau" -o "$PTAU"
 fi
 echo "[setup] verifying powers of tau"
+echo "$PTAU_SHA256  $PTAU" | sha256sum -c -
 snarkjs powersoftau verify "$PTAU"
 
 echo "[setup] done. Run: python3 aion_cycle.py"

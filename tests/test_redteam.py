@@ -145,7 +145,7 @@ def test_generation_trace_receipt_mutation_fails() -> None:
     path = ROOT / "proofs" / "v1" / "generation-trace.receipt.json"
     original = path.read_text(encoding="utf-8")
     data = json.loads(original)
-    data["commands"][0]["returncode"] = 99
+    data["generation_trace"][0]["returncode"] = 99
     try:
         path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         _assert_verify_fails()
@@ -199,3 +199,9 @@ def test_missing_circom_fails(monkeypatch) -> None:
         assert "missing_circom" in str(exc)
     else:
         raise AssertionError("missing circom did not fail")
+
+
+def test_expected_root_script_matches_frozen_root() -> None:
+    result = subprocess.run([sys.executable, "scripts/compute_expected_root.py"], cwd=ROOT, text=True, capture_output=True, timeout=10, check=False)
+    assert result.returncode == 0
+    assert result.stdout.strip() == EXPECTED

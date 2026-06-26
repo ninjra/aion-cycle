@@ -14,6 +14,7 @@ from typing import Any
 EXPECTED_TRANSCRIPT_ROOT = "9f6071ca3e5b314fd295cb7a4461a38ef14573a4395352e288f84304f5aa8756"
 DOMAIN = b"AION-CYCLE-V1|"
 PTAU = "powersOfTau28_hez_final_18.ptau"
+PTAU_SHA256 = "e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694"
 ROOT = Path(__file__).resolve().parent
 BUNDLE_DIR = ROOT / "proofs" / "v1"
 LENS = {"query": 30, "corpus0": 42, "corpus1": 33, "corpus2": 24, "emitted": 42}
@@ -131,9 +132,11 @@ def toolchain_receipt() -> dict[str, Any]:
     circomlib = ROOT / "node_modules" / "circomlib" / "circuits"
     if not ptau.exists() or not circomlib.is_dir():
         raise RuntimeError("missing_ptau_or_circomlib")
+    if file_sha(ptau) != PTAU_SHA256:
+        raise RuntimeError("ptau_hash_mismatch")
     return receipt("toolchain", {
         "toolchain": data,
-        "ptau": {"path": PTAU, "sha256": file_sha(ptau)},
+        "ptau": {"path": PTAU, "sha256": file_sha(ptau), "expected_sha256": PTAU_SHA256},
         "package_lock_sha256": file_sha(ROOT / "package-lock.json"),
     })
 
@@ -172,7 +175,7 @@ def prove(circuit_input: dict[str, Any]) -> dict[str, Any]:
         raise RuntimeError("negative_check_passed")
     (work / "toolchain.receipt.json").write_text(json.dumps(tc, indent=2, sort_keys=True) + "\n")
     trace = receipt("generation-trace", {
-        "commands": commands,
+        "generation_trace": commands,
         "negative_verify_returncode": neg.returncode,
     })
     (work / "generation-trace.receipt.json").write_text(json.dumps(trace, indent=2, sort_keys=True) + "\n")

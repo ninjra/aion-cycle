@@ -1,6 +1,7 @@
 {
   "child_receipt_hashes": [],
-  "commands": [
+  "failed_checks": [],
+  "generation_trace": [
     {
       "cmd": [
         "circom",
@@ -42,7 +43,7 @@
       ],
       "returncode": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "2eef24fe799de30682e9ca95a84d1585fa78d50a04c772547012d8a241ac69b4"
+      "stdout_sha256": "bc817e9f275e6b2b7f532d90de7a868d4cf58d19511b26ff2f31fe630e72ff01"
     },
     {
       "cmd": [
@@ -86,9 +87,8 @@
       "stdout_sha256": "268f2a0657e006c47dbf5b700288f39f1f1608dff46553e99bf7353f840bb2bd"
     }
   ],
-  "failed_checks": [],
   "negative_verify_returncode": 1,
   "proof_passed": true,
-  "receipt_hash": "af8dd3c0da77060222bb9b02e0a5db0a155ba593e7b8af568aaa04dfe2da67a9",
+  "receipt_hash": "b59690dbe1624bce2bede63871e4ddca923ba8fe463284205b2737e6c30824e8",
   "schema_version": "aion-generation-trace-receipt-v1"
 }

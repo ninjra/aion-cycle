@@ -1,14 +1,14 @@
 {
   "circuit_hash": "54b508824ff2a71c16aac98fe3ee739272d5f7f66fe68586f5a06ef2456d5107",
   "cycle_id": "aion.one_prompt_closed_loop.v1",
-  "cycle_root": "e116e517bfe59d6257884f439db6123288a90af9aa91bb86976b39652925cda6",
+  "cycle_root": "1cad6c93e1032f773953c26a7821fa072145f6b81b180129ac316a288ba2931d",
   "expected_transcript_root": "9f6071ca3e5b314fd295cb7a4461a38ef14573a4395352e288f84304f5aa8756",
   "policy": "aion.cycle.v1",
-  "proof_hash": "9fc18e5016b60008ccb607907a88bc7eed4fa79776700128e775ef55898c79fd",
-  "proof_root": "d6b7c45b5b25aed803e88836884c0ddf03bcff79e5511e6feb05c6bfffdf8a00",
+  "proof_hash": "14f32f6a91e4f499dd70d518646203a297a88bdd4726dd06290eb3af720f9247",
+  "proof_root": "256cc358d9ff90f583814c7f23a313db3c559f1b683f189fc2377651511d5405",
   "proof_system": "groth16",
   "public_input_hash": "d9c6f3d022ab69758336911b7fe09171e9e6964ad13d1257b47f3c3179df58a9",
   "schema_version": "aion-cycle-statement-v1",
   "transcript_root": "9f6071ca3e5b314fd295cb7a4461a38ef14573a4395352e288f84304f5aa8756",
-  "verification_key_hash": "6bb482752f5cdf85adb61ac414259395d044c2c4fec95fca911c88c1a040d116"
+  "verification_key_hash": "92451bb3786cb3af85c41dea03cf95729fdd7455395b4bde9649a94fa9a2e190"
 }

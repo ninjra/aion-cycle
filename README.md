@@ -108,10 +108,14 @@ It does not prove:
 - semantic understanding,
 - patent scope.
 
+Side channels are outside the local promise. The command prints only `PASS` or
+`FAIL`, but timing, memory use, host tooling, and operating-system behavior are
+not privacy claims.
+
 It proves:
 
 ```text
-the fixed canonical cycle in zero knowledge, including in-circuit SHA-256
+the fixed canonical cycle as a Groth16 proof, with emitted bytes and transcript digest public
 ```
 
 The final byte checks are direct and hashed:
@@ -244,7 +248,7 @@ are not future hardening notes. They are requirements for `PASS`.
   names and path hashes, not local absolute paths.
 - **Artifact binding:** the circuit source hash, compiled artifacts, proving key,
   verification key, proof, public inputs, and verifier result are receipts.
-  Historical command metadata is kept in a separate generation trace receipt.
+  Historical command metadata is kept in a separate generation trace receipt. The portable verifier treats it as audit history and verifies the trace receipt hash; it does not treat it as the source of artifact truth.
   A missing or changed artifact or trace fails `proof_root`, which changes
   `cycle_root`.
 - **Receipt binding:** every receipt is meaningful only because it is generated
@@ -273,6 +277,8 @@ AION uses three roots so the proof is not circular:
 | `transcript_root` | the canonical bytes and emitted answer | computed by the host and by in-circuit SHA-256 |
 | `proof_root` | toolchain, circuit source, compiled artifacts, keys, proof, public inputs, verifier result | computed from proof/artifact receipts |
 | `cycle_root` | the final statement: transcript root + proof root + policy | recomputed from `aion.statement.json` |
+
+The frozen transcript root can be recomputed with `python3 scripts/compute_expected_root.py`.
 
 `EXPECTED_TRANSCRIPT_ROOT` is frozen. The generated `cycle_root` is not a magic
 constant; it is the hash of the emitted statement for that run. `PASS` requires
@@ -308,7 +314,8 @@ fresh bad public input from `public.json` and does not trust a stored
 ## The Groth16 circuit
 
 The project has one circuit, `aion.circom`. It proves the fixed canonical cycle
-in zero knowledge. The canonical byte/scoring/output/hash relation is proved
+as a Groth16 relation. The emitted bytes and transcript digest are public inputs;
+the private witness is the route data needed to satisfy the circuit. The canonical byte/scoring/output/hash relation is proved
 in-circuit; the host remains responsible for fail-closed orchestration,
 toolchain and artifact receipts, replay/tamper policy, and statement generation.
 

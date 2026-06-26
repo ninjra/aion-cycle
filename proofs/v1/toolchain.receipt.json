@@ -4,10 +4,11 @@
   "package_lock_sha256": "1fe47962799fffa69b23983c57898719b0e9c4c833afabda3d0f41c7ec1188a7",
   "proof_passed": true,
   "ptau": {
+    "expected_sha256": "e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694",
     "path": "powersOfTau28_hez_final_18.ptau",
     "sha256": "e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694"
   },
-  "receipt_hash": "25ae4f66e9a8c8d9e1c4df8c0c84c6539bfb243626ed64c9eb7e08dfbc7b736c",
+  "receipt_hash": "7684a7076563c2ecd0ced66a0f6059dcbc5989fb49f9521aac15a4a7732c3577",
   "schema_version": "aion-toolchain-receipt-v1",
   "toolchain": {
     "circom": {
