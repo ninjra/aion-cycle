@@ -29,3 +29,12 @@ claim. In particular, it does not claim:
 
 Reports are especially useful if they show that a generated project prints
 `PASS` when one of the documented invariants is broken.
+
+## Public safety clamps
+
+| Positive clamp | Negative clamp |
+|---|---|
+| Inputs are untrusted data. | Inputs must not become instructions. |
+| Verification policy is code and receipts. | Input text must not change verification policy. |
+| Failure reports should be minimal. | Failure must not leak private data through debug output. |
+| Reports should include reproducible failing cases. | Reports should not include secrets or private source data. |

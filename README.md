@@ -5,6 +5,11 @@ SPDX-License-Identifier: Apache-2.0 OR LicenseRef-Commercial
 
 Apex version: v1.0
 
+AION v1 is a reference implementation, not a production provenance service.
+It exists to make a truth route visible: source bytes, metadata-free comparison,
+exact output, in-circuit transcript commitment, proof artifacts, receipts, and
+fail-closed verification.
+
 AION is a small closed loop you can build on your own machine. Turn bytes into
 bounded numbers, compare the numbers without names, keep receipts, map the
 chosen field back, prove the fixed canonical cycle with Groth16, and accept only
@@ -38,6 +43,31 @@ verification, it prints `PASS`. If anything is off, it prints `FAIL`.
 There is no local-only pass. There is no optional proof. There is no demo mode.
 The path is laminar: it flows once, cleanly, or not at all.
 
+
+## Truth route
+
+```text
+bytes
+  ↓
+bounded fields
+  ↓
+metadata-free comparison
+  ↓
+selected source mapback
+  ↓
+exact emitted bytes
+  ↓
+in-circuit SHA-256 transcript proof
+  ↓
+proof/artifact receipts
+  ↓
+three-root statement
+  ↓
+PASS / FAIL
+```
+
+AION proves route truth: this output followed this committed path.
+
 ## The path
 
 ```text
@@ -60,6 +90,92 @@ verify the proof
 AION watches the path and checks whether it closed. AION does not choose the
 answer. AION does not change the answer. AION only checks whether the route
 contradicted its own receipts.
+
+
+## Positive and negative clamps
+
+AION is defined by pairs: what must happen, and what must never happen.
+
+| Positive clamp | Negative clamp |
+|---|---|
+| Source bytes are treated as data. | Source bytes must not become instructions. |
+| The route must close in order. | A later step must not skip or replace an earlier step. |
+| The comparison step receives bounded fields. | The comparison step must not receive names, labels, paths, or hidden metadata. |
+| Receipts must be recomputable from artifacts. | A `PASS` flag must not be trusted by itself. |
+| The proof must verify against public inputs. | A proof artifact must not be accepted because it merely exists. |
+| The emitted bytes must equal the selected bytes. | Similar, plausible, or human-approved output must not count. |
+| Audit artifacts may be written for verification. | Audit artifacts must not become the final answer. |
+| Failure must print `FAIL`. | The system must not guess, continue, or emit partial success. |
+
+## Data is data
+
+Positive clamp:
+
+Inputs are source bytes. They may be encoded, carried, compared, mapped back, and
+emitted.
+
+Negative clamp:
+
+Inputs must not change the route, disable a check, select a toolchain, rewrite
+the expected root, change verification policy, or tell the program what to do.
+
+## One exit
+
+Positive clamp:
+
+The final accepted answer is the emitted byte string after the full route closes.
+
+Negative clamp:
+
+Receipts, logs, proof artifacts, statements, fixture text, and intermediate
+records must not be treated as final answers.
+
+## Reference implementation clamp
+
+Positive clamp:
+
+AION v1 is a reference implementation for one fixed canonical route. It is meant
+to make route truth inspectable.
+
+Negative clamp:
+
+AION v1 must not be described as a production provenance service, a general
+arbitrary-input engine, an objective-truth oracle, or a semantic understanding
+system.
+
+## Proof clamp
+
+Positive clamp:
+
+The Groth16 proof must verify that the canonical circuit accepts the committed
+public inputs.
+
+Negative clamp:
+
+The proof must not be described as proving more than the fixed canonical circuit
+actually constrains.
+
+## Receipt clamp
+
+Positive clamp:
+
+A receipt counts only when its hash can be recomputed from its body and its
+referenced artifacts.
+
+Negative clamp:
+
+A receipt must not count because a JSON file claims `proof_passed: true`.
+
+## Failure clamp
+
+Positive clamp:
+
+A broken route must print `FAIL`.
+
+Negative clamp:
+
+A broken route must not print partial success, fallback output,
+explanation-as-answer, or best-effort output.
 
 ## The five basic words
 
@@ -218,8 +334,8 @@ Instead, every quantity the proof binds is computed by constraints:
 
 ```text
 emitted[i] == corpus0[i]                     // exact output equals the winner
-score0 - score1 >= 0   (16-bit range)        // strict winner, scored in-circuit
-score0 - score2 >= 0   (16-bit range)
+score0 - score1 - 1 >= 0   (16-bit range)    // strict winner, scored in-circuit
+score0 - score2 - 1 >= 0   (16-bit range)
 SHA256(transcript) == expected_digest_bits   // hashed in-circuit, public digest
 ```
 
@@ -340,7 +456,7 @@ b[i] === sum(bits[i][k] * 2^k);     bits[i][k] * (bits[i][k] - 1) === 0;
 // pairwise equality score (per query/corpus pair), eq in {0,1}
 eq <== 1 - (q - c) * inv;     (q - c) * eq === 0;     eq * (eq - 1) === 0;
 
-// strict winner: score0 - score1 and score0 - score2 are 16-bit non-negative
+// strict winner: score0 - score1 - 1 and score0 - score2 - 1 are 16-bit non-negative
 ge01 === sum(ge01_bits[k] * 2^k);
 
 // exact output
@@ -453,8 +569,8 @@ Groth16 proof step (required, not optional):
     a. 8-bit range checks for every query, corpus, and output byte;
     b. pairwise byte-equality scoring (the byte-histogram inner product) computed
        in-circuit for each corpus record;
-    c. corpus record 0 is the strict winner (score0 - score1 and score0 - score2
-       are non-negative 16-bit values);
+    c. corpus record 0 is the strict winner (score0 - score1 - 1 and
+       score0 - score2 - 1 are non-negative 16-bit values);
     d. emitted output bytes equal the winning record byte for byte;
     e. in-circuit SHA-256 (widely used circomlib Sha256 template) of the transcript
        query || corpus0 || corpus1 || corpus2 || emitted equals a public 256-bit
