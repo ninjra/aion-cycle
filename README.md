@@ -201,19 +201,24 @@ A field alone does not reconstruct arbitrary source. Recovery needs the ledger
 as side information. This is the source-coding limit, with descriptive
 complexity as the lower-bound intuition.
 
-### Prove closure compactly
+### Prove closure honestly
 
-Groth16 proves a small arithmetic relation over public values:
+The circuit asserts no free "pass" bit. There is no `tamper_failed === 1` and no
+`child_passed === 1` witness, because asserting a public input equals a constant
+is a tautology a prover could satisfy trivially.
+
+Instead, every quantity the proof binds is computed by constraints:
 
 ```text
-final_root    == expected_root
-selected_hash == output_hash
-replay_root   == final_root
-tamper_failed == 1
-every child_passed bit == 1
+emitted[i] == corpus0[i]                     // exact output equals the winner
+score0 - score1 >= 0   (16-bit range)        // strict winner, scored in-circuit
+score0 - score2 >= 0   (16-bit range)
+SHA256(transcript) == expected_digest_bits   // hashed in-circuit, public digest
 ```
 
-This relation is mandatory. It is a real circuit, not a stub.
+The scores and the digest are produced inside the circuit, not handed in as free
+witnesses. The emitted answer and the digest are public inputs, so the proof is
+about real computed values, not a constant.
 
 
 ## Closure requirements
@@ -291,7 +296,9 @@ all three roots to cohere.
 ## The Groth16 circuit
 
 The project has one circuit, `aion.circom`. It proves the entire canonical cycle
-in zero knowledge. Nothing about the route is left to host trust.
+in zero knowledge. The canonical byte/scoring/output/hash relation is proved
+in-circuit; the host remains responsible for fail-closed orchestration,
+toolchain and artifact receipts, replay/tamper policy, and statement generation.
 
 The circuit proves, in-circuit:
 
@@ -303,8 +310,9 @@ The circuit proves, in-circuit:
 - the SHA-256 of the transcript `query || corpus0 || corpus1 || corpus2 ||
   emitted` equals a public 256-bit digest commitment.
 
-The SHA-256 is computed inside the circuit using the audited circomlib `Sha256`
-template, so the proof itself attests the hash. The shape of the circuit:
+The SHA-256 is computed inside the circuit using the widely used circomlib
+`Sha256` template, with the exact installed package-lock and circuit-source hash
+bound into the proof artifacts, so the proof itself attests the hash. The shape of the circuit:
 
 ```circom
 // byte range check (per byte)
@@ -430,7 +438,7 @@ Groth16 proof step (required, not optional):
     c. corpus record 0 is the strict winner (score0 - score1 and score0 - score2
        are non-negative 16-bit values);
     d. emitted output bytes equal the winning record byte for byte;
-    e. in-circuit SHA-256 (audited circomlib Sha256 template) of the transcript
+    e. in-circuit SHA-256 (widely used circomlib Sha256 template) of the transcript
        query || corpus0 || corpus1 || corpus2 || emitted equals a public 256-bit
        digest commitment.
 22. Public inputs are the emitted answer bytes and the 256-bit digest commitment.
