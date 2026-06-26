@@ -110,8 +110,8 @@ def build_input(query: bytes, corpus: list[bytes], emitted: bytes, digest_hex: s
         "eq0_inv": [inv_or_zero(a - d) for a in query for d in corpus[0]],
         "eq1_inv": [inv_or_zero(a - d) for a in query for d in corpus[1]],
         "eq2_inv": [inv_or_zero(a - d) for a in query for d in corpus[2]],
-        "ge01_bits": bits_le(scores[0] - scores[1], 16),
-        "ge02_bits": bits_le(scores[0] - scores[2], 16),
+        "ge01_bits": bits_le(scores[0] - scores[1] - 1, 16),
+        "ge02_bits": bits_le(scores[0] - scores[2] - 1, 16),
         "expected_digest_bits": [str((digest[k // 8] >> (7 - (k % 8))) & 1) for k in range(256)],
     }
 

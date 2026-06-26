@@ -1,21 +1,21 @@
 {
   "child_receipt_hashes": [
     "7684a7076563c2ecd0ced66a0f6059dcbc5989fb49f9521aac15a4a7732c3577",
-    "b59690dbe1624bce2bede63871e4ddca923ba8fe463284205b2737e6c30824e8"
+    "70a08ed5496e0abd9d65cf764493d33299171896c6a1ad4da6444e0fccae0aea"
   ],
-  "circuit_source_sha256": "54b508824ff2a71c16aac98fe3ee739272d5f7f66fe68586f5a06ef2456d5107",
+  "circuit_source_sha256": "c34160541549061807635812830cdc6fd16b5d6a6bd08db31f09bf482dbdbd7f",
   "failed_checks": [],
-  "generation_trace_receipt_hash": "b59690dbe1624bce2bede63871e4ddca923ba8fe463284205b2737e6c30824e8",
-  "input_sha256": "16a1187b0a1f762a4180dbd17b2d7c15680baabfc613638cba6d10746ca4f0cd",
+  "generation_trace_receipt_hash": "70a08ed5496e0abd9d65cf764493d33299171896c6a1ad4da6444e0fccae0aea",
+  "input_sha256": "f2360dec41d009ddfe1daed1ba3c76c63a057a2eca3387b22568cb1163506bd9",
   "proof_passed": true,
-  "proof_sha256": "14f32f6a91e4f499dd70d518646203a297a88bdd4726dd06290eb3af720f9247",
+  "proof_sha256": "18ae345106ee13c3b9042b5e1758d011b5f72f04a2d288788dfe85934d0e621b",
   "public_sha256": "d9c6f3d022ab69758336911b7fe09171e9e6964ad13d1257b47f3c3179df58a9",
-  "r1cs_sha256": "69c4713b1c6c27476416c70d6272893c4c8e0e04c05132f46ea4416376ad5556",
-  "receipt_hash": "256cc358d9ff90f583814c7f23a313db3c559f1b683f189fc2377651511d5405",
+  "r1cs_sha256": "cdb1fd1fd4c990ff3b4bdd2beb2777daf4850298946c600dfc9b2714fe692060",
+  "receipt_hash": "cd1ee6cc855e14778087cdbb629d907644fffb3f7a9b4352bbcc517567e4858b",
   "schema_version": "aion-proof-artifacts-receipt-v1",
   "sym_sha256": "b3670e4fa13603cbe56b6455d7bc26d262f727cbb1c4ad5230af3d879a5236c2",
-  "verification_key_sha256": "92451bb3786cb3af85c41dea03cf95729fdd7455395b4bde9649a94fa9a2e190",
-  "wasm_sha256": "1827fcccfb6844517cafdfc57b4aede98b56cd3992960968a47c2aa8776f0d67",
-  "zkey0_sha256": "537f9f5a88e2820fe4e7faf13c086e80f2e861ccf851ebfcf7df23d65fd0df3b",
-  "zkey_sha256": "bd79e8ebae2b68dce318325d87d3cd5d9ca5a815e63217bbff6db301f2c7ab8c"
+  "verification_key_sha256": "f731ba6656b73aaba85ffd00e34d703b79071b8a136ea36539db6e265abab725",
+  "wasm_sha256": "458eae533bc37143dc4bcac0bfb78416728353e330bf3ba8adb20bc62afc7cba",
+  "zkey0_sha256": "1da1f7b4e90d62bafd7e0e97e5961babd0cd941c48dc51fa5c4f2b6279752475",
+  "zkey_sha256": "0154770e3378572305bebc295fda0115f5943933dc99a7d8e1d84bb18c0c399c"
 }

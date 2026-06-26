@@ -29,7 +29,7 @@
       ],
       "returncode": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "3c58182dec8827d1cd4ca32bca3a72b4ca8e18a2f11f0c1bc127dd44c66b0191"
+      "stdout_sha256": "9dc79838a3a9d95ed0cc99330bf8cd260510bcade578bdea33770ee8f6d6578c"
     },
     {
       "cmd": [
@@ -43,7 +43,7 @@
       ],
       "returncode": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "bc817e9f275e6b2b7f532d90de7a868d4cf58d19511b26ff2f31fe630e72ff01"
+      "stdout_sha256": "08bcd0dd7065ceb805b1513c037a4ea54c6dfb8ec730e1f1999af54f822e5421"
     },
     {
       "cmd": [
@@ -89,6 +89,6 @@
   ],
   "negative_verify_returncode": 1,
   "proof_passed": true,
-  "receipt_hash": "b59690dbe1624bce2bede63871e4ddca923ba8fe463284205b2737e6c30824e8",
+  "receipt_hash": "70a08ed5496e0abd9d65cf764493d33299171896c6a1ad4da6444e0fccae0aea",
   "schema_version": "aion-generation-trace-receipt-v1"
 }
