@@ -7,8 +7,8 @@ Apex version: v1.0
 
 AION is a small closed loop you can build on your own machine. Turn bytes into
 bounded numbers, compare the numbers without names, keep receipts, map the
-chosen field back, prove the closure relation with Groth16, and accept only if
-the final bytes match.
+chosen field back, prove the fixed canonical cycle with Groth16, and accept only
+if the final bytes match.
 
 It prints exactly one of these:
 
@@ -88,7 +88,7 @@ only. Identity returns only through the ledger.
 | Verify | Verify the Groth16 proof and all local receipts. |
 | AION | Accept only if the entire path closes. |
 
-The proof is not in one step. The proof is in the whole path closing.
+The proof is not in one step. The proof is in the fixed canonical path closing.
 
 ## The only promise
 
@@ -97,7 +97,7 @@ AION makes one narrow promise:
 > If the generated project prints `PASS`, then the canonical route closed end to
 > end: the selected bytes were mapped back and emitted exactly, the receipts
 > composed, replay matched, tampering failed, the transcript root matched the frozen
-> expected transcript root, and a real Groth16 proof of the entire canonical cycle
+> expected transcript root, and a real Groth16 proof of the fixed canonical cycle
 > (route logic plus in-circuit SHA-256 of the transcript) was generated and
 > verified.
 
@@ -111,7 +111,7 @@ It does not prove:
 It proves:
 
 ```text
-the entire canonical cycle in zero knowledge, including in-circuit SHA-256
+the fixed canonical cycle in zero knowledge, including in-circuit SHA-256
 ```
 
 The final byte checks are direct and hashed:
@@ -141,7 +141,7 @@ inspect. This map uses a byte histogram:
 - clamp every value to the bounded range.
 
 This is not a search engine. It is a tiny numeric surface that lets the loop
-demonstrate the path: bounded fields, opaque carry, deterministic comparison,
+demonstrate the path: bounded fields, metadata-free carry, deterministic comparison,
 mapback, exact output, and proof closure.
 
 ## The small math, in plain language
@@ -174,8 +174,9 @@ and the inner product.
 key = (-score, field_hash)
 ```
 
-Sort by score, then by hash, so every machine agrees on the order. This is a
-total deterministic order.
+The general design sorts by score and a deterministic tie-break. This v1 circuit
+uses a stricter shape: the canonical fixture must have one unique winner. If the
+winner is ambiguous, the run fails instead of guessing.
 
 ### Keep receipts
 
@@ -192,8 +193,10 @@ parent fails. This is Merkle-style commitment composition.
 
 ### Names cannot leak
 
-The comparison step receives fields only, never identity. Hidden identity must
-not influence the result. This is noninterference.
+The comparison step receives fields only, never names or labels. In v1, the
+verifier sees the canonical public bytes because the circuit is a public fixed
+fixture. The opacity claim is architectural: names and labels cannot steer the
+comparison. This is noninterference.
 
 ### You cannot get something from nothing
 
@@ -237,10 +240,10 @@ are not future hardening notes. They are requirements for `PASS`.
   for the untampered proof and rejects a tampered public input.
 - **Toolchain binding:** the paths and versions (or `--version` output) for
   `circom`, `snarkjs`, and `node` must be recorded in a toolchain receipt. The
-  toolchain receipt hash is a child of the transcript root.
+  toolchain receipt hash is a child of `proof_root`.
 - **Artifact binding:** the circuit source hash, compiled artifacts, proving key,
   verification key, proof, public inputs, and verifier result are all receipts.
-  A missing or changed artifact fails the transcript root.
+  A missing or changed artifact fails `proof_root`, which changes `cycle_root`.
 - **Receipt binding:** every receipt is meaningful only because it is generated
   by the step it describes and included in the parent root. The project must bind
   receipts to phase name, input hash, output hash, child receipt hashes, toolchain
@@ -280,7 +283,7 @@ all three roots to cohere.
 4. Every arithmetic result is clamped.
 5. The comparison step sees only fields.
 6. Identity lives only in the ledger.
-7. Ranking uses a total deterministic key.
+7. The canonical fixture has a strict winner; ambiguous ranking fails.
 8. Ambiguous mapback fails instead of guessing.
 9. Every step emits a receipt.
 10. A parent receipt fails if any child failed.
@@ -295,7 +298,7 @@ all three roots to cohere.
 
 ## The Groth16 circuit
 
-The project has one circuit, `aion.circom`. It proves the entire canonical cycle
+The project has one circuit, `aion.circom`. It proves the fixed canonical cycle
 in zero knowledge. The canonical byte/scoring/output/hash relation is proved
 in-circuit; the host remains responsible for fail-closed orchestration,
 toolchain and artifact receipts, replay/tamper policy, and statement generation.
@@ -406,8 +409,7 @@ Determinism and integrity constraints:
     paths, text, raw bytes, or record hashes.
 8.  Compare scores a query field against each corpus field:
     score starts at 0; for aligned slots, score = sat_add(score, sat_mul(q[i], c[i])).
-9.  Rank by the total key (-score, field_hash) where
-    field_hash = sha256_bytes(canonical_bytes(field)). Never rank by score alone.
+9.  For v1, require a strict unique winner. Do not use score-only ties; if the top score is tied, FAIL instead of guessing.
 10. Never rely on dict or set iteration order. Never iterate a set. Sort keys.
 11. If two different source records produce the same field_hash, FAIL instead of
     guessing (ambiguous mapback).
@@ -431,7 +433,7 @@ Determinism and integrity constraints:
 
 Groth16 proof step (required, not optional):
 
-21. Write aion.circom as one circuit that proves the entire canonical cycle:
+21. Write aion.circom as one circuit that proves the fixed canonical cycle:
     a. 8-bit range checks for every query, corpus, and output byte;
     b. pairwise byte-equality scoring (the byte-histogram inner product) computed
        in-circuit for each corpus record;

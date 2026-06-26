@@ -203,22 +203,66 @@ def execute() -> None:
     (ROOT / "aion.statement.json").write_text(json.dumps(st, indent=2, sort_keys=True) + "\n")
 
 
+
+def verify_receipt_hash(obj: dict[str, Any]) -> str:
+    claimed = obj.get("receipt_hash")
+    if not isinstance(claimed, str) or len(claimed) != 64:
+        raise RuntimeError("receipt_hash_missing")
+    body = dict(obj)
+    body.pop("receipt_hash", None)
+    actual = sha256_hex(canonical_bytes(body))
+    if actual != claimed:
+        raise RuntimeError("receipt_hash_mismatch")
+    return claimed
+
+
+def load_verified_receipt(path: Path) -> dict[str, Any]:
+    obj = json.loads(path.read_text(encoding="utf-8"))
+    verify_receipt_hash(obj)
+    if obj.get("proof_passed") is not True:
+        raise RuntimeError("receipt_not_passing")
+    return obj
+
+
+def recompute_artifact_receipt(tool: dict[str, Any], existing: dict[str, Any]) -> dict[str, Any]:
+    payload = {
+        "circuit_source_sha256": file_sha(ROOT / "aion.circom"),
+        "input_sha256": file_sha(BUNDLE_DIR / "input.json"),
+        "r1cs_sha256": file_sha(BUNDLE_DIR / "aion.r1cs"),
+        "wasm_sha256": file_sha(BUNDLE_DIR / "aion_js" / "aion.wasm"),
+        "sym_sha256": file_sha(BUNDLE_DIR / "aion.sym"),
+        "zkey0_sha256": file_sha(BUNDLE_DIR / "aion_0.zkey"),
+        "zkey_sha256": file_sha(BUNDLE_DIR / "aion.zkey"),
+        "verification_key_sha256": file_sha(BUNDLE_DIR / "verification_key.json"),
+        "proof_sha256": file_sha(BUNDLE_DIR / "proof.json"),
+        "public_sha256": file_sha(BUNDLE_DIR / "public.json"),
+        "negative_verify_returncode": existing.get("negative_verify_returncode"),
+        "commands": existing.get("commands"),
+    }
+    return receipt("proof-artifacts", payload, [tool])
+
+
 def verify_statement(path: Path) -> None:
-    data = json.loads(path.read_text())
-    body = dict(data); cycle_root = body.pop("cycle_root", None)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    cycle_root = data.get("cycle_root")
+    body = dict(data)
+    body.pop("cycle_root", None)
     if sha256_hex(canonical_bytes(body)) != cycle_root:
         raise RuntimeError("cycle_root_mismatch")
     if data.get("transcript_root") != EXPECTED_TRANSCRIPT_ROOT:
         raise RuntimeError("transcript_root_mismatch")
-    snarkjs = shutil.which("snarkjs")
-    if not snarkjs:
-        raise RuntimeError("missing_snarkjs")
-    cp = run([snarkjs, "groth16", "verify", "verification_key.json", "public.json", "proof.json"], BUNDLE_DIR, 300)
-    if cp.returncode != 0:
-        raise RuntimeError("portable_verify_failed")
-    art = json.loads((BUNDLE_DIR / "proof-artifacts.receipt.json").read_text())
-    if art["receipt_hash"] != data.get("proof_root"):
+
+    tool = load_verified_receipt(BUNDLE_DIR / "toolchain.receipt.json")
+    existing_artifact = load_verified_receipt(BUNDLE_DIR / "proof-artifacts.receipt.json")
+    if existing_artifact.get("child_receipt_hashes") != [tool["receipt_hash"]]:
+        raise RuntimeError("artifact_child_hash_mismatch")
+    recomputed = recompute_artifact_receipt(tool, existing_artifact)
+    if recomputed["receipt_hash"] != existing_artifact["receipt_hash"]:
+        raise RuntimeError("artifact_receipt_recompute_mismatch")
+    if recomputed["receipt_hash"] != data.get("proof_root"):
         raise RuntimeError("proof_root_mismatch")
+    if file_sha(ROOT / "aion.circom") != data.get("circuit_hash"):
+        raise RuntimeError("circuit_hash_mismatch")
     if file_sha(BUNDLE_DIR / "verification_key.json") != data.get("verification_key_hash"):
         raise RuntimeError("verification_key_hash_mismatch")
     if file_sha(BUNDLE_DIR / "public.json") != data.get("public_input_hash"):
@@ -226,6 +270,15 @@ def verify_statement(path: Path) -> None:
     if file_sha(BUNDLE_DIR / "proof.json") != data.get("proof_hash"):
         raise RuntimeError("proof_hash_mismatch")
 
+    snarkjs = shutil.which("snarkjs")
+    if not snarkjs:
+        raise RuntimeError("missing_snarkjs")
+    verify = run([snarkjs, "groth16", "verify", "verification_key.json", "public.json", "proof.json"], BUNDLE_DIR, 300)
+    if verify.returncode != 0:
+        raise RuntimeError("portable_verify_failed")
+    neg = run([snarkjs, "groth16", "verify", "verification_key.json", "public_bad.json", "proof.json"], BUNDLE_DIR, 300)
+    if neg.returncode == 0:
+        raise RuntimeError("portable_negative_verify_passed")
 
 def main() -> int:
     parser = argparse.ArgumentParser(add_help=True)
