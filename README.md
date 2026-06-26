@@ -653,6 +653,34 @@ any receipt, the selected record, or the circuit input causes FAIL and exit 1.
 If circom or snarkjs is missing, it prints FAIL.
 ```
 
+
+## Known-good environment
+
+The checked-in proof bundle and statement were verified with:
+
+| Tool | Version / hash |
+|---|---|
+| Python | `3.12.3` |
+| Node.js | `v22.22.0` |
+| Circom | `2.2.3` |
+| snarkjs | `0.7.6` |
+| circomlib | `2.0.5` |
+| Powers of Tau | `powersOfTau28_hez_final_18.ptau` |
+| ptau SHA-256 | `e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694` |
+
+Docker users can verify the checked-in proof bundle with:
+
+```bash
+docker build -t aion-cycle .
+docker run --rm aion-cycle
+```
+
+Expected output:
+
+```text
+PASS
+```
+
 ## Run it
 
 The reference runner requires `node`, `circom`, and `snarkjs`, plus a Powers of
