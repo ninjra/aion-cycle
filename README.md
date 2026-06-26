@@ -238,9 +238,10 @@ are not future hardening notes. They are requirements for `PASS`.
   public digest bit must make the real verifier reject the proof.
 - **No fake verifier:** `PASS` is forbidden unless the real verifier returns OK
   for the untampered proof and rejects a tampered public input.
-- **Toolchain binding:** the paths and versions (or `--version` output) for
-  `circom`, `snarkjs`, and `node` must be recorded in a toolchain receipt. The
-  toolchain receipt hash is a child of `proof_root`.
+- **Toolchain binding:** the tool names, versions, and path hashes for `circom`,
+  `snarkjs`, and `node` must be recorded in a toolchain receipt. The toolchain
+  receipt hash is a child of `proof_root`. Public receipts use normalized command
+  names and path hashes, not local absolute paths.
 - **Artifact binding:** the circuit source hash, compiled artifacts, proving key,
   verification key, proof, public inputs, and verifier result are all receipts.
   A missing or changed artifact fails `proof_root`, which changes `cycle_root`.
@@ -274,6 +275,10 @@ AION uses three roots so the proof is not circular:
 `EXPECTED_TRANSCRIPT_ROOT` is frozen. The generated `cycle_root` is not a magic
 constant; it is the hash of the emitted statement for that run. `PASS` requires
 all three roots to cohere.
+
+The portable verifier also parses `public.json` and reconstructs the 256 public
+digest bits. Those bits must equal `EXPECTED_TRANSCRIPT_ROOT`, not merely hash to
+the same `public.json` file.
 
 ## The safety rules
 

@@ -119,3 +119,23 @@ def test_toolchain_receipt_mutation_fails() -> None:
         _assert_verify_fails()
     finally:
         path.write_text(original, encoding="utf-8")
+
+
+def test_public_digest_bit_mutation_fails() -> None:
+    path = ROOT / "proofs" / "v1" / "public.json"
+    original = path.read_text(encoding="utf-8")
+    data = json.loads(original)
+    idx = 42  # first public digest bit after emitted bytes
+    data[idx] = "0" if data[idx] != "0" else "1"
+    try:
+        path.write_text(json.dumps(data), encoding="utf-8")
+        _assert_verify_fails()
+    finally:
+        path.write_text(original, encoding="utf-8")
+
+
+def test_public_receipts_do_not_leak_local_absolute_paths() -> None:
+    for rel in ("aion.statement.json", "proofs/v1/toolchain.receipt.json", "proofs/v1/proof-artifacts.receipt.json"):
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        assert "/home/" not in text
+        assert "/usr/bin" not in text

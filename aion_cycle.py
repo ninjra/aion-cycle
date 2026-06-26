@@ -30,6 +30,34 @@ def file_sha(path: Path) -> str:
     return sha256_hex(path.read_bytes())
 
 
+def public_path_id(path_text: str) -> dict[str, str]:
+    path = Path(path_text)
+    name = path.name or path_text
+    return {
+        "name": name,
+        "path_kind": "local",
+        "path_sha256": sha256_hex(str(path).encode("utf-8")),
+    }
+
+
+def normalize_cmd(cmd: list[str]) -> list[str]:
+    out: list[str] = []
+    for item in cmd:
+        text = str(item)
+        try:
+            path = Path(text)
+            if path.is_absolute():
+                if path.is_relative_to(ROOT):
+                    out.append(str(path.relative_to(ROOT)))
+                else:
+                    out.append(path.name)
+                continue
+        except Exception:
+            pass
+        out.append(text)
+    return out
+
+
 def receipt(kind: str, payload: dict[str, Any], children: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     failed = list(payload.get("failed_checks") or [])
     child_hashes = [c["receipt_hash"] for c in children or []]
@@ -97,7 +125,7 @@ def toolchain_receipt() -> dict[str, Any]:
         if not path:
             raise RuntimeError(f"missing_{tool}")
         cp = run([path, "--version"], ROOT, 30)
-        data[tool] = {"path": path, "version": (cp.stdout + cp.stderr).strip()[:500]}
+        data[tool] = {**public_path_id(path), "version": (cp.stdout + cp.stderr).strip()[:500]}
     ptau = ROOT / PTAU
     circomlib = ROOT / "node_modules" / "circomlib" / "circuits"
     if not ptau.exists() or not circomlib.is_dir():
@@ -111,7 +139,7 @@ def toolchain_receipt() -> dict[str, Any]:
 
 def checked(cmd: list[str], cwd: Path, commands: list[dict[str, Any]], timeout: int = 900) -> subprocess.CompletedProcess[str]:
     cp = run(cmd, cwd, timeout)
-    commands.append({"cmd": cmd, "returncode": cp.returncode, "stdout_sha256": sha256_hex(cp.stdout.encode()), "stderr_sha256": sha256_hex(cp.stderr.encode())})
+    commands.append({"cmd": normalize_cmd(cmd), "returncode": cp.returncode, "stdout_sha256": sha256_hex(cp.stdout.encode()), "stderr_sha256": sha256_hex(cp.stderr.encode())})
     if cp.returncode != 0:
         raise RuntimeError("command_failed")
     return cp
@@ -242,6 +270,18 @@ def recompute_artifact_receipt(tool: dict[str, Any], existing: dict[str, Any]) -
     return receipt("proof-artifacts", payload, [tool])
 
 
+def bits_to_hex(bits: list[Any]) -> str:
+    if len(bits) != 256:
+        raise RuntimeError("public_digest_bit_count_mismatch")
+    value = 0
+    for bit in bits:
+        b = int(bit)
+        if b not in (0, 1):
+            raise RuntimeError("public_digest_bit_not_boolean")
+        value = (value << 1) | b
+    return f"{value:064x}"
+
+
 def verify_statement(path: Path) -> None:
     data = json.loads(path.read_text(encoding="utf-8"))
     cycle_root = data.get("cycle_root")
@@ -269,6 +309,10 @@ def verify_statement(path: Path) -> None:
         raise RuntimeError("public_input_hash_mismatch")
     if file_sha(BUNDLE_DIR / "proof.json") != data.get("proof_hash"):
         raise RuntimeError("proof_hash_mismatch")
+    public_inputs = json.loads((BUNDLE_DIR / "public.json").read_text(encoding="utf-8"))
+    digest_bits = public_inputs[LENS["emitted"]:LENS["emitted"] + 256]
+    if bits_to_hex(digest_bits) != EXPECTED_TRANSCRIPT_ROOT:
+        raise RuntimeError("public_digest_not_expected_transcript_root")
 
     snarkjs = shutil.which("snarkjs")
     if not snarkjs:
