@@ -34,6 +34,25 @@ background to read it. You do not need any private system to run it. Copy one
 prompt into a coding agent, run the project it builds, then break it on purpose
 and watch it refuse to lie.
 
+
+## Quick start
+
+```bash
+make setup
+make verify
+make test
+```
+
+Expected result:
+
+```text
+PASS
+```
+
+`make setup` installs the local proof toolchain and fetches the pinned Powers of
+Tau file. `make verify` runs the route and verifies the statement. `make test`
+runs the red-team checks.
+
 ## The whole map
 
 AION is one closed path. One prompt builds the local project. The project runs
@@ -43,6 +62,25 @@ verification, it prints `PASS`. If anything is off, it prints `FAIL`.
 There is no local-only pass. There is no optional proof. There is no demo mode.
 The path is laminar: it flows once, cleanly, or not at all.
 
+
+
+## Project status
+
+AION v1 is complete as a fixed-canonical reference implementation:
+
+- one canonical fixture,
+- one full-cycle Groth16 circuit,
+- in-circuit SHA-256 transcript commitment,
+- committed proof bundle,
+- three-root statement,
+- portable statement verification,
+- positive and negative clamps,
+- red-team mutation tests.
+
+It is not a production provenance service and not a general arbitrary-input
+engine. It is a public reference route.
+
+See also: [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md).
 
 ## Truth route
 
@@ -722,7 +760,7 @@ Patent pending. Public application details are intentionally omitted until a
 publication record or approved citation is available.
 
 This document is not a patent claim, not legal advice, and does not publish
-private filing materials. The code you build from the prompt is yours to run
+non-public legal materials. The code you build from the prompt is yours to run
 locally.
 
 ## Where to go

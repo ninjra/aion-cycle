@@ -1,0 +1,42 @@
+name: Failing invariant
+about: Report a case where AION prints PASS when it should fail, or FAIL when the documented route should close.
+title: "Invariant report: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing the map. Please do not include secrets, private data, or non-public legal material.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the exact commands and edits you made.
+      placeholder: |
+        1. make setup
+        2. make verify
+        3. changed ...
+        4. make verify
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      placeholder: PASS or FAIL, and why.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      placeholder: What printed? Any exit code?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: OS, Python, node, circom, snarkjs versions.
+    validations:
+      required: false
