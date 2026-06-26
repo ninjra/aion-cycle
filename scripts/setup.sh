@@ -14,6 +14,9 @@ if ! command -v snarkjs >/dev/null; then
 fi
 echo "[setup] snarkjs: $(command -v snarkjs || echo MISSING)"
 
+echo "[setup] installing circomlib"
+npm install circomlib --prefix "$ROOT" --cache "$HOME/.cache/aion-npm"
+
 if ! command -v circom >/dev/null; then
   echo "[setup] fetching circom prebuilt binary"
   url="https://github.com/iden3/circom/releases/latest/download/circom-linux-amd64"
@@ -23,10 +26,10 @@ if ! command -v circom >/dev/null; then
 fi
 echo "[setup] circom: $(command -v circom || echo "$BIN/circom")"
 
-PTAU="$ROOT/powersOfTau28_hez_final_14.ptau"
+PTAU="$ROOT/powersOfTau28_hez_final_17.ptau"
 if [ ! -f "$PTAU" ]; then
   echo "[setup] fetching powers of tau (2^10)"
-  curl -fsSL "https://storage.googleapis.com/zkevm/ptau/powersOfTau28_hez_final_14.ptau" -o "$PTAU"
+  curl -fsSL "https://storage.googleapis.com/zkevm/ptau/powersOfTau28_hez_final_17.ptau" -o "$PTAU"
 fi
 echo "[setup] verifying powers of tau"
 snarkjs powersoftau verify "$PTAU"

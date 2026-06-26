@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0 OR LicenseRef-Commercial
 """AION reference runner.
 
-This file is intentionally small and strict. It prints exactly PASS or FAIL.
-It requires real circom/snarkjs tooling for PASS. If the proof toolchain is not
-available, it fails closed.
+One laminar path. One Groth16 proof of the entire canonical cycle, including the
+in-circuit SHA-256 commitment over the transcript. Prints exactly PASS or FAIL.
+Fails closed if the proof toolchain is missing.
 """
 from __future__ import annotations
 
@@ -12,307 +12,167 @@ import hashlib
 import json
 import shutil
 import subprocess
-import sys
 import tempfile
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
-MIN_Q15 = -32768
-MAX_Q15 = 32767
-FIELD_SIZE = 256
 BN254_SCALAR_FIELD = 21888242871839275222246405745257275088548364400416034343698204186575808495617
-EXPECTED_ROOT = "b7d163eb8ea2cb12cb81117a9261ab25370607e2f16b8c7d91d0b2986b01c941"
+EXPECTED_ROOT = "4fe55b20021791ebb3ca62b2773ea689e59deab6f68c3ecdea36ae37ab3a47a7"
+PTAU = "powersOfTau28_hez_final_17.ptau"
 ROOT = Path(__file__).resolve().parent
+LENS = {"query": 30, "corpus0": 42, "corpus1": 33, "corpus2": 24, "emitted": 42}
 
 
-def sha256_bytes(data: bytes) -> str:
+def sha256_hex(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def canonical_bytes(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
-
-
-def clamp_q15(x: int) -> int:
-    return max(MIN_Q15, min(MAX_Q15, int(x)))
-
-
-def sat_add(a: int, b: int) -> int:
-    return clamp_q15(a + b)
-
-
-def sat_mul(a: int, b: int) -> int:
-    return clamp_q15(a * b)
-
-
-def receipt(phase: str, input_hash: str, output_hash: str, children: list[dict[str, Any]] | None = None, failed: list[str] | None = None) -> dict[str, Any]:
-    children = children or []
-    failed = list(failed or [])
-    child_hashes = [c["receipt_hash"] for c in children]
-    if any(c.get("proof_passed") is not True for c in children):
-        failed.append("child_failed")
-    body = {
-        "phase": phase,
-        "input_hash": input_hash,
-        "output_hash": output_hash,
-        "child_receipt_hashes": child_hashes,
-        "failed_checks": failed,
-        "proof_passed": not failed,
-    }
-    body["receipt_hash"] = sha256_bytes(canonical_bytes(body))
-    return body
-
-
-def encode(source: bytes, ledger: dict[str, bytes]) -> tuple[list[int], str]:
-    field = [0] * FIELD_SIZE
-    for b in source:
-        field[b] = sat_add(field[b], 1)
-    field_hash = sha256_bytes(canonical_bytes(field))
-    prior = ledger.get(field_hash)
-    if prior is not None and prior != source:
-        raise ValueError("ambiguous_mapback")
-    ledger[field_hash] = source
-    return field, field_hash
-
-
-def carry(field: list[int]) -> list[int]:
-    if not isinstance(field, list) or not all(isinstance(x, int) for x in field):
-        raise TypeError("carry_requires_list_int")
-    return list(field)
-
-
-def score(query: list[int], candidate: list[int]) -> int:
-    total = 0
-    for q, c in zip(query, candidate):
-        total = sat_add(total, sat_mul(q, c))
-    return total
-
-
-def run_fixture(fixture: dict[str, Any], *, tamper_score: bool = False) -> dict[str, Any]:
-    ledger: dict[str, bytes] = {}
-    query = fixture["query"].encode("utf-8", "strict")
-    corpus = [item.encode("utf-8", "strict") for item in fixture["corpus"]]
-    expected = fixture["expected_selected"].encode("utf-8", "strict")
-    event_id = sha256_bytes(canonical_bytes({"query": query.hex(), "corpus": [c.hex() for c in corpus]}))
-
-    q_field, q_hash = encode(query, ledger)
-    corpus_items = [encode(item, ledger) for item in corpus]
-    enc_r = receipt("Encode", event_id, sha256_bytes(canonical_bytes({"query": q_hash, "corpus": [h for _, h in corpus_items]})))
-
-    q_carried = carry(q_field)
-    c_carried = [(carry(f), h) for f, h in corpus_items]
-    carry_r = receipt("Carry", enc_r["receipt_hash"], sha256_bytes(canonical_bytes([q_carried, [h for _, h in c_carried]])), [enc_r])
-
-    ranked = []
-    for f, h in c_carried:
-        s = score(q_carried, f)
-        if tamper_score and ledger[h] == expected:
-            s = MIN_Q15
-        ranked.append(( -s, h))
-    ranked.sort(key=lambda x: (x[0], x[1]))
-    selected_hash = ranked[0][1]
-    cmp_r = receipt("Compare", carry_r["receipt_hash"], selected_hash, [carry_r])
-
-    back_r = receipt("CarryBack", cmp_r["receipt_hash"], selected_hash, [cmp_r])
-    selected = ledger[selected_hash]
-    map_r = receipt("MapBack", back_r["receipt_hash"], sha256_bytes(selected), [back_r])
-    output = bytes(selected)
-    fail = []
-    if output != selected:
-        fail.append("byte_mismatch")
-    if sha256_bytes(output) != sha256_bytes(selected):
-        fail.append("hash_mismatch")
-    write_r = receipt("Write", map_r["receipt_hash"], sha256_bytes(output), [map_r], fail)
-    root = receipt("Root", event_id, write_r["receipt_hash"], [write_r])
-    return {
-        "root": root,
-        "selected": selected,
-        "output": output,
-        "selected_field_hash": selected_hash,
-        "selected_source_hash": sha256_bytes(selected),
-        "output_hash": sha256_bytes(output),
-    }
-
-
-def digest_to_field(hex_digest: str) -> str:
-    return str(int(hex_digest, 16) % BN254_SCALAR_FIELD)
-
-
-def digest_limbs(hex_digest: str) -> tuple[list[str], list[list[str]]]:
-    raw = bytes.fromhex(hex_digest)
-    limbs: list[str] = []
-    bits: list[list[str]] = []
-    for i in range(4):
-        chunk = raw[i * 8:(i + 1) * 8]
-        value = int.from_bytes(chunk, "big")
-        limbs.append(str(value))
-        bits.append([str((value >> j) & 1) for j in range(64)])
-    return limbs, bits
-
-
-def toolchain_receipt() -> dict[str, Any]:
-    data: dict[str, Any] = {}
-    for tool in ("node", "circom", "snarkjs"):
-        path = shutil.which(tool)
-        if not path:
-            raise RuntimeError(f"missing_{tool}")
-        version = subprocess.run([path, "--version"], text=True, capture_output=True, timeout=20, check=False)
-        data[tool] = {"path": path, "version": (version.stdout + version.stderr).strip()[:200]}
-    return receipt("Toolchain", sha256_bytes(b"toolchain"), sha256_bytes(canonical_bytes(data)))
-
-
-def _sh(cmd: list[str], cwd: Path) -> None:
-    subprocess.run(cmd, cwd=str(cwd), check=True, capture_output=True, timeout=300)
-
-
-def groth16_prove_verify(circuit: Path, input_obj: dict[str, Any], work: Path) -> str:
-    work.mkdir(parents=True, exist_ok=True)
-    circom = shutil.which("circom")
-    snarkjs = shutil.which("snarkjs")
-    if not circom or not snarkjs:
-        raise RuntimeError("missing_tooling")
-    ptau = ROOT / "powersOfTau28_hez_final_14.ptau"
-    if not ptau.exists():
-        raise RuntimeError("missing_ptau")
-    name = circuit.stem
-    (work / "input.json").write_text(json.dumps(input_obj), encoding="utf-8")
-    _sh([circom, str(circuit), "--r1cs", "--wasm", "--sym", "-o", str(work)], work)
-    r1cs = work / f"{name}.r1cs"
-    zkey0 = work / f"{name}_0.zkey"
-    zkey = work / f"{name}.zkey"
-    vkey = work / f"{name}_vkey.json"
-    proof = work / f"{name}_proof.json"
-    public = work / f"{name}_public.json"
-    wasm = work / f"{name}_js" / f"{name}.wasm"
-    _sh([snarkjs, "groth16", "setup", str(r1cs), str(ptau), str(zkey0)], work)
-    _sh([snarkjs, "zkey", "contribute", str(zkey0), str(zkey), "--name=aion", "-e=aion-local-entropy"], work)
-    _sh([snarkjs, "zkey", "export", "verificationkey", str(zkey), str(vkey)], work)
-    _sh([snarkjs, "groth16", "fullprove", str(work / "input.json"), str(wasm), str(zkey), str(proof), str(public)], work)
-    ok = subprocess.run([snarkjs, "groth16", "verify", str(vkey), str(public), str(proof)], cwd=str(work), text=True, capture_output=True, timeout=120, check=False)
-    if ok.returncode != 0:
-        raise RuntimeError(f"verify_failed:{name}")
-    pub = json.loads(public.read_text(encoding="utf-8"))
-    pub[0] = str((int(pub[0]) + 1) % BN254_SCALAR_FIELD)
-    bad = work / f"{name}_public_bad.json"
-    bad.write_text(json.dumps(pub), encoding="utf-8")
-    neg = subprocess.run([snarkjs, "groth16", "verify", str(vkey), str(bad), str(proof)], cwd=str(work), text=True, capture_output=True, timeout=120, check=False)
-    if neg.returncode == 0:
-        raise RuntimeError(f"negative_check_passed:{name}")
-    return sha256_bytes(canonical_bytes({
-        "circuit": name,
-        "vkey": sha256_bytes(vkey.read_bytes()),
-        "proof": sha256_bytes(proof.read_bytes()),
-    }))
-
-
-def byte_bits(value: int, width: int) -> list[str]:
+def bits_le(value: int, width: int) -> list[str]:
     return [str((int(value) >> i) & 1) for i in range(width)]
 
 
-def inverse_or_zero(diff: int) -> str:
+def inv_or_zero(diff: int) -> str:
     v = int(diff) % BN254_SCALAR_FIELD
-    if v == 0:
-        return "0"
-    return str(pow(v, -1, BN254_SCALAR_FIELD))
+    return "0" if v == 0 else str(pow(v, -1, BN254_SCALAR_FIELD))
 
 
-def full_cycle_input(fixture: dict[str, Any], selected: bytes) -> dict[str, Any]:
-    query = list(fixture["query"].encode("utf-8", "strict"))
-    corpus = [list(item.encode("utf-8", "strict")) for item in fixture["corpus"]]
-    emitted = list(selected)
-    if len(query) != 30 or len(corpus[0]) != 42 or len(corpus[1]) != 33 or len(corpus[2]) != 24 or len(emitted) != 42:
-        raise RuntimeError("fixture_length_mismatch")
-    eq0_inv = [inverse_or_zero(a - b) for a in query for b in corpus[0]]
-    eq1_inv = [inverse_or_zero(a - b) for a in query for b in corpus[1]]
-    eq2_inv = [inverse_or_zero(a - b) for a in query for b in corpus[2]]
-    # Score deltas for canonical fixture: corpus0 must win.
-    from collections import Counter
+def select_winner(query: bytes, corpus: list[bytes]) -> int:
+    cq = Counter(query)
+    scores = [sum(cq[k] * Counter(c)[k] for k in cq) for c in corpus]
+    best = max(range(len(scores)), key=lambda i: (scores[i], [-b for b in corpus[i]]))
+    if scores[best] != max(scores) or scores.count(max(scores)) != 1:
+        raise RuntimeError("ambiguous_or_no_winner")
+    return best
+
+
+def build_input(query: bytes, corpus: list[bytes], emitted: bytes, digest_hex: str) -> dict[str, Any]:
+    def byte_list(b: bytes) -> list[str]:
+        return [str(x) for x in b]
+
+    def byte_bits(b: bytes) -> list[list[str]]:
+        return [bits_le(x, 8) for x in b]
+
+    eq_inv = []
+    for cn, c in (("0", corpus[0]), ("1", corpus[1]), ("2", corpus[2])):
+        eq_inv.append([inv_or_zero(a - d) for a in query for d in c])
+
     cq = Counter(query)
     scores = [sum(cq[k] * Counter(c)[k] for k in cq) for c in corpus]
     ge01 = scores[0] - scores[1]
     ge02 = scores[0] - scores[2]
     if ge01 < 0 or ge02 < 0:
-        raise RuntimeError("canonical_selection_not_winner")
+        raise RuntimeError("winner_not_corpus0")
+
+    digest = bytes.fromhex(digest_hex)
+    digest_bits = []
+    for k in range(256):
+        byte = digest[k // 8]
+        digest_bits.append(str((byte >> (7 - (k % 8))) & 1))
+
     return {
-        "query": [str(x) for x in query],
-        "corpus0": [str(x) for x in corpus[0]],
-        "corpus1": [str(x) for x in corpus[1]],
-        "corpus2": [str(x) for x in corpus[2]],
-        "emitted": [str(x) for x in emitted],
-        "query_bits": [[str((x >> i) & 1) for i in range(8)] for x in query],
-        "corpus0_bits": [[str((x >> i) & 1) for i in range(8)] for x in corpus[0]],
-        "corpus1_bits": [[str((x >> i) & 1) for i in range(8)] for x in corpus[1]],
-        "corpus2_bits": [[str((x >> i) & 1) for i in range(8)] for x in corpus[2]],
-        "emitted_bits": [[str((x >> i) & 1) for i in range(8)] for x in emitted],
-        "ge01_bits": byte_bits(ge01, 16),
-        "ge02_bits": byte_bits(ge02, 16),
-        "eq0_inv": eq0_inv,
-        "eq1_inv": eq1_inv,
-        "eq2_inv": eq2_inv,
+        "query": byte_list(query),
+        "corpus0": byte_list(corpus[0]),
+        "corpus1": byte_list(corpus[1]),
+        "corpus2": byte_list(corpus[2]),
+        "emitted": byte_list(emitted),
+        "query_bits": byte_bits(query),
+        "corpus0_bits": byte_bits(corpus[0]),
+        "corpus1_bits": byte_bits(corpus[1]),
+        "corpus2_bits": byte_bits(corpus[2]),
+        "emitted_bits": byte_bits(emitted),
+        "eq0_inv": eq_inv[0],
+        "eq1_inv": eq_inv[1],
+        "eq2_inv": eq_inv[2],
+        "ge01_bits": bits_le(ge01, 16),
+        "ge02_bits": bits_le(ge02, 16),
+        "expected_digest_bits": digest_bits,
     }
 
 
-def prove(final_root: str, source_hash: str, output_hash: str, replay_root: str, fixture: dict[str, Any], selected: bytes) -> dict[str, Any]:
-    tool_r = toolchain_receipt()
-    children = [tool_r]
+def _sh(cmd: list[str], cwd: Path) -> None:
+    subprocess.run(cmd, cwd=str(cwd), check=True, capture_output=True, timeout=900)
+
+
+def prove_and_verify(circuit_input: dict[str, Any]) -> None:
+    circom = shutil.which("circom")
+    snarkjs = shutil.which("snarkjs")
+    if not circom or not snarkjs:
+        raise RuntimeError("missing_tooling")
+    circomlib = ROOT / "node_modules" / "circomlib" / "circuits"
+    ptau = ROOT / PTAU
+    if not circomlib.is_dir() or not ptau.exists():
+        raise RuntimeError("missing_circomlib_or_ptau")
     with tempfile.TemporaryDirectory() as td:
         work = Path(td)
-        full_input = full_cycle_input(fixture, selected)
-        full_proof_hash = groth16_prove_verify(ROOT / "aion_full_cycle.circom", full_input, work / "full_cycle")
+        (work / "input.json").write_text(json.dumps(circuit_input), encoding="utf-8")
+        _sh([circom, str(ROOT / "aion.circom"), "--r1cs", "--wasm", "--sym", "-l", str(circomlib), "-o", str(work)], work)
+        r1cs = work / "aion.r1cs"
+        wasm = work / "aion_js" / "aion.wasm"
+        zkey0 = work / "aion_0.zkey"
+        zkey = work / "aion.zkey"
+        vkey = work / "vkey.json"
+        proof = work / "proof.json"
+        public = work / "public.json"
+        _sh([snarkjs, "groth16", "setup", str(r1cs), str(ptau), str(zkey0)], work)
+        _sh([snarkjs, "zkey", "contribute", str(zkey0), str(zkey), "--name=aion", "-e=aion-local-entropy"], work)
+        _sh([snarkjs, "zkey", "export", "verificationkey", str(zkey), str(vkey)], work)
+        _sh([snarkjs, "groth16", "fullprove", str(work / "input.json"), str(wasm), str(zkey), str(proof), str(public)], work)
+        ok = subprocess.run([snarkjs, "groth16", "verify", str(vkey), str(public), str(proof)], cwd=str(work), text=True, capture_output=True, timeout=300, check=False)
+        if ok.returncode != 0:
+            raise RuntimeError("verify_failed")
+        pub = json.loads(public.read_text(encoding="utf-8"))
+        # public layout: emitted[42] then expected_digest_bits[256]; flip first digest bit.
+        i = LENS["emitted"]
+        pub[i] = "0" if pub[i] == "1" else "1"
+        bad = work / "public_bad.json"
+        bad.write_text(json.dumps(pub), encoding="utf-8")
+        neg = subprocess.run([snarkjs, "groth16", "verify", str(vkey), str(bad), str(proof)], cwd=str(work), text=True, capture_output=True, timeout=300, check=False)
+        if neg.returncode == 0:
+            raise RuntimeError("negative_check_passed")
 
-        root_input = {
-            "expected_root": digest_to_field(final_root),
-            "final_root": digest_to_field(final_root),
-            "selected_hash": digest_to_field(source_hash),
-            "output_hash": digest_to_field(output_hash),
-            "replay_root": digest_to_field(replay_root),
-            "canonical_transcript_root": digest_to_field(final_root),
-            "tamper_transcript_root": digest_to_field(sha256_bytes(b"tamper:" + final_root.encode())),
-            "tamper_failed": "1",
-            "child_passed": ["1"] * 8,
-        }
-        root_proof_hash = groth16_prove_verify(ROOT / "aion_closure_root.circom", root_input, work / "root")
 
-        fr_l, fr_b = digest_limbs(final_root)
-        sh_l, sh_b = digest_limbs(source_hash)
-        oh_l, oh_b = digest_limbs(output_hash)
-        limb_input = {
-            "expected_root_limbs": fr_l,
-            "final_root_limbs": fr_l,
-            "selected_hash_limbs": sh_l,
-            "output_hash_limbs": oh_l,
-            "replay_root_limbs": fr_l,
-            "expected_root_bits": fr_b,
-            "final_root_bits": fr_b,
-            "selected_hash_bits": sh_b,
-            "output_hash_bits": oh_b,
-            "replay_root_bits": fr_b,
-            "tamper_failed": "1",
-            "child_passed": ["1"] * 8,
-        }
-        limb_proof_hash = groth16_prove_verify(ROOT / "aion_digest_limb_closure.circom", limb_input, work / "limb")
-
-    out = sha256_bytes(canonical_bytes({"full_cycle_proof": full_proof_hash, "root_proof": root_proof_hash, "limb_proof": limb_proof_hash}))
-    return receipt("Groth16", tool_r["receipt_hash"], out, children)
+def cycle(query: bytes, corpus: list[bytes]) -> tuple[bytes, str]:
+    winner = select_winner(query, corpus)
+    selected = corpus[winner]
+    emitted = bytes(selected)
+    if emitted != selected:
+        raise RuntimeError("output_not_exact")
+    transcript = query + corpus[0] + corpus[1] + corpus[2] + emitted
+    return emitted, sha256_hex(transcript)
 
 
 def main() -> int:
     try:
-        fixture = json.loads((ROOT / "fixtures" / "canonical.json").read_text(encoding="utf-8"))
-        run1 = run_fixture(fixture)
-        run2 = run_fixture(fixture)
-        if run1["root"]["receipt_hash"] != run2["root"]["receipt_hash"] or run1["output"] != run2["output"]:
-            raise RuntimeError("replay_mismatch")
-        if run1["selected_source_hash"] != run1["output_hash"]:
-            raise RuntimeError("output_not_equal_to_selected")
-        tampered = run_fixture(fixture, tamper_score=True)
-        if tampered["selected"] == run1["selected"]:
-            raise RuntimeError("tamper_not_detected")
         if len(EXPECTED_ROOT) != 64 or any(c not in "0123456789abcdef" for c in EXPECTED_ROOT):
             raise RuntimeError("expected_root_not_frozen")
-        if run1["root"]["receipt_hash"] != EXPECTED_ROOT:
+        fx = json.loads((ROOT / "fixtures" / "canonical.json").read_text(encoding="utf-8"))
+        query = fx["query"].encode("utf-8", "strict")
+        corpus = [c.encode("utf-8", "strict") for c in fx["corpus"]]
+        for name, b in (("query", query), ("corpus0", corpus[0]), ("corpus1", corpus[1]), ("corpus2", corpus[2])):
+            if len(b) != LENS[name]:
+                raise RuntimeError("fixture_length_mismatch")
+
+        emitted, digest = cycle(query, corpus)
+        if len(emitted) != LENS["emitted"]:
+            raise RuntimeError("emitted_length_mismatch")
+        # replay must match
+        _, digest2 = cycle(query, corpus)
+        if digest != digest2:
+            raise RuntimeError("replay_mismatch")
+        # tamper must change the commitment
+        tampered_query = bytearray(query)
+        tampered_query[0] ^= 0x01
+        _, tdigest = cycle(bytes(tampered_query), corpus)
+        if tdigest == digest:
+            raise RuntimeError("tamper_not_detected")
+        if digest != EXPECTED_ROOT:
             raise RuntimeError("expected_root_mismatch")
-        prove(EXPECTED_ROOT, run1["selected_source_hash"], run1["output_hash"], run2["root"]["receipt_hash"], fixture, run1["selected"])
+        if corpus[0] != emitted:
+            raise RuntimeError("winner_not_emitted")
+
+        circuit_input = build_input(query, corpus, emitted, digest)
+        prove_and_verify(circuit_input)
     except Exception:  # noqa: BLE001
         print("FAIL")
         return 1

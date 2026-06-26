@@ -22,7 +22,6 @@ The public README is a local integrity map. It is not a production security
 claim. In particular, it does not claim:
 
 - production-safe trusted setup,
-- in-circuit SHA-256,
 - toolchain integrity,
 - objective truth,
 - semantic understanding,
