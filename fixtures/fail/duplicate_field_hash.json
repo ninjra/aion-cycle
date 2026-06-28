@@ -1,0 +1,4 @@
+{
+  "description": "Two source records map to the same field hash. Expected behavior: mapback fails closed.",
+  "expected_reason": "mapback_ambiguous_or_missing_field_hash"
+}

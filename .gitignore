@@ -19,3 +19,9 @@ proofs/v1/*.log
 !proofs/
 !proofs/v1/
 !proofs/v1/**
+# Regenerated debug/intermediate proof byproducts; not committed authority.
+proofs/v1/aion_0.zkey
+proofs/v1/aion.sym
+proofs/v1/aion.r1cs
+proofs/v1/aion.zkey
+proofs/v1/aion_js/

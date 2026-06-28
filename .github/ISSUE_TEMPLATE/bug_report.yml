@@ -6,17 +6,55 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for testing the map. Please do not include secrets, private data, or non-public legal material.
+        Thank you for testing the map. Please do not include secrets, private data, credentials, private source, or non-public legal material.
   - type: textarea
-    id: steps
+    id: changed_file
     attributes:
-      label: Steps to reproduce
-      description: List the exact commands and edits you made.
-      placeholder: |
-        1. make setup
-        2. make verify
-        3. changed ...
-        4. make verify
+      label: File changed
+      description: Name the file or fixture you changed, if any.
+      placeholder: proofs/v1/public.json
+    validations:
+      required: false
+  - type: input
+    id: old_hash
+    attributes:
+      label: Old SHA-256
+      placeholder: 64 lowercase hex characters
+    validations:
+      required: false
+  - type: input
+    id: new_hash
+    attributes:
+      label: New SHA-256
+      placeholder: 64 lowercase hex characters
+    validations:
+      required: false
+  - type: textarea
+    id: command
+    attributes:
+      label: Command run
+      placeholder: make verify
+    validations:
+      required: true
+  - type: textarea
+    id: stdout
+    attributes:
+      label: stdout
+      placeholder: PASS or FAIL
+    validations:
+      required: true
+  - type: textarea
+    id: stderr
+    attributes:
+      label: stderr
+      placeholder: FAIL_REASON:<reason_code>, if any
+    validations:
+      required: false
+  - type: input
+    id: exit_code
+    attributes:
+      label: Exit code
+      placeholder: "0 or 1"
     validations:
       required: true
   - type: textarea
@@ -31,6 +69,13 @@ body:
     attributes:
       label: Actual result
       placeholder: What printed? Any exit code?
+    validations:
+      required: true
+  - type: textarea
+    id: clamp
+    attributes:
+      label: Violated clamp
+      placeholder: Which positive/negative clamp did this violate?
     validations:
       required: true
   - type: textarea

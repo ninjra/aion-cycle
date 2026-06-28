@@ -1,0 +1,4 @@
+{
+  "description": "Changing public digest bits breaks artifact receipt or digest verification. Expected behavior: verification fails.",
+  "expected_reason": "artifact_receipt_recompute_mismatch"
+}

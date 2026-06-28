@@ -3,25 +3,424 @@ SPDX-License-Identifier: Apache-2.0 OR LicenseRef-Commercial
 
 # AION Apex: The One-Prompt Closed Loop
 
+Document class: public orientation.
 Apex version: v1.0
 
-AION v1 is an RFC-style theoretical architecture with an executable reference
-implementation. It is not a production provenance service and not a product
-manual.
+AION v1 is an RFC-style theoretical architecture with an executable local
+reference implementation. It is not a hosted service, not a production
+provenance platform, not a universal truth engine, and not a lie detector.
 
-The purpose of this repository is to make a truth route visible: source bytes,
-metadata-free comparison, exact output, in-circuit transcript commitment, proof
-artifacts, receipts, and fail-closed verification. Review the core mechanics:
-the route, the constraints, the proof, and the receipt bundle. Production user
-interfaces, deployment ceremonies, and environment-specific integrations are
-outside this public reference boundary.
+AION proves one narrow public claim:
 
-AION is a small closed loop you can build on your own machine. Turn bytes into
-bounded numbers, compare the numbers without names, keep receipts, map the
-chosen field back, prove the fixed canonical cycle with Groth16, and accept only
-if the final bytes match.
+> **Route truth:** this output followed this committed path.
 
-It prints exactly one of these:
+It does that with source bytes, metadata-free comparison, exact output,
+in-circuit transcript commitment, proof artifacts, receipts, and fail-closed
+verification.
+
+## Why this exists
+
+Most systems ask you to trust a pipeline. This one makes the pipeline small
+enough to rerun, strict enough to fail when changed, and explicit enough to
+audit. Start by running it. Then break it on purpose. Then read the exact
+boundary when you want the formal version.
+
+## 90-second path
+
+```bash
+make demo            # run the fixed canonical cycle
+make verify          # prints exactly PASS or FAIL
+make verify-explain  # PASS plus the list of checks performed
+make break           # tamper a temp copy and watch it FAIL (repo untouched)
+```
+
+Expected core verifier output:
+
+```text
+PASS
+```
+
+What to inspect after the demo:
+
+```text
+aion.statement.json
+proofs/v1/proof-artifacts.receipt.json
+proofs/v1/toolchain.receipt.json
+proofs/v1/generation-trace.receipt.json
+proofs/v1/public.json
+proofs/v1/proof.json
+```
+
+
+## Trust ladder
+
+```text
+Level 1  run it        make demo
+Level 2  verify it     make verify
+Level 3  explain it    make verify-explain
+Level 4  break it      make break   (and: make redteam)
+Level 5  recompute it  make reproduce
+Level 6  audit it      read VERIFY.md, PUBLIC_BOUNDARY.md, PUBLIC_CLAIMS.md
+```
+
+## Copy-paste prompt
+
+Paste the following into a coding agent that can write and run local files.
+
+```text
+Build a single local AION reference project.
+
+The project is a fixed canonical reference artifact. It is not a hosted service,
+not a production provenance system, not arbitrary-input support, not objective
+truth, and not a production Groth16 trusted-setup ceremony.
+
+Execution clamps for the coding agent:
+
+- Treat this prompt as the only source of truth. Do not inspect parent workspaces, prior repos, memories, MCP graphs, or external project files.
+- Work only in the current empty project directory. Do not search parent directories, sibling repositories, user home directories, caches, prior workspaces, or system-wide project trees for source material or artifacts.
+- Use PATH only to locate executables. Use project-local files only for project data. If the Powers of Tau file is absent, `make setup` may download it only from the pinned URL and must hash-check it.
+- Do not use web search or online hash services. Compute hashes locally with Python hashlib.
+- Do not create placeholders that verification accepts. No DERIVED placeholders, no TODO hashes, no stub proof, no fake verifier, no static PASS path.
+- If real circom/snarkjs/ptau are unavailable, the command must fail closed with stdout FAIL. Do not simulate the Groth16 proof.
+- Do not widen scope to product features, hosted service, dashboards, or arbitrary-input support.
+- Do not load optional skills, MCP resources, parent repo rules, memories, or external helper context.
+- Before claiming done, you must actually run the required local commands. If the shell/command runner is unavailable, stop and report BLOCKED; do not create an unverified project and do not claim PASS.
+
+Required public files:
+
+  README.md
+  PUBLIC_BOUNDARY.md
+  PUBLIC_CLAIMS.md
+  VERIFY.md
+  DESIGN_NOTES.md
+  TRUSTED_SETUP.md
+  CIRCUIT.md
+  SECURITY.md
+  Makefile
+  Dockerfile
+  package.json
+  package-lock.json
+  toolchain.lock
+  aion_cycle.py
+  aion.circom
+  fixtures/canonical.json
+  fixtures/pass/canonical.json
+  fixtures/fail/*.json
+  expected_root.txt
+  aion.statement.json
+  proofs/v1/input.json
+  proofs/v1/proof.json
+  proofs/v1/public.json
+  proofs/v1/verification_key.json
+  proofs/v1/toolchain.receipt.json
+  proofs/v1/generation-trace.receipt.json
+  proofs/v1/proof-artifacts.receipt.json
+  proofs/v1/emissions/*.emission.json
+  proofs/v1/receipts/*.receipt.json
+  tests/test_redteam.py
+  tests/test_emission_chain.py
+  tests/test_fixtures.py
+  tests/test_circuit_structure.py
+  tests/test_public_boundary.py
+  viewer/index.html
+  viewer/app.js
+
+Do not commit or rely on these regenerated byproducts as verifier authority:
+
+  proofs/v1/aion.r1cs
+  proofs/v1/aion.sym
+  proofs/v1/aion.zkey
+  proofs/v1/aion_0.zkey
+  proofs/v1/aion_js/
+  proofs/v1/public_bad.json
+  proofs/v1/public_bad_reverify.json
+
+Goal:
+Run one fixed closed route and prove it:
+
+  Source -> Encode -> Carry -> Compare -> Carry Back -> Map Back -> Write -> Prove -> Verify -> Close
+
+Command contract:
+
+  make setup       # installs/checks local toolchain and hash-checks ptau
+  make verify      # verifies the committed lightweight proof bundle
+  make reproduce   # regenerates heavy proof byproducts and the proof bundle
+  make test        # red-team, fixture, circuit-structure, and boundary tests
+  make boundary-check
+
+stdout contract:
+
+  PASS
+
+or:
+
+  FAIL
+
+Failure diagnostics:
+
+  stdout remains exactly PASS or FAIL.
+  On failure, stderr may include one controlled public-safe line:
+
+    FAIL_REASON:<reason_code>
+
+  Reason codes are diagnostics, not a third status. Do not print tracebacks during
+  normal failure handling. Do not leak local private paths, credentials, secrets,
+  or internal implementation names.
+
+Host route requirements:
+
+1. Never use Python's built-in hash(). Use hashlib.sha256 for all identity,
+   ordering, receipts, emissions, and roots.
+2. Serialize deterministically with json.dumps(value, sort_keys=True,
+   separators=(",", ":")).encode("utf-8") unless a stricter byte tuple is used.
+3. Bytes are source authority. Encode text fixtures as UTF-8 strict. Do not
+   normalize casing, whitespace, line endings, or Unicode.
+4. V1 uses fixed fixture byte-count scoring. Do not describe it as Q15 or
+   saturating arithmetic unless both host and circuit implement that model.
+5. Implement explicit phase functions:
+     phase_source
+     phase_encode
+     phase_carry
+     phase_compare
+     phase_carry_back
+     phase_map_back
+     phase_write
+6. Encode stores identity in a local ledger:
+     source_record_id -> source_bytes
+     field_hash -> [source_record_id]
+7. Compare sees fields only and performs integer byte-count scoring.
+8. Require a strict unique winner. Ties fail closed.
+9. If mapback finds zero or multiple source records for a selected field_hash,
+   fail closed with a stable reason code.
+10. Write emits selected source bytes and checks byte-exact equality.
+11. Every phase emits a receipt with:
+     phase name
+     input identity/hash
+     output identity/hash
+     child receipt hashes
+     failed_checks
+     proof_passed
+     receipt_hash
+12. Compose phase receipts into a cycle receipt.
+13. Emit transition emissions with source lineage and chain hashes.
+14. Verification must recompute receipt hashes from bodies; never trust a stored
+    proof_passed flag by itself.
+15. Verification must be read-only: do not write public_bad files into the tracked
+    proof directory. Generate negative public inputs in a temp path.
+
+Circuit requirements:
+
+1. Use one fixed-reference Circom circuit for the canonical fixture.
+2. Public inputs are emitted bytes and the 256-bit transcript digest commitment.
+3. Enforce byte/bit consistency for query, corpus, and emitted bytes.
+4. Enforce pairwise equality scoring in-circuit.
+5. Enforce corpus0 as the strict winner:
+     score0 - score1 - 1 is a non-negative 16-bit value
+     score0 - score2 - 1 is a non-negative 16-bit value
+6. Enforce emitted[i] === corpus0[i] for every emitted byte.
+7. Enforce in-circuit SHA-256 over the domain-separated transcript:
+     AION-CYCLE-V1| || query || corpus0 || corpus1 || corpus2 || emitted
+   and bind sha.out to expected_digest_bits.
+8. Document the circuit structure in CIRCUIT.md and add tests that assert the
+   structural constraints are present.
+
+Groth16/toolchain requirements:
+
+1. Use real circom and snarkjs. No fake verifier, no stub proof, no static boolean.
+2. Pin the public reference toolchain:
+     snarkjs 0.7.6
+     circom 2.2.3
+     circom binary sha256 85342c7ff332d948df7c0c50ecf201e6129349aef550ce873f3c811b79fe53a3
+     circomlib 2.0.5
+     powersOfTau28_hez_final_18.ptau sha256 e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694
+3. Use npm ci for locked local dependencies.
+4. Use a public deterministic beacon for the demo/reference zkey step. Record the
+   beacon and state clearly that this is demo/reference-only, not a production
+   ceremony.
+5. Run positive Groth16 verification and a negative public-input verification.
+   The negative input must be generated from current public.json in a temp path.
+6. TRUSTED_SETUP.md must state what this proves and what it does not prove.
+
+Root model:
+
+  transcript_root = domain-separated hash of source bytes and emitted output
+  proof_root      = receipt hash for proof/toolchain/artifact evidence
+  cycle_root      = statement hash binding transcript_root, proof_root, policy,
+                    proof system, circuit hash, verification key hash,
+                    public input hash, and proof hash
+
+EXPECTED_TRANSCRIPT_ROOT is the frozen transcript root only. The cycle_root must
+not be equated to EXPECTED_TRANSCRIPT_ROOT.
+
+Canonical fixture:
+
+  query:
+    b"need contract renewal approval"
+
+  corpus:
+    b"contract renewal requires finance approval"
+    b"weather report says rain tomorrow"
+    b"lunch menu includes soup"
+
+  expected selected record:
+    b"contract renewal requires finance approval"
+
+Tests required:
+
+1. The canonical statement verifies: stdout PASS, rc 0.
+2. Mutating statement root, proof hash, public input, receipt body, generation
+   trace, phase receipt, emission order, previous emission hash, or source root
+   produces stdout FAIL, rc 1, and the expected FAIL_REASON.
+3. Stored public_bad files are absent and not trusted.
+4. Verification is read-only.
+5. Duplicate field-hash mapback fails closed.
+6. Fixtures are concrete JSON files, not README-only placeholders.
+7. Public boundary test forbids private paths, credentials, private keys, internal
+   Apex markers, internal method inventories, and claims wider than the fixed route.
+8. Circuit structure test asserts public signals, strict-winner binding,
+   emitted==corpus0 binding, digest binding, and SHA width.
+
+Definition of done:
+
+- `make setup` completes with pinned hash checks.
+- `make verify` prints PASS and leaves git status unchanged.
+- `make reproduce` regenerates proof byproducts and then `make verify` still prints PASS.
+- `make test` passes.
+- `make boundary-check` passes.
+- Public docs contain positive and negative clamps for major claims.
+- No public doc claims production security, production trusted setup,
+  arbitrary-input support, objective truth, privacy, hosted service behavior, or
+  broad provenance.
+```
+
+## Plain claim / formal claim
+
+```text
+Plain:  If any committed artifact changes, verification fails.
+Formal: verify recomputes the statement cycle_root, receipt hashes, artifact
+        hashes, public digest bits, and Groth16 verification, and rejects any
+        mismatch fail-closed.
+```
+
+```text
+Plain:  The verifier does not trust a green flag.
+Formal: a stored proof_passed flag is ignored; receipts are recomputed from
+        their bodies before they are believed.
+```
+
+## What to trust / what not to trust
+
+| You can trust | Because |
+|---|---|
+| The committed bundle matches the statement | `make verify` recomputes it from files |
+| Tampering is detected | red-team fixtures and `make break` show fail-closed behavior |
+| The public claim is bounded | `PUBLIC_BOUNDARY.md` and `PUBLIC_CLAIMS.md` define scope |
+
+| Do not trust | Why |
+|---|---|
+| That this is production secure | demo/reference trusted setup only (`TRUSTED_SETUP.md`) |
+| That it proves objective truth | it verifies a route, not reality |
+| That arbitrary inputs are supported | one fixed canonical fixture only |
+| That a UI equals verification | the CLI and artifacts are canonical |
+
+## Glossary
+
+```text
+statement   the public claim being verified (aion.statement.json)
+receipt     a small artifact recording input hash, output hash, and link to the route
+fixture     a tiny fixed example proving the route behaves the same every time
+route       the fixed ordered phases from source bytes to verified statement
+map-back    recovering the selected source bytes from the ledger by field hash
+canonical   the one fixed reference cycle this repo proves
+byte-exact  compared as raw bytes, not normalized text
+fail-closed if the route cannot be verified, the result is FAIL, never a guess
+```
+
+## Verification axiom
+
+```text
+Trust is ephemeral and lazy-resolved from source.
+```
+
+AION never trusts self-certification. A cached or previously verified artifact may be evidence, but it is not authority. The verifier recomputes the lineage needed for the present decision every time. Caches store material, never trust.
+
+Reports, emissions, receipts, generated artifacts, and cache entries are snapshots, never authority unless explicitly promoted into durable data/source authority. Code/source files can be durable source artifacts. Trust comes only from fresh recomputation from source.
+
+
+## Claim discipline
+
+Every AION claim has two sides:
+
+- the positive claim: what is verified,
+- the negative clamp: what must not be inferred.
+
+This mirrors the cycle itself: a route closes only when the required relation holds and the forbidden shortcuts fail.
+
+| Topic | Positive claim | Negative clamp |
+|---|---|---|
+| Route truth | This output followed this committed path. | It does not prove objective truth. |
+| Local-first | Verification runs locally. | It is not a hosted service. |
+| Receipts | Receipts are recomputed from artifacts. | A receipt is not trusted because it exists. |
+| PASS | PASS means this fixed cycle closed. | PASS is not production security or privacy. |
+| Artifacts | Artifacts are inspectable snapshots. | Artifacts are not durable authority. |
+| Cache | Cache may store material. | Cache may not store trust. |
+| Sections | A valid section can re-enter verification. | An orphan fragment is not valid. |
+| Proof | Groth16 verifies the fixed circuit. | It does not prove claims outside that circuit. |
+
+Full claim boundary: [`PUBLIC_CLAIMS.md`](PUBLIC_CLAIMS.md).
+
+## What this is / is not
+
+| This is | This is not |
+|---|---|
+| A local reference implementation. | A hosted product. |
+| A fixed canonical proof cycle. | A general arbitrary-input engine. |
+| A route-truth verifier. | An objective-truth oracle. |
+| A receipt/proof/artifact demo. | A production provenance service. |
+| A fail-closed reference pattern. | A privacy system or lie detector. |
+
+## Two reader tracks
+
+```text
+Track A: I just want to see it work.
+  make demo
+  make verify
+  inspect aion.statement.json
+
+Track B: I need to trust the claim.
+  read PUBLIC_BOUNDARY.md
+  read VERIFY.md
+  read PUBLIC_CLAIMS.md
+  run make test
+  inspect proof/artifact receipts
+  read DESIGN_NOTES.md
+```
+
+## The route at a glance
+
+```text
+Source bytes
+  ↓
+Encode
+  ↓
+Carry
+  ↓
+Compare
+  ↓
+Carry Back
+  ↓
+Map Back
+  ↓
+Write
+  ↓
+Prove
+  ↓
+Verify
+  ↓
+PASS / FAIL
+```
+
+The program prints exactly one of these:
 
 ```text
 PASS
@@ -35,30 +434,62 @@ FAIL
 
 There is no halfway status.
 
-You do not need advanced math to try it. You do not need a cryptography
-background to read it. You do not need any private system to run it. Copy one
-prompt into a coding agent, run the project it builds, then break it on purpose
-and watch it refuse to lie.
-
-
 ## Quick start
 
 ```bash
 make setup
+make demo
 make verify
 make test
 ```
 
-Expected result:
+`make setup` installs the local proof toolchain and fetches the pinned Powers of
+Tau file. `make demo` runs the committed reference statement and points to the
+artifacts. `make verify` prints the canonical verifier result. `make test` runs
+red-team mutation and public-boundary checks.
 
-```text
-PASS
+## Read next
+
+| File | Purpose |
+|---|---|
+| [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) | Public contract and egress boundary. |
+| [`VERIFY.md`](VERIFY.md) | Proof path and failure matrix. |
+| [`PUBLIC_CLAIMS.md`](PUBLIC_CLAIMS.md) | Allowed and forbidden public claims. |
+| [`DESIGN_NOTES.md`](DESIGN_NOTES.md) | Rationale and non-goals. |
+| [`TRUSTED_SETUP.md`](TRUSTED_SETUP.md) | Demo-only Groth16 setup boundary. |
+| [`CIRCUIT.md`](CIRCUIT.md) | Generated circuit structure and audit spec. |
+| [`fixtures/`](fixtures/) | PASS/FAIL/tamper/out-of-boundary examples. |
+| [`viewer/`](viewer/) | Optional local read-only artifact viewer. |
+
+## Adoption recipes
+
+These recipes show how to reuse the reference pattern without changing its
+contract. They are wrappers around the same local PASS/FAIL path, not a new
+verification mode.
+
+| Recipe | Do this | This is | This is not |
+|---|---|---|---|
+| Use it in your repo | Copy the boundary docs, keep the fixtures visible, and make your own `make verify` run the local verifier before release. | A way to publish a recomputable route. | A claim that arbitrary inputs are proven. |
+| Wrap it in CI | Add a CI step that runs `make verify` and fails the build on `FAIL` or missing artifacts. | A release gate for the fixed proof path. | A substitute for local recomputation or human review. |
+| Verify a release artifact | Pin the artifact hash, run the verifier from a clean checkout, and compare the emitted receipt fields to the release note. | A portable check that the published bytes match the proof bundle. | A hosted attestation service or a broad provenance platform. |
+
+Minimal CI shape:
+
+```yaml
+name: verify-aion
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make setup
+      - run: make verify
+      - run: make test
 ```
 
-`make setup` installs the local proof toolchain and fetches the pinned Powers of
-Tau file. `make verify` runs the route and verifies the statement. `make test`
-runs the red-team checks.
-
+Keep the artifact visible. A dashboard may summarize the receipt, but the
+receipt and proof bundle remain the inspectable evidence.
 
 ## RFC boundary
 
@@ -94,7 +525,7 @@ AION is one closed path. One prompt builds the local project. The project runs
 the path end to end. If every step closes, including a real Groth16 proof and
 verification, it prints `PASS`. If anything is off, it prints `FAIL`.
 
-There is no local-only pass. There is no optional proof. There is no demo mode.
+There is no local-only pass and no optional proof. `make demo` is only a friendly entrypoint to the same committed verifier path. The Groth16 setup is demo/reference-only; see `TRUSTED_SETUP.md`.
 The path is laminar: it flows once, cleanly, or not at all.
 
 
@@ -180,89 +611,6 @@ AION is defined by pairs: what must happen, and what must never happen.
 | Audit artifacts may be written for verification. | Audit artifacts must not become the final answer. |
 | Failure must print `FAIL`. | The system must not guess, continue, or emit partial success. |
 
-## Data is data
-
-Positive clamp:
-
-Inputs are source bytes. They may be encoded, carried, compared, mapped back, and
-emitted.
-
-Negative clamp:
-
-Inputs must not change the route, disable a check, select a toolchain, rewrite
-the expected root, change verification policy, or tell the program what to do.
-
-## One exit
-
-Positive clamp:
-
-The final accepted answer is the emitted byte string after the full route closes.
-
-Negative clamp:
-
-Receipts, logs, proof artifacts, statements, fixture text, and intermediate
-records must not be treated as final answers.
-
-## Reference implementation clamp
-
-Positive clamp:
-
-AION v1 is a reference implementation for one fixed canonical route. It is meant
-to make route truth inspectable.
-
-Negative clamp:
-
-AION v1 must not be described as a production provenance service, a general
-arbitrary-input engine, an objective-truth oracle, or a semantic understanding
-system.
-
-## Proof clamp
-
-Positive clamp:
-
-The Groth16 proof must verify that the canonical circuit accepts the committed
-public inputs.
-
-Negative clamp:
-
-The proof must not be described as proving more than the fixed canonical circuit
-actually constrains.
-
-## Receipt clamp
-
-Positive clamp:
-
-A receipt counts only when its hash can be recomputed from its body and its
-referenced artifacts.
-
-Negative clamp:
-
-A receipt must not count because a JSON file claims `proof_passed: true`.
-
-## Failure clamp
-
-Positive clamp:
-
-A broken route must print `FAIL`.
-
-Negative clamp:
-
-A broken route must not print partial success, fallback output,
-explanation-as-answer, or best-effort output.
-
-## The five basic words
-
-| Word | Plain meaning | Tiny math |
-|---|---|---|
-| Source bytes | The original input. | bytes are the domain |
-| Field | A bounded integer view of bytes. | `F: bytes -> [-32768, 32767]^n` |
-| Ledger | A private mapback table. | side information |
-| Receipt | A hash record of one step. | `H(input, output, checks)` |
-| Root | The final composite receipt hash. | parent commitment |
-
-SHA-256 is a hash, not a digital signature. The comparison step receives fields
-only. Identity returns only through the ledger.
-
 ## What each step does
 
 | Step | Plain job |
@@ -277,51 +625,7 @@ only. Identity returns only through the ledger.
 | Verify | Verify the Groth16 proof and all local receipts. |
 | AION | Accept only if the entire path closes. |
 
-The proof is not in one step. The proof is in the fixed canonical path closing.
-
-## The only promise
-
-AION makes one narrow promise:
-
-> If the generated project prints `PASS`, then the canonical route closed end to
-> end: the selected bytes were mapped back and emitted exactly, the receipts
-> composed, replay matched, tampering failed, the transcript root matched the frozen
-> expected transcript root, and a real Groth16 proof of the fixed canonical cycle
-> (route logic plus in-circuit SHA-256 of the transcript) was generated and
-> verified.
-
-It does not prove:
-
-- objective truth,
-- production security,
-- semantic understanding,
-- patent scope.
-
-Side channels are outside the local promise. The command prints only `PASS` or
-`FAIL`, but timing, memory use, host tooling, and operating-system behavior are
-not privacy claims.
-
-It proves:
-
-```text
-the fixed canonical cycle as a Groth16 proof, with emitted bytes and transcript digest public
-```
-
-The final byte checks are direct and hashed:
-
-```python
-output_bytes == selected_source_bytes
-sha256_bytes(output_bytes) == sha256_bytes(selected_source_bytes)
-```
-
-The final proof check is real:
-
-```text
-the Groth16 verifier accepts the closure proof
-```
-
-If the Groth16 circuit does not compile, prove, and verify, the result is
-`FAIL`.
+The proof is not in one step. The proof is in the fixed canonical path closing. Each named route phase has a public receipt under `proofs/v1/receipts/`.
 
 ## The local scoring surface
 
@@ -349,8 +653,7 @@ MIN = -32768
 MAX =  32767
 ```
 
-Keep every value inside a fixed range and clamp every operation. This is
-fixed-width integer arithmetic.
+Keep the v1 fixture arithmetic integer-only and byte-count based. This reference does not claim a Q15/saturating arithmetic implementation.
 
 ### Compare fields
 
@@ -459,7 +762,7 @@ only when these risks are handled.
 
 ## The three roots
 
-AION uses three roots so the proof is not circular:
+AION uses phase receipts and three roots so the proof is not circular:
 
 | Root | What it binds | How it is checked |
 |---|---|---|
@@ -476,15 +779,14 @@ all three roots to cohere.
 The portable verifier also parses `public.json` and reconstructs the 256 public
 digest bits. Those bits must equal `EXPECTED_TRANSCRIPT_ROOT`, not merely hash to
 the same `public.json` file. For the negative verifier check, it regenerates a
-fresh bad public input from `public.json` and does not trust a stored
-`public_bad.json`.
+fresh bad public input from `public.json` and does not trust a stored bad-public artifact.
 
 ## The safety rules
 
 1. Bytes are the source authority.
-2. Fields are bounded integers.
+2. Fields are byte-count integer views for the fixed fixture.
 3. Arithmetic is integer-only.
-4. Every arithmetic result is clamped.
+4. v1 does not claim Q15/saturating arithmetic.
 5. The comparison step sees only fields.
 6. Identity lives only in the ledger.
 7. The canonical fixture has a strict winner; ambiguous ranking fails.
@@ -502,8 +804,10 @@ fresh bad public input from `public.json` and does not trust a stored
 
 ## The Groth16 circuit
 
-The project has one circuit, `aion.circom`. It proves the fixed canonical cycle
-as a Groth16 relation. The emitted bytes and transcript digest are public inputs;
+`aion.circom` is a single fixed-reference circuit. It is fully unrolled and
+machine-generated; audit it through [`CIRCUIT.md`](CIRCUIT.md) and
+`tests/test_circuit_structure.py`, not by reading every line. It proves the
+fixed canonical cycle as a Groth16 relation. The emitted bytes and transcript digest are public inputs;
 the private witness is the route data needed to satisfy the circuit. The canonical byte/scoring/output/hash relation is proved
 in-circuit; the host remains responsible for fail-closed orchestration,
 toolchain and artifact receipts, replay/tamper policy, and statement generation.
@@ -548,147 +852,6 @@ must reject it.
 There is no host-trusted hash step left in the proof. The host computes the same
 digest only to know the public commitment and to fail closed before proving.
 
-## Copy-paste prompt
-
-Paste the following into a coding agent that can write and run local files.
-
-```text
-Build a single local AION project with these files:
-
-  aion_cycle.py
-  aion.circom
-  fixtures/canonical.json
-  fixtures/tampered.json
-  expected_root.txt
-  toolchain.lock
-  tests/test_redteam.py
-  aion.statement.json
-
-Goal:
-Run one laminar closed path and prove it:
-
-  Encode -> Carry -> Compare -> Carry Back -> Map Back -> Write -> Prove -> Verify
-
-The project must run with:
-
-  python aion_cycle.py
-
-It must print exactly PASS and exit 0 only if the entire path closes, including
-real Groth16 proof generation and verification.
-It must print exactly FAIL and exit 1 otherwise.
-It must write aion.statement.json containing transcript_root, proof_root, and cycle_root.
-Print nothing else. Do not print the expected transcript root. Do not print tracebacks
-during normal failure handling. Do not write debug logs.
-
-Use only the Python standard library for the loop. For the proof step, call real
-external Groth16 tooling (circom and snarkjs) through subprocess. Do not install
-or import third-party Python packages. If the Groth16 tooling is not available,
-print FAIL. There is no demo mode and no local-only pass.
-
-Required constants in aion_cycle.py:
-
-  MIN_Q15 = -32768
-  MAX_Q15 = 32767
-  FIELD_SIZE = 256
-  BOOTSTRAP_EXPECTED_TRANSCRIPT_ROOT = False
-  EXPECTED_TRANSCRIPT_ROOT = "<concrete sha256 hex string>"
-
-Determinism and integrity constraints:
-
-1.  Never use Python's built-in hash(). Use hashlib.sha256 for all identity,
-    ordering, receipts, and roots. Provide sha256_bytes(data: bytes) -> str.
-2.  Serialize anything before hashing deterministically:
-    json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    or strictly ordered tuples converted to bytes. Provide canonical_bytes(value).
-3.  Bytes are the source authority. Encode any text fixtures as UTF-8 strict.
-    Do not normalize casing, whitespace, line endings, or Unicode.
-4.  Integer-only arithmetic. No float. No "/" division. Use "//" only if needed.
-5.  Simulate fixed-width Q15: clamp every value to [MIN_Q15, MAX_Q15].
-    Provide clamp_q15(x), sat_add(a, b), sat_mul(a, b). Python big integers must
-    not hide overflow.
-6.  Encode turns source bytes into a 256-slot byte histogram field. For each byte
-    b in the source, increment slot b, then clamp. Store identity in a ledger
-    mapping field_hash -> source_bytes.
-7.  Carry copies a field to a pure list[int] and strips all metadata. The Compare
-    step receives only list[int] fields. It must never receive dicts, ids, names,
-    paths, text, raw bytes, or record hashes.
-8.  Compare scores a query field against each corpus field:
-    score starts at 0; for aligned slots, score = sat_add(score, sat_mul(q[i], c[i])).
-9.  For v1, require a strict unique winner. Do not use score-only ties; if the top score is tied, FAIL instead of guessing.
-10. Never rely on dict or set iteration order. Never iterate a set. Sort keys.
-11. If two different source records produce the same field_hash, FAIL instead of
-    guessing (ambiguous mapback).
-12. Carry Back carries only the selected field_hash.
-13. Map Back recovers selected source bytes from the ledger by selected field_hash.
-14. Write emits output_bytes and requires both:
-        output_bytes == selected_source_bytes
-        sha256_bytes(output_bytes) == sha256_bytes(selected_source_bytes)
-15. Every step emits a receipt dict: phase name, input hash, output hash, child
-    receipt hashes, failed_checks list, proof_passed bool, receipt_hash.
-16. A parent receipt fails if any child receipt failed. A green parent cannot
-    hide a red child.
-17. Compose all receipts into a final composite root.
-18. Replay: run the canonical fixture twice. Selected bytes, output bytes, and
-    transcript root must match. Track an event_id = sha256_bytes(canonical input);
-    a repeated event_id is replay verification only and must not mutate twice.
-19. Tamper: run a copied fixture with one byte, one score, or the selected
-    record changed. That run must fail its root or byte-exact check.
-20. The final composite root must equal the literal EXPECTED_TRANSCRIPT_ROOT. Do not compute
-    EXPECTED_TRANSCRIPT_ROOT at runtime in the final file and do not update it at runtime.
-
-Groth16 proof step (required, not optional):
-
-21. Write aion.circom as one circuit that proves the fixed canonical cycle:
-    a. 8-bit range checks for every query, corpus, and output byte;
-    b. pairwise byte-equality scoring (the byte-histogram inner product) computed
-       in-circuit for each corpus record;
-    c. corpus record 0 is the strict winner (score0 - score1 - 1 and
-       score0 - score2 - 1 are non-negative 16-bit values);
-    d. emitted output bytes equal the winning record byte for byte;
-    e. in-circuit SHA-256 (widely used circomlib Sha256 template) of the transcript
-       query || corpus0 || corpus1 || corpus2 || emitted equals a public 256-bit
-       digest commitment.
-22. Public inputs are the emitted answer bytes and the 256-bit digest commitment.
-23. Install circomlib and compile with circom using the circomlib include path.
-    Use a powers-of-tau large enough for the domain-separated circuit (2^18).
-24. Run a Groth16 setup, generate the proof with snarkjs, and verify it.
-25. Run a verifier-negative check: flip one public digest bit; the real verifier
-    must reject. If it accepts, FAIL.
-26. The project prints PASS only if: the host cycle selected the strict winner,
-    the emitted bytes equal the winner, replay matched, tampering changed the
-    digest, the transcript digest equals the frozen EXPECTED_TRANSCRIPT_ROOT, the circuit
-    compiled, the proof generated, the verifier returned OK, and the negative
-    check rejected the tampered public input. Otherwise FAIL.
-
-Canonical fixture:
-
-  query:
-    b"need contract renewal approval"
-
-  corpus:
-    b"contract renewal requires finance approval"
-    b"weather report says rain tomorrow"
-    b"lunch menu includes soup"
-
-  expected selected record:
-    b"contract renewal requires finance approval"
-
-Bootstrap then freeze EXPECTED_TRANSCRIPT_ROOT:
-
-- While writing the project you may compute the canonical transcript root once.
-- The final saved aion_cycle.py must contain a concrete EXPECTED_TRANSCRIPT_ROOT string and
-  BOOTSTRAP_EXPECTED_TRANSCRIPT_ROOT = False.
-- The final file must compare the current computed root against that literal and
-  must never overwrite it at runtime.
-
-Definition of done:
-Running python aion_cycle.py on a machine with circom and snarkjs available
-prints exactly PASS and exits 0. Changing any canonical input byte, any score,
-any receipt, the selected record, or the circuit input causes FAIL and exit 1.
-If circom or snarkjs is missing, it prints FAIL.
-```
-
-
 ## Known-good environment
 
 The checked-in proof bundle and statement were verified with:
@@ -703,7 +866,7 @@ The checked-in proof bundle and statement were verified with:
 | Powers of Tau | `powersOfTau28_hez_final_18.ptau` |
 | ptau SHA-256 | `e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694` |
 
-Docker users can verify the checked-in proof bundle with:
+Docker users can verify the checked-in proof bundle with. The Docker base image is pinned by digest in `Dockerfile`:
 
 ```bash
 docker build -t aion-cycle .
@@ -763,7 +926,7 @@ It does not leave out Groth16. Groth16 is part of the path.
 The local map keeps the rest small:
 
 - local demo setup artifacts with hashes instead of a public ceremony,
-- local proof artifacts committed or emitted with hashes instead of production artifact storage,
+- small verifier artifacts committed with hashes and heavy proof byproducts regenerated by `make reproduce`,
 - a fixed-length canonical fixture instead of arbitrary-length inputs,
 - one in-circuit scoring surface instead of advanced scoring surfaces,
 - an in-memory ledger instead of production mapback storage,
@@ -771,24 +934,6 @@ The local map keeps the rest small:
 
 None of that changes the path. Real Groth16 generation and verification are
 still required for `PASS`.
-
-## The stones under the path
-
-The whole path is made of ordinary, published parts:
-
-| Part of the path | Standard result | Reference |
-|---|---|---|
-| Bounded numbers | Fixed-width integer arithmetic | Oppenheim and Schafer (2009); Knuth Vol. 2 (1997) |
-| Coordinate compare | Hadamard product | Horn and Johnson (1991) |
-| Match score and ranking | Inner product and stable sort | Halmos (1958); Strang (2016); Knuth Vol. 3 (1998) |
-| Receipts | SHA-256 hash commitment | NIST FIPS 180-4 (2015) |
-| Receipt tree | Merkle-style composition | Merkle (1988) |
-| No name leakage | Noninterference / information flow | Goguen and Meseguer (1982); Denning and Denning (1977) |
-| Mapback honesty | Source-coding and complexity bounds | Shannon (1948); Cover and Thomas (2006); Kolmogorov (1965) |
-| Closure proof | Groth16 zk-SNARK | Groth (2016); Ben-Sasson et al. (2014) |
-
-Kolmogorov complexity is a lower-bound idea, not a number the project computes.
-Recovery is proven by the ledger, not by descriptive complexity.
 
 ## References
 
@@ -832,10 +977,24 @@ More information, demos, licensing, and contact: [mushku.com](https://mushku.com
 
 No account required to try the map. Copy the prompt and run it first.
 
-## Last note
+<!-- AION_INVARIANT_PROJECTION_START -->
+## AION invariant projection
 
-This is a map made of ordinary parts.
+Invariant: `aion-trust-lineage-storage-v1`
+Version: `2026-06-27`
+Packet hash: `7dc4cfd6d5df39ba3dc3234456f62f64f8aeae71448f3cb56d604e919e3ab696`
+Document class: public projection
 
-Copy it. Run it. Break it.
+Positive clamp:
 
-If it fails honestly, you found the door.
+- AION verifies present state from source lineage.
+- Code/source files may be durable source artifacts; durable data/context stores preserve material and lineage.
+- Reports, emissions, receipts, generated artifacts, and caches are inspectable current snapshots unless explicitly promoted.
+- Every major public claim says what it is and what it is not.
+
+Negative clamp:
+
+- Reports, receipts, emissions, generated artifacts, and caches are not authority unless explicitly promoted into durable data/source authority.
+- Nothing is trusted because it exists, is stored, is emitted, is cached, is signed, is hashed, or says it passed.
+- Public docs must not make internal scientific-metaphor claims or expose private implementation details.
+<!-- AION_INVARIANT_PROJECTION_END -->

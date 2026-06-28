@@ -1,0 +1,4 @@
+{
+  "description": "Changing a child receipt hash breaks receipt recomputation. Expected behavior: verification fails.",
+  "expected_reason": "receipt_hash_mismatch"
+}

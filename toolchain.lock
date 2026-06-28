@@ -1,6 +1,9 @@
 # Toolchain expected by the reference implementation.
-# The script records the actual resolved paths and version output at runtime.
+# Verification records the actual resolved paths and version output at runtime.
 python >= 3.11
-circom 2.x
-snarkjs 0.7.x
 node >= 18
+snarkjs 0.7.6
+circom 2.2.3
+circom_linux_amd64_sha256 85342c7ff332d948df7c0c50ecf201e6129349aef550ce873f3c811b79fe53a3
+circomlib 2.0.5
+powersOfTau28_hez_final_18.ptau sha256 e970efa7774da80101e0ac336d083ef3339855c98112539338d706b2b89ac694

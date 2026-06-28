@@ -1,0 +1,4 @@
+{
+  "description": "Unicode composed and decomposed forms are treated as byte-distinct, not normalized into equality.",
+  "expected_boundary": "bytes_not_names"
+}

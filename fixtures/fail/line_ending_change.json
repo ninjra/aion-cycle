@@ -1,0 +1,4 @@
+{
+  "description": "Changing line endings changes bytes and therefore route identity.",
+  "expected_boundary": "bytes_not_platform_text"
+}

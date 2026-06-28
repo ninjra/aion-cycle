@@ -1,0 +1,4 @@
+{
+  "description": "Changing one query byte changes the transcript root. Expected behavior: verification fails.",
+  "expected_reason": "transcript_root_mismatch"
+}

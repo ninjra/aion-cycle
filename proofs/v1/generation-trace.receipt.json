@@ -20,7 +20,7 @@
     },
     {
       "cmd": [
-        "snarkjs",
+        "node_modules/.bin/snarkjs",
         "groth16",
         "setup",
         "aion.r1cs",
@@ -33,21 +33,21 @@
     },
     {
       "cmd": [
-        "snarkjs",
+        "node_modules/.bin/snarkjs",
         "zkey",
-        "contribute",
+        "beacon",
         "aion_0.zkey",
         "aion.zkey",
-        "--name=aion",
-        "-e=aion-local-entropy"
+        "936fc578d78c5a8fc92863f1e4393e35fa8318ce4e65fd1311b40e68dc75f6ea",
+        "10"
       ],
       "returncode": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "08bcd0dd7065ceb805b1513c037a4ea54c6dfb8ec730e1f1999af54f822e5421"
+      "stdout_sha256": "b1f4819ea04b3061ec936d82d00159f0493938d61fc04975be0f8d68cdaf0f5f"
     },
     {
       "cmd": [
-        "snarkjs",
+        "node_modules/.bin/snarkjs",
         "zkey",
         "export",
         "verificationkey",
@@ -60,7 +60,7 @@
     },
     {
       "cmd": [
-        "snarkjs",
+        "node_modules/.bin/snarkjs",
         "groth16",
         "fullprove",
         "input.json",
@@ -75,7 +75,7 @@
     },
     {
       "cmd": [
-        "snarkjs",
+        "node_modules/.bin/snarkjs",
         "groth16",
         "verify",
         "verification_key.json",
@@ -89,6 +89,9 @@
   ],
   "negative_verify_returncode": 1,
   "proof_passed": true,
-  "receipt_hash": "70a08ed5496e0abd9d65cf764493d33299171896c6a1ad4da6444e0fccae0aea",
-  "schema_version": "aion-generation-trace-receipt-v1"
+  "public_beacon_hex": "936fc578d78c5a8fc92863f1e4393e35fa8318ce4e65fd1311b40e68dc75f6ea",
+  "public_beacon_iterations_exp": "10",
+  "receipt_hash": "27db394bdc81e917d27306df6e64b4b969baaed035eb41958bf4d25d467a9122",
+  "schema_version": "aion-generation-trace-receipt-v1",
+  "trusted_setup_profile": "public_deterministic_beacon_demo_only"
 }

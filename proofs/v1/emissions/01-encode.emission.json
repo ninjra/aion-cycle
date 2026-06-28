@@ -1,0 +1,32 @@
+{
+  "chain_length": 9,
+  "child_emission_hashes": [],
+  "claimed_emission_hash": "2092e5f40e2933a0974a7f8538f0c4a9230da73822f1af3bd8b1b8054ec990ee",
+  "claimed_passed": true,
+  "domain_from": "source_bytes",
+  "domain_to": "bounded_fields",
+  "input_identity": {
+    "byte_count": 161,
+    "label": "source_material",
+    "sha256": "b0b81704a5582ade37a9f4eed2f743cde0ff0ee575cfdfa65d049f07ec837284"
+  },
+  "next_expected_transition": "carry",
+  "output_identity": {
+    "byte_count": 1126,
+    "label": "bounded_fields",
+    "sha256": "74306d4c9bb04dd583607cb24485c8778a27c1d2891f38719b5e8f7116b24752"
+  },
+  "previous_emission_hash": "34d11f49580a96d313e07e49915bdc5253deb7375f8fbe6c26c6a47d6e4e239d",
+  "route_id": "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close",
+  "schema_version": "aion-transition-emission-v1",
+  "source_lineage_hashes": [
+    "34d11f49580a96d313e07e49915bdc5253deb7375f8fbe6c26c6a47d6e4e239d"
+  ],
+  "source_root": {
+    "byte_count": 226,
+    "label": "canonical_fixture",
+    "sha256": "f42d12afaa61c6f0219354301edb9d65693a77b0c059ea77d0ec9643df505258"
+  },
+  "transition_id": "encode",
+  "transition_index": 1
+}

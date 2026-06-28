@@ -9,13 +9,17 @@ FORBIDDEN_PATTERNS = (
     re.compile(r"[A-Za-z]:\\Users\\"),
     re.compile(r"gho_[A-Za-z0-9_]+"),
     re.compile("-----" + "BEGIN " + r"(RSA |EC |OPENSSH )?" + "PRIVATE " + "KEY" + "-----"),
+    # Internal-only Apex markers. Assembled from fragments so this detector file
+    # does not itself contain the verbatim forbidden strings.
+    re.compile("INTERNAL" + " / NOT FOR " + "PUBLIC " + "DISTRIBUTION"),
+    re.compile("AION_APEX" + "_MANIFEST"),
+    re.compile("encoded_field_backup" + "_missing_or_invalid_count"),
 )
 ALLOWLIST = {
     ".git",
     ".pytest_cache",
     "__pycache__",
     "node_modules",
-    "proofs/v1/aion.sym",
 }
 
 

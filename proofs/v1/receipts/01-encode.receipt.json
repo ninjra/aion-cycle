@@ -1,0 +1,22 @@
+{
+  "child_receipt_hashes": [
+    "26eec4a7d6651d42ea8343aaee5a4f39eb42ae5b6389d49c655815db20192f1e"
+  ],
+  "failed_checks": [],
+  "input_identity": {
+    "byte_count": 161,
+    "label": "source_material",
+    "sha256": "b0b81704a5582ade37a9f4eed2f743cde0ff0ee575cfdfa65d049f07ec837284"
+  },
+  "output_identity": {
+    "byte_count": 1126,
+    "label": "bounded_fields",
+    "sha256": "74306d4c9bb04dd583607cb24485c8778a27c1d2891f38719b5e8f7116b24752"
+  },
+  "phase": "encode",
+  "phase_index": 1,
+  "proof_passed": true,
+  "receipt_hash": "c64839b37fbee61b1007e6438aecd55068514a18802d31c2f421fd1990e1106e",
+  "route_id": "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close",
+  "schema_version": "aion-phase-receipt-v1"
+}

@@ -24,10 +24,11 @@ def _run_verify() -> subprocess.CompletedProcess[str]:
     )
 
 
-def _assert_verify_fails() -> None:
+def _assert_verify_fails(reason: str) -> None:
     result = _run_verify()
     assert result.stdout.strip() == "FAIL"
     assert result.returncode == 1
+    assert f"FAIL_REASON:{reason}" in result.stderr
 
 
 def test_no_builtin_hash_call() -> None:
@@ -63,7 +64,7 @@ def test_statement_cycle_root_mutation_fails(tmp_path: Path) -> None:
     data["cycle_root"] = "0" * 64
     try:
         path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        _assert_verify_fails()
+        _assert_verify_fails("cycle_root_mismatch")
     finally:
         path.write_text(original, encoding="utf-8")
 
@@ -80,7 +81,7 @@ def test_statement_proof_hash_mutation_fails() -> None:
     data["cycle_root"] = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     try:
         path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        _assert_verify_fails()
+        _assert_verify_fails("proof_hash_mismatch")
     finally:
         path.write_text(original, encoding="utf-8")
 
@@ -92,7 +93,7 @@ def test_public_input_mutation_fails() -> None:
     data[0] = "0" if data[0] != "0" else "1"
     try:
         path.write_text(json.dumps(data), encoding="utf-8")
-        _assert_verify_fails()
+        _assert_verify_fails("artifact_receipt_recompute_mismatch")
     finally:
         path.write_text(original, encoding="utf-8")
 
@@ -104,7 +105,7 @@ def test_artifact_receipt_mutation_fails() -> None:
     data["proof_hash"] = "0" * 64
     try:
         path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        _assert_verify_fails()
+        _assert_verify_fails("receipt_hash_mismatch")
     finally:
         path.write_text(original, encoding="utf-8")
 
@@ -116,7 +117,7 @@ def test_toolchain_receipt_mutation_fails() -> None:
     data["toolchain"]["node"]["version"] = "tampered"
     try:
         path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        _assert_verify_fails()
+        _assert_verify_fails("receipt_hash_mismatch")
     finally:
         path.write_text(original, encoding="utf-8")
 
@@ -129,7 +130,7 @@ def test_public_digest_bit_mutation_fails() -> None:
     data[idx] = "0" if data[idx] != "0" else "1"
     try:
         path.write_text(json.dumps(data), encoding="utf-8")
-        _assert_verify_fails()
+        _assert_verify_fails("artifact_receipt_recompute_mismatch")
     finally:
         path.write_text(original, encoding="utf-8")
 
@@ -148,35 +149,27 @@ def test_generation_trace_receipt_mutation_fails() -> None:
     data["generation_trace"][0]["returncode"] = 99
     try:
         path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        _assert_verify_fails()
+        _assert_verify_fails("receipt_hash_mismatch")
     finally:
         path.write_text(original, encoding="utf-8")
 
 
-def test_stored_public_bad_is_not_trusted() -> None:
+def test_stored_public_bad_is_absent_and_not_trusted() -> None:
     path = ROOT / "proofs" / "v1" / "public_bad.json"
-    original = path.read_text(encoding="utf-8")
-    data = json.loads(original)
-    # Make the stored public_bad equal to public.json. Verifier must ignore it and
-    # regenerate public_bad_reverify.json from public.json, so verification still passes.
-    data = json.loads((ROOT / "proofs" / "v1" / "public.json").read_text(encoding="utf-8"))
-    try:
-        path.write_text(json.dumps(data), encoding="utf-8")
-        result = _run_verify()
-        assert result.stdout.strip() == "PASS"
-        assert result.returncode == 0
-    finally:
-        path.write_text(original, encoding="utf-8")
+    assert not path.exists()
+    result = _run_verify()
+    assert result.stdout.strip() == "PASS"
+    assert result.returncode == 0
 
 
 def test_missing_snarkjs_fails(monkeypatch) -> None:
     import aion_cycle
-    original = aion_cycle.shutil.which
-    def fake_which(name: str):
+    original = aion_cycle.resolve_tool
+    def fake_resolve(name: str):
         if name == "snarkjs":
             return None
         return original(name)
-    monkeypatch.setattr(aion_cycle.shutil, "which", fake_which)
+    monkeypatch.setattr(aion_cycle, "resolve_tool", fake_resolve)
     try:
         aion_cycle.verify_statement(ROOT / "aion.statement.json")
     except RuntimeError as exc:
@@ -199,6 +192,30 @@ def test_missing_circom_fails(monkeypatch) -> None:
         assert "missing_circom" in str(exc)
     else:
         raise AssertionError("missing circom did not fail")
+
+
+
+
+def test_verify_is_read_only_for_negative_public_input() -> None:
+    reverify = ROOT / "proofs" / "v1" / "public_bad_reverify.json"
+    before = reverify.read_text(encoding="utf-8") if reverify.exists() else None
+    result = _run_verify()
+    assert result.stdout.strip() == "PASS"
+    assert result.returncode == 0
+    after = reverify.read_text(encoding="utf-8") if reverify.exists() else None
+    assert after == before
+
+
+def test_duplicate_field_hash_mapback_fails() -> None:
+    import aion_cycle
+    query = b"aa"
+    corpus = [b"same", b"same", b"other"]
+    try:
+        aion_cycle.cycle(query, corpus)
+    except RuntimeError as exc:
+        assert "ambiguous" in str(exc)
+    else:
+        raise AssertionError("duplicate field hash did not fail closed")
 
 
 def test_expected_root_script_matches_frozen_root() -> None:

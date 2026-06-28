@@ -1,0 +1,4 @@
+{
+  "description": "Two candidate records tie under fixed byte-count scoring. Expected behavior: fail closed before emitting an answer.",
+  "expected_reason": "ambiguous_or_no_winner"
+}

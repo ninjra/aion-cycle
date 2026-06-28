@@ -1,0 +1,5 @@
+{
+  "description": "Canonical fixed reference fixture. Expected verifier output: PASS.",
+  "command": "make verify",
+  "expected_stdout": "PASS"
+}
