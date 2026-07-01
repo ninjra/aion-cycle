@@ -1,22 +1,22 @@
 {
   "chain_length": 9,
   "child_emission_hashes": [],
-  "claimed_emission_hash": "5852d391bac13e7ab2c715a52e1d740951d697d6f3a429b2bc3f67d3c2796f94",
+  "claimed_emission_hash": "d718d85d6489ec7a2853ddc481d8a143dbb2924913f18eca7272e114e981c1f9",
   "claimed_passed": true,
   "domain_from": "proof_artifacts",
   "domain_to": "cycle_statement",
   "input_identity": {
     "byte_count": 64,
     "label": "proof_artifacts",
-    "sha256": "8ad07259d95ee386aa3ba778e9076b1eb5595db8de95b6e9945d1fe41210e07f"
+    "sha256": "27ec7be9c3be9d7ad5b68acc96baeadfafa2ab6ef677af4b40076abc07043b11"
   },
   "next_expected_transition": "final-cycle",
   "output_identity": {
     "byte_count": 817,
     "label": "cycle_statement",
-    "sha256": "2cca7e3e161b2fe4f8d27e145481197b84ec3c7409475e7ef6997b228e9203ff"
+    "sha256": "d3ed35979b197d8f7aa442df8326aa82bccab25756b9f8fe6665b437c2716b9b"
   },
-  "previous_emission_hash": "b7090367976968ae3cecb9da88843af5dc7a18e609d97207b18bc5c5187b402b",
+  "previous_emission_hash": "088c9a1b00403ec6642dac4439ef77d996e290e126f30dd84a4e743f320e8e62",
   "route_id": "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close",
   "schema_version": "aion-transition-emission-v1",
   "source_lineage_hashes": [
@@ -27,7 +27,7 @@
     "0184782162237c2259ef50cf8e93bdaefd839c0a2f9b547bf191392b5e1d1a5b",
     "79e3581e90deed39ec344076994e25dd1339ac2934b771b08d49a30b71d7ab92",
     "cce530818f98fdc9be45a55a88cd85ded44237d5402d7bc5d40d547809180b19",
-    "b7090367976968ae3cecb9da88843af5dc7a18e609d97207b18bc5c5187b402b"
+    "088c9a1b00403ec6642dac4439ef77d996e290e126f30dd84a4e743f320e8e62"
   ],
   "source_root": {
     "byte_count": 226,

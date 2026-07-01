@@ -7,10 +7,10 @@
     "c9af8183a7393b55e29df9eae22e1b20b3c9f287f469b1dddf2c5552f641e5b0",
     "3e4f2ba59433e0dd198323d5c8cfe657b9fe1aaf428cf455e15c68e91242f720",
     "1e529406aac31d734d36ab8552ec0db8d42fd2a55f75ff237e13b794d9e52ad4",
-    "3244f36affda90643a247e7a1cc7333cdbc9a629b87f02d89c1a94808214254c",
-    "6a6ac2a5c146e51870ec33f7055ce35c7d8d180ed507aaa2ec752ce771483303"
+    "332f07804c1075c0912bef5ad2299fca02bb676674d82b3b22b6087041086fc5",
+    "a813a6dccb691c9fb72811fef6da48246933329af3229b4c54bc08bb60739b61"
   ],
-  "cycle_root": "bf34f1ea605b4b7784a0c156a9102b6ad9a85fbead4bb21cf669795b9f7590c0",
+  "cycle_root": "b5d5ef136891fce987e6abfc842f4fc20d6be2b0584bd64b5f1c04ec81bd9494",
   "failed_checks": [],
   "phase": "cycle",
   "phase_receipt_hashes": [
@@ -21,12 +21,12 @@
     "c9af8183a7393b55e29df9eae22e1b20b3c9f287f469b1dddf2c5552f641e5b0",
     "3e4f2ba59433e0dd198323d5c8cfe657b9fe1aaf428cf455e15c68e91242f720",
     "1e529406aac31d734d36ab8552ec0db8d42fd2a55f75ff237e13b794d9e52ad4",
-    "3244f36affda90643a247e7a1cc7333cdbc9a629b87f02d89c1a94808214254c",
-    "6a6ac2a5c146e51870ec33f7055ce35c7d8d180ed507aaa2ec752ce771483303"
+    "332f07804c1075c0912bef5ad2299fca02bb676674d82b3b22b6087041086fc5",
+    "a813a6dccb691c9fb72811fef6da48246933329af3229b4c54bc08bb60739b61"
   ],
   "proof_passed": true,
-  "proof_root": "15c45a67bee0d6bf00803b4e70a101d71e7e06bc666a9a92c17d139c226c578a",
-  "receipt_hash": "c419220ac5b850226eff31e433b31a2b6a1fe224cbdbbd5ea3aeec3874abacc0",
+  "proof_root": "c3f9aa171aa5db44c5633bbed68493c9ebb80f485108794cc9b05b61e433c029",
+  "receipt_hash": "7dec784fe08369b829eff74f91810e21a26fac59aaecd77dd06641fc3a9db63c",
   "route_id": "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close",
   "schema_version": "aion-cycle-receipt-v1",
   "transcript_root": "9f6071ca3e5b314fd295cb7a4461a38ef14573a4395352e288f84304f5aa8756"

@@ -1,12 +1,12 @@
 {
-  "chain_tip": "5852d391bac13e7ab2c715a52e1d740951d697d6f3a429b2bc3f67d3c2796f94",
+  "chain_tip": "d718d85d6489ec7a2853ddc481d8a143dbb2924913f18eca7272e114e981c1f9",
   "computed_passed": true,
-  "cycle_root": "bf34f1ea605b4b7784a0c156a9102b6ad9a85fbead4bb21cf669795b9f7590c0",
+  "cycle_root": "b5d5ef136891fce987e6abfc842f4fc20d6be2b0584bd64b5f1c04ec81bd9494",
   "failed_checks": [],
-  "final_emission_hash": "3565231e2c33cb67c32c4f849375036f33fb74b491c1aa4361a0ea60d0a49838",
+  "final_emission_hash": "bbc2b0a6abf3acfbf72236473063d4f648ce4be873660a91811f63bff3f357d2",
   "output_byte_count": 42,
   "output_sha256": "e5890d3cfa062595e462a1fe50864ab394521a4bf2badf4f01fb01f94cec3cde",
-  "proof_root": "15c45a67bee0d6bf00803b4e70a101d71e7e06bc666a9a92c17d139c226c578a",
+  "proof_root": "c3f9aa171aa5db44c5633bbed68493c9ebb80f485108794cc9b05b61e433c029",
   "route_id": "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close",
   "schema_version": "aion-cycle-final-emission-v1",
   "source_root": {
@@ -23,7 +23,7 @@
     "0184782162237c2259ef50cf8e93bdaefd839c0a2f9b547bf191392b5e1d1a5b",
     "79e3581e90deed39ec344076994e25dd1339ac2934b771b08d49a30b71d7ab92",
     "cce530818f98fdc9be45a55a88cd85ded44237d5402d7bc5d40d547809180b19",
-    "b7090367976968ae3cecb9da88843af5dc7a18e609d97207b18bc5c5187b402b",
-    "5852d391bac13e7ab2c715a52e1d740951d697d6f3a429b2bc3f67d3c2796f94"
+    "088c9a1b00403ec6642dac4439ef77d996e290e126f30dd84a4e743f320e8e62",
+    "d718d85d6489ec7a2853ddc481d8a143dbb2924913f18eca7272e114e981c1f9"
   ]
 }

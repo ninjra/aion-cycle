@@ -8,9 +8,9 @@
   "generation_trace_receipt_hash": "27db394bdc81e917d27306df6e64b4b969baaed035eb41958bf4d25d467a9122",
   "input_sha256": "f2360dec41d009ddfe1daed1ba3c76c63a057a2eca3387b22568cb1163506bd9",
   "proof_passed": true,
-  "proof_sha256": "97b354c80fdfd3c923432b5d1be82973fe7c1965fbbeb12f215542085e1e76dc",
+  "proof_sha256": "bb8f2b0267157b3afbb68d287a95de191745f1d86bc4d50147e177e957d2d26c",
   "public_sha256": "d9c6f3d022ab69758336911b7fe09171e9e6964ad13d1257b47f3c3179df58a9",
-  "receipt_hash": "15c45a67bee0d6bf00803b4e70a101d71e7e06bc666a9a92c17d139c226c578a",
+  "receipt_hash": "c3f9aa171aa5db44c5633bbed68493c9ebb80f485108794cc9b05b61e433c029",
   "schema_version": "aion-proof-artifacts-receipt-v1",
   "verification_key_sha256": "924b0838512fc8e339a0ec83197701fda5ff5e5fcad9535aabffdc47126918a6"
 }

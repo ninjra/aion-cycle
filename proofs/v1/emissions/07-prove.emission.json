@@ -1,7 +1,7 @@
 {
   "chain_length": 9,
   "child_emission_hashes": [],
-  "claimed_emission_hash": "b7090367976968ae3cecb9da88843af5dc7a18e609d97207b18bc5c5187b402b",
+  "claimed_emission_hash": "088c9a1b00403ec6642dac4439ef77d996e290e126f30dd84a4e743f320e8e62",
   "claimed_passed": true,
   "domain_from": "emitted_bytes",
   "domain_to": "proof_artifacts",
@@ -14,7 +14,7 @@
   "output_identity": {
     "byte_count": 64,
     "label": "proof_artifacts",
-    "sha256": "8ad07259d95ee386aa3ba778e9076b1eb5595db8de95b6e9945d1fe41210e07f"
+    "sha256": "27ec7be9c3be9d7ad5b68acc96baeadfafa2ab6ef677af4b40076abc07043b11"
   },
   "previous_emission_hash": "cce530818f98fdc9be45a55a88cd85ded44237d5402d7bc5d40d547809180b19",
   "route_id": "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close",

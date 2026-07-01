@@ -1,22 +1,22 @@
 {
   "child_receipt_hashes": [
-    "3244f36affda90643a247e7a1cc7333cdbc9a629b87f02d89c1a94808214254c"
+    "332f07804c1075c0912bef5ad2299fca02bb676674d82b3b22b6087041086fc5"
   ],
   "failed_checks": [],
   "input_identity": {
     "byte_count": 64,
     "label": "proof_artifacts",
-    "sha256": "8ad07259d95ee386aa3ba778e9076b1eb5595db8de95b6e9945d1fe41210e07f"
+    "sha256": "27ec7be9c3be9d7ad5b68acc96baeadfafa2ab6ef677af4b40076abc07043b11"
   },
   "output_identity": {
     "byte_count": 817,
     "label": "cycle_statement",
-    "sha256": "2cca7e3e161b2fe4f8d27e145481197b84ec3c7409475e7ef6997b228e9203ff"
+    "sha256": "d3ed35979b197d8f7aa442df8326aa82bccab25756b9f8fe6665b437c2716b9b"
   },
   "phase": "verify",
   "phase_index": 8,
   "proof_passed": true,
-  "receipt_hash": "6a6ac2a5c146e51870ec33f7055ce35c7d8d180ed507aaa2ec752ce771483303",
+  "receipt_hash": "a813a6dccb691c9fb72811fef6da48246933329af3229b4c54bc08bb60739b61",
   "route_id": "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close",
   "schema_version": "aion-phase-receipt-v1"
 }
