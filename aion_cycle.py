@@ -24,6 +24,17 @@ ROOT = Path(__file__).resolve().parent
 BUNDLE_DIR = ROOT / "proofs" / "v1"
 LENS = {"query": 30, "corpus0": 42, "corpus1": 33, "corpus2": 24, "emitted": 42}
 
+AION_PHASE_CHAIN_SCHEMA_VERSION = "aion-phase-chain-theorem-receipt-v1"
+AION_LAMINAR_ROUTE = (
+    "ionizer_ingress",
+    "wire_ingress",
+    "gravitas",
+    "wire_egress",
+    "ionizer_mapback",
+    "energizer",
+)
+PUBLIC_AION_ENTRYPOINT = "bin/aion.com"
+
 SCHEMA_TRANSITION_EMISSION = "aion-transition-emission-v1"
 SCHEMA_FINAL_EMISSION = "aion-cycle-final-emission-v1"
 PUBLIC_ROUTE_ID = "source->encode->carry->compare->carry-back->map-back->write->prove->verify->close"
@@ -90,6 +101,129 @@ def sha256_hex(data: bytes) -> str:
 
 def canonical_bytes(value: Any) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def canonical_sha256(value: Any) -> str:
+    return sha256_hex(canonical_bytes(value))
+
+
+def is_sha256(value: str) -> bool:
+    return len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
+
+
+def aion_initial_chain_hash(input_envelope: bytes, binary_sha256: str = "") -> str:
+    seed = {
+        "schema_version": "aion-phase-chain-initial-hash-v1",
+        "public_entrypoint": PUBLIC_AION_ENTRYPOINT,
+        "binary_sha256": binary_sha256,
+        "input_envelope_sha256": sha256_hex(input_envelope),
+        "input_envelope_bytes": len(input_envelope),
+        "route": AION_LAMINAR_ROUTE,
+    }
+    return canonical_sha256(seed)
+
+
+def aion_phase_chain_theorem_receipt(
+    *,
+    phase_id: str,
+    phase_index: int,
+    input_chain_hash: str,
+    phase_input: bytes,
+    phase_output: bytes,
+    expected_previous_output_chain_hash: str | None = None,
+    hotpath_datatype: str = "sint16",
+    public_entrypoint: str = PUBLIC_AION_ENTRYPOINT,
+    phase_binary_invoked: bool = False,
+    python_hotpath_used: bool = False,
+) -> dict[str, Any]:
+    failed: list[str] = []
+    expected_phase = AION_LAMINAR_ROUTE[phase_index] if 0 <= phase_index < len(AION_LAMINAR_ROUTE) else ""
+    if not expected_phase:
+        failed.append("phase_index_out_of_laminar_route")
+    elif phase_id != expected_phase:
+        failed.append("phase_id_does_not_match_laminar_route_index")
+    if not is_sha256(input_chain_hash):
+        failed.append("input_chain_hash_invalid")
+    if expected_previous_output_chain_hash is not None and input_chain_hash != expected_previous_output_chain_hash:
+        failed.append("phase_chain_link_broken")
+    if hotpath_datatype != "sint16":
+        failed.append("hotpath_datatype_not_sint16")
+    if public_entrypoint != PUBLIC_AION_ENTRYPOINT:
+        failed.append("public_entrypoint_not_bin_aion_com")
+    if phase_binary_invoked:
+        failed.append("caller_selected_phase_binary")
+    if python_hotpath_used:
+        failed.append("python_hotpath_used")
+    link_material = {
+        "schema_version": "aion-phase-chain-link-v1",
+        "route": AION_LAMINAR_ROUTE,
+        "phase_id": phase_id,
+        "phase_index": phase_index,
+        "input_chain_hash": input_chain_hash,
+        "phase_input_sha256": sha256_hex(phase_input),
+        "phase_input_bytes": len(phase_input),
+        "phase_output_sha256": sha256_hex(phase_output),
+        "phase_output_bytes": len(phase_output),
+        "hotpath_datatype": hotpath_datatype,
+        "public_entrypoint": public_entrypoint,
+    }
+    receipt_payload = {
+        "schema_version": AION_PHASE_CHAIN_SCHEMA_VERSION,
+        "repo_role": "aion_cycle_groth16",
+        "phase_id": phase_id,
+        "expected_phase_id": expected_phase,
+        "phase_index": phase_index,
+        "single_laminar_route": True,
+        "route": list(AION_LAMINAR_ROUTE),
+        "input_chain_hash": input_chain_hash,
+        "output_chain_hash": canonical_sha256(link_material),
+        "phase_input_sha256": link_material["phase_input_sha256"],
+        "phase_output_sha256": link_material["phase_output_sha256"],
+        "phase_input_bytes": len(phase_input),
+        "phase_output_bytes": len(phase_output),
+        "native_hotpath_datatype": hotpath_datatype,
+        "python_theorem_surface_only": True,
+        "python_hotpath_used": python_hotpath_used,
+        "caller_selected_phase_binary": phase_binary_invoked,
+        "public_entrypoint": public_entrypoint,
+        "groth16_scope": "one_aion_cycle_repeated_application",
+        "exact_blocker": bool(failed),
+        "failed_checks": failed,
+        "proof_passed": not failed,
+    }
+    receipt_payload["receipt_sha256"] = canonical_sha256(receipt_payload)
+    return receipt_payload
+
+
+def verify_aion_phase_chain_link(
+    receipt_payload: dict[str, Any], *, expected_input_chain_hash: str | None = None
+) -> dict[str, Any]:
+    failed: list[str] = []
+    if receipt_payload.get("schema_version") != AION_PHASE_CHAIN_SCHEMA_VERSION:
+        failed.append("schema_version_invalid")
+    if receipt_payload.get("route") != list(AION_LAMINAR_ROUTE):
+        failed.append("laminar_route_invalid")
+    if receipt_payload.get("native_hotpath_datatype") != "sint16":
+        failed.append("hotpath_datatype_not_sint16")
+    if receipt_payload.get("public_entrypoint") != PUBLIC_AION_ENTRYPOINT:
+        failed.append("public_entrypoint_not_bin_aion_com")
+    if receipt_payload.get("caller_selected_phase_binary") is not False:
+        failed.append("caller_selected_phase_binary")
+    if receipt_payload.get("python_hotpath_used") is not False:
+        failed.append("python_hotpath_used")
+    output_hash = str(receipt_payload.get("output_chain_hash") or "")
+    if not is_sha256(output_hash):
+        failed.append("output_chain_hash_invalid")
+    if expected_input_chain_hash is not None and receipt_payload.get("input_chain_hash") != expected_input_chain_hash:
+        failed.append("phase_chain_link_broken")
+    if receipt_payload.get("failed_checks"):
+        failed.append("declared_receipt_failed_checks_present")
+    return {
+        "schema_version": "aion-phase-chain-link-verification-v1",
+        "proof_passed": not failed,
+        "failed_checks": failed,
+        "verified_output_chain_hash": output_hash,
+    }
 
 
 def file_sha(path: Path) -> str:
