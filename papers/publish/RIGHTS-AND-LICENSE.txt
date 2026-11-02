@@ -1,0 +1,7 @@
+Copyright 2026 S N Justin Ram / Mushku Nobleworks.
+
+Paper text and formal specification: All rights reserved pending an explicit
+publication license decision by the author.
+
+This candidate packet does not itself grant publication or release authority.
+

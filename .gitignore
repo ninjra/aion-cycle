@@ -25,3 +25,10 @@ proofs/v1/aion.sym
 proofs/v1/aion.r1cs
 proofs/v1/aion.zkey
 proofs/v1/aion_js/
+
+
+# Generated paper build intermediates.
+papers/tmp/
+# Raw owner provenance is preserved in the private companion archive.
+papers/provenance/CROSS-PAPER-IMPORT-MATRIX.json
+papers/provenance/IONIZER-DECISION-DISPOSITIONS.json

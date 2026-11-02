@@ -1,0 +1,42 @@
+{
+  "schema_version": "exact-typed-phase-chain-source-history-audit-v1",
+  "repository": "aion-cycle",
+  "head": "acc8fba43da897fbd94baac615c64d9c8adce07c",
+  "source_read_only": true,
+  "papers_only_mutation": true,
+  "current_evidence": {
+    "aion_cycle.py": "3aaddff5b3498e3be1ab27c8f712f93a385bc0f9d55b39a208ab7ef74c315796",
+    "phase_chain_tests": "faa72e9ef8235a9a42f9968b1396cb6e404f9141916da44164c5ef0884b24082",
+    "emission_chain_tests": "921a7f344ceb95be2597037ca147ea8007ce6acab4172a580444b6dd50847cac",
+    "circuit": "c34160541549061807635812830cdc6fd16b5d6a6bd08db31f09bf482dbdbd7f"
+  },
+  "lineage": [
+    {"commit": "d3dc454b2ba2419e28f1775e9ac7188ca54bc9d2", "date": "2026-06-25", "contribution": "reference route fixtures and adversarial tests"},
+    {"commit": "3be75effb15b2283413037b831c5c3b29fca5991", "date": "2026-06-25", "contribution": "single full-cycle Groth16 circuit and transcript commitment"},
+    {"commit": "bc83d891181a54256c3a522e450f68dad0e8c23f", "date": "2026-06-25", "contribution": "separate transcript, proof, and cycle roots"},
+    {"commit": "0d680b72f75628e9df9432755dae76aad58b7aca", "date": "2026-06-26", "contribution": "receipt recomputation and mutation tests"},
+    {"commit": "c6d775788ede1059cab663c82d6fcb7a0c8169dc", "date": "2026-06-26", "contribution": "portable verification semantics"},
+    {"commit": "7202a1ed39e88898f5d3d9ac09322f91545fa80e", "date": "2026-06-26", "contribution": "domain-separated transcript and stronger verifier tests"},
+    {"commit": "0f8a1893a84acf2223359fcf4e3f73b7368f170c", "date": "2026-06-28", "contribution": "ordered phase-chain receipt surface"},
+    {"commit": "acc8fba43da897fbd94baac615c64d9c8adce07c", "date": "2026-07-02", "contribution": "current repository state"}
+  ],
+  "preserved_theorem_material": [
+    "fixed ordered route",
+    "phase and transition identities",
+    "predecessor-linked emissions",
+    "receipt-body recomputation",
+    "separate transcript/proof/cycle roots",
+    "read-only verification",
+    "mutation and reordering rejection",
+    "section re-entry with lineage",
+    "stored pass flags are not accepted by themselves"
+  ],
+  "retired_or_replaced_material": [
+    "source_record_id restoration identity",
+    "field_to_records and records mapback ledger",
+    "fixed sint16 universal phase-chain semantics",
+    "legacy source/encode/carry/compare/map-back fixture as the universal route",
+    "any alternate decoder or restoration surface outside Ionizer"
+  ],
+  "conclusion": "The candidate paper preserves the exact route-closure lineage while replacing legacy restoration and datatype semantics with the patent/Ionizer-compatible typed phase-chain theorem. Current implementation equivalence is explicitly false until owner replacement and freeze."
+}

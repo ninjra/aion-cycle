@@ -1,0 +1,26 @@
+{
+  "boundary": "This gate does not authorize source mutation, git action, APEX action, upload, DOI, release, or publication.",
+  "exact_remaining_gate": [
+    "owners freeze exact Paper II, Paper III, and Paper IV dependency identities after the cross-paper import matrix proves exact domain, codomain, rejection type, epoch binding, bridge theorem, and whole-route type composition",
+    "owner designates one immutable AION-cycle implementation-theorem byte identity",
+    "the owner theorem implements the exact SRFT typed route without source_record_id, field_to_records, or ledger mapback",
+    "signed-int16 fidelity and raw aperture remain declared typed options rather than universal semantics",
+    "bidirectional theorem-leaf comparison proves no missing, extra, weakened, or contradictory semantic leaf",
+    "positive vectors prove two complete Wire lifecycles with exact operation echo, exact two-operand route closure, streaming verification, exact canonical-byte equality, optional proof-profile typing, bounded-section codomain separation, and section agreement",
+    "one-field mutations prove deletion, insertion, reordering, duplication, cross-route, cross-epoch, entrypoint, type, value, operator, evaluator, predecessor, proof, and terminal rejection",
+    "the owner explicitly authorizes a publication-readiness seal for the exact resulting bytes"
+  ],
+  "observed_non_equivalence": [
+    "current phase_map_back restores through retained field_to_records and records ledgers",
+    "current route carries source_record_id as an alternate source lookup identity",
+    "current phase-chain receipt and verifier require fixed sint16 as universal hotpath semantics",
+    "current source/circuit implement one fixed legacy fixture rather than the exact imported SRFT typed route",
+    "current route omits the replacement theorem's exact epoch/type/operator/evaluator bindings for every phase",
+    "Paper II, Paper III, and Paper IV identities are not yet owner-frozen dependencies; their exact signatures are checked in the cross-paper import matrix",
+    "no owner-frozen implementation theorem has been designated for bidirectional leaf comparison"
+  ],
+  "proof_passed": false,
+  "release_authorized": false,
+  "schema_version": "exact-typed-phase-chain-owner-freeze-gate-v2",
+  "upload_ready": false
+}

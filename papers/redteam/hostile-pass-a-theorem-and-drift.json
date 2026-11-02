@@ -1,0 +1,37 @@
+{
+  "audit_boundary": "Paper-layer theorem and drift audit only; no implementation-equivalence or release authority is granted.",
+  "checks": {
+    "close_target_mutation_rejects": true,
+    "fixed_route_and_phase_position_enforced": true,
+    "forged_standalone_declaration_and_route_reject": true,
+    "malformed_route_input_returns_typed_rejection": true,
+    "private_calculation_engine_boundary_preserved": true,
+    "same_class_evaluator_environment_substitution_rejects": true,
+    "scoped_tests_passed": 39,
+    "specification_tex_and_executable_agree": true,
+    "typed_failure_algebra_preserved": true
+  },
+  "dependency_freeze_complete": false,
+  "fixed_identities": {
+    "executable_candidate_sha256": "569db732e660e7691323b981c3b94dd331b69d4a7c51bd2caff2df1812562ede",
+    "formal_specification_sha256": "d37eb49d4148bd13dfb0df7bcf98b764e41ca3fdd503fc227be3811eb4049388",
+    "paper_pdf_sha256": "edcfdd9c823d887fe4d0a2c7acd6364e1d0f9476d6bcd0b46043b900df2c3592",
+    "paper_tex_sha256": "47368057ff83347394cc9989bb19b6403c269bf0af55a88ceaeef3a397fc42ee"
+  },
+  "focus": "theorem, dependency, patent, Ionizer, datatype, evaluator, receipt, and alternate-mapback drift",
+  "implementation_equivalence": false,
+  "open_gate": [
+    "owners freeze exact Paper II, Paper III, and Paper IV dependency identities after the cross-paper import matrix proves exact domain, codomain, rejection type, epoch binding, bridge theorem, and whole-route type composition",
+    "owner designates one immutable AION-cycle implementation-theorem byte identity",
+    "the owner theorem implements the exact SRFT typed route without source_record_id, field_to_records, or ledger mapback",
+    "signed-int16 fidelity and raw aperture remain declared typed options rather than universal semantics",
+    "bidirectional theorem-leaf comparison proves no missing, extra, weakened, or contradictory semantic leaf",
+    "positive vectors prove two complete Wire lifecycles with exact operation echo, exact two-operand route closure, streaming verification, exact canonical-byte equality, optional proof-profile typing, bounded-section codomain separation, and section agreement",
+    "one-field mutations prove deletion, insertion, reordering, duplication, cross-route, cross-epoch, entrypoint, type, value, operator, evaluator, predecessor, proof, and terminal rejection",
+    "the owner explicitly authorizes a publication-readiness seal for the exact resulting bytes"
+  ],
+  "paper": "Exact Typed Phase Chains with Recomputable Route Closure",
+  "release_authorized": false,
+  "result": "PASS_PAPER_LAYER_OWNER_GATE_OPEN",
+  "schema_version": "candidate-hostile-pass-v2"
+}

@@ -46,3 +46,20 @@ def test_public_files_do_not_leak_private_paths_or_credentials() -> None:
             if pattern.search(text):
                 hits.append(f"{path.relative_to(ROOT)} matches {pattern.pattern!r}")
     assert hits == []
+
+
+def test_raw_paper_provenance_is_kept_out_of_public_git_history() -> None:
+    tracked = {path.relative_to(ROOT).as_posix() for path in tracked_files()}
+    private = {
+        "papers/provenance/CROSS-PAPER-IMPORT-MATRIX.json",
+        "papers/provenance/IONIZER-DECISION-DISPOSITIONS.json",
+    }
+    assert tracked.isdisjoint(private)
+    history = subprocess.run(
+        ["git", "log", "--format=%H", "HEAD", "--", *sorted(private)],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    assert history.stdout.strip() == ""

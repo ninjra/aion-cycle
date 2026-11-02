@@ -1,0 +1,146 @@
+{
+  "schema_version": "mushku-theorem-series-index-v2",
+  "series": "Mushku Nobleworks theorem series",
+  "updated": "2026-07-21",
+  "author": {
+    "name": "S N Justin Ram",
+    "affiliation": "Mushku Nobleworks",
+    "email": "sram@mushku.com",
+    "orcid": "0009-0008-3593-2816"
+  },
+  "foundation": {
+    "paper_role": "bottom of the construction pyramid",
+    "kind": "signed-as-filed patent technical foundation",
+    "sha256": "e2975c587ae6299f86a84e4630c51a4de19b72abfaf4ec45c853f68775418240",
+    "included_in_paper_packets": false,
+    "legal_conclusion_claimed": false
+  },
+  "public_engine_boundary": {
+    "permitted_reference": "a calculation engine",
+    "internal_method_disclosure": false,
+    "internal_paper_included": false
+  },
+  "papers": [
+    {
+      "paper_number": 1,
+      "paper_identifier": "MUSHKU-PAPER-I-IONIZER-SRFT",
+      "title": "Ionizer Sparse Residual Field Tensor Theorem",
+      "status": "READY_TO_PUBLISH",
+      "rendering_revision": 9,
+      "theorem_sha256": "bf58f880e75aa4e62052bcefd59ce6c4fd44e80dcd941042f66e124e65de3efe",
+      "paper_source_sha256": "c7215050261bc998593646867c1cdb0204cd48e739a9d006024420357446a0e5",
+      "pdf_sha256": "ec3937845464c1b8f90e078481b80db1ef587bb47dc5d1de556cd8b29f8f4e68",
+      "publication_readiness_seal_sha256": "5d18c693a64bdba9c1d362ab9a11729b99bbdefe7e0d8c74ba345fa2c1231065",
+      "dependencies": [
+        "SIGNED-AS-FILED-PATENT"
+      ],
+      "implementation_equivalence": "separately governed",
+      "upload_ready": true,
+      "release_authorized": false,
+      "external_publication_executed": false
+    },
+    {
+      "paper_number": 2,
+      "paper_identifier": "MUSHKU-PAPER-II-WIRE",
+      "title": "Exact Opaque Transport of Canonical Sparse Residual Tensors",
+      "status": "PAPER_LAYER_COMPLETE_OWNER_EQUIVALENCE_OPEN",
+      "rendering_revision": 1,
+      "formal_specification_sha256": "7a26eebc3dfbb7a98b472612a4eab603667c3aef46027b97e0ba8950bd54b5c7",
+      "paper_source_sha256": "cde4ea31841f8c757e99a2343c0ea911e360d78d0123089e8ad862b1c703125b",
+      "pdf_sha256": "b6d767c0e13bb865482628957a81109ec6e97bab14f0c80e9cceaf8da2978f09",
+      "dependencies": [
+        "SIGNED-AS-FILED-PATENT",
+        "MUSHKU-PAPER-I-IONIZER-SRFT"
+      ],
+      "implementation_equivalence": false,
+      "upload_ready": false,
+      "release_authorized": false,
+      "external_publication_executed": false
+    },
+    {
+      "paper_number": 3,
+      "paper_identifier": "MUSHKU-PAPER-III-ORIGAMOLD",
+      "title": "Exact Bounded Active-Window Realization of Canonical Sparse Residual Tensors",
+      "status": "PAPER_LAYER_COMPLETE_OWNER_EQUIVALENCE_OPEN",
+      "rendering_revision": 1,
+      "formal_specification_sha256": "e4e04c379032b45f9c82dc9b84749962770281807a4dc2eaf5068c7c133c8c70",
+      "paper_source_sha256": "a02523c49904ea203512eae9aab9e2e90b2c06f444fed397631241636bdeb124",
+      "pdf_sha256": "8e46cb0c5e804ffe26de136be07329474f30f28cd6ba670df52a2c1ea4a902fe",
+      "dependencies": [
+        "SIGNED-AS-FILED-PATENT",
+        "MUSHKU-PAPER-I-IONIZER-SRFT"
+      ],
+      "implementation_equivalence": false,
+      "upload_ready": false,
+      "release_authorized": false,
+      "external_publication_executed": false
+    },
+    {
+      "paper_number": 4,
+      "paper_identifier": "MUSHKU-PAPER-IV-ENERGIZER",
+      "title": "Atomic Exact Manifestation",
+      "status": "PAPER_LAYER_COMPLETE_OWNER_EQUIVALENCE_OPEN",
+      "rendering_revision": 1,
+      "formal_specification_sha256": "5183b526dc651aca0ad29d2ce0e9af7e2e2e5a063c6417dd9056b3d92adcc6fb",
+      "paper_source_sha256": "9ebf2cb6a8fd868f99f803628490943ce1b5b21371b37c9a873e8db29c14f2b2",
+      "pdf_sha256": "cb5ce8d5c8d328bb66a564edfa77a61c5c911fcd5619e1dcfcb6cfb05bebbbe9",
+      "dependencies": [
+        "SIGNED-AS-FILED-PATENT",
+        "MUSHKU-PAPER-I-IONIZER-SRFT"
+      ],
+      "implementation_equivalence": false,
+      "upload_ready": false,
+      "release_authorized": false,
+      "external_publication_executed": false
+    },
+    {
+      "paper_number": 5,
+      "paper_identifier": "MUSHKU-PAPER-V-PHASE-CHAIN",
+      "title": "Exact Typed Phase Chains with Recomputable Route Closure",
+      "status": "PAPER_LAYER_COMPLETE_OWNER_EQUIVALENCE_OPEN",
+      "rendering_revision": 4,
+      "formal_specification_sha256": "d37eb49d4148bd13dfb0df7bcf98b764e41ca3fdd503fc227be3811eb4049388",
+      "executable_candidate_sha256": "569db732e660e7691323b981c3b94dd331b69d4a7c51bd2caff2df1812562ede",
+      "paper_source_sha256": "47368057ff83347394cc9989bb19b6403c269bf0af55a88ceaeef3a397fc42ee",
+      "pdf_sha256": "edcfdd9c823d887fe4d0a2c7acd6364e1d0f9476d6bcd0b46043b900df2c3592",
+      "dependencies": [
+        "SIGNED-AS-FILED-PATENT",
+        "MUSHKU-PAPER-I-IONIZER-SRFT",
+        "MUSHKU-PAPER-II-WIRE",
+        "MUSHKU-PAPER-III-ORIGAMOLD",
+        "MUSHKU-PAPER-IV-ENERGIZER"
+      ],
+      "implementation_equivalence": false,
+      "dependency_freeze_complete": false,
+      "upload_ready": false,
+      "release_authorized": false,
+      "external_publication_executed": false
+    },
+    {
+      "paper_number": 6,
+      "paper_identifier": "MUSHKU-PAPER-VI-KU",
+      "title": "Ku: Reflection Perfection — A Resolver-Agnostic Exact Choreography",
+      "status": "READY_FOR_HUMAN_APPROVAL",
+      "rendering_revision": 7,
+      "theorem_sha256": "83655cddc75bd366b64db9b6a34ed579e754ce6ee7229231b98f5bd38992a0e0",
+      "paper_source_sha256": "5c2e680c70fc04a738299c66db90ddb4c9b281d060987bbf30a72cf8094ffbf3",
+      "pdf_sha256": "500a3541fe7142fb42609fa21ddfbc6284c4b881942845dd4d9f2f728058acfe",
+      "dependencies": [
+        "SIGNED-AS-FILED-PATENT",
+        "MUSHKU-PAPER-I-IONIZER-SRFT"
+      ],
+      "general_theorem_resolver_agnostic": true,
+      "theorem_sealed": false,
+      "paper_publication_readiness_sealed": false,
+      "upload_ready": false,
+      "release_authorized": false,
+      "external_publication_executed": false
+    }
+  ],
+  "boundary": {
+    "series_membership_does_not_expand_normative_imports": true,
+    "ku_normative_imports_remain_patent_and_ionizer_only": true,
+    "series_index_is_citation_metadata_not_theorem_authority": true,
+    "release_requires_separate_human_authorization": true
+  }
+}

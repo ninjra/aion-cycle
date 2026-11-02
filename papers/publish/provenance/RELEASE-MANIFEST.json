@@ -1,0 +1,29 @@
+{
+  "affiliation": "Mushku Nobleworks",
+  "author": "S N Justin Ram",
+  "candidate_theorem_sha256": "d37eb49d4148bd13dfb0df7bcf98b764e41ca3fdd503fc227be3811eb4049388",
+  "date_released": null,
+  "dependency_freeze_complete": false,
+  "doi": null,
+  "email": "sram@mushku.com",
+  "exact_open_gate": "provenance/OWNER-FREEZE-GATE-PUBLIC.json",
+  "executable_theorem_candidate_sha256": "569db732e660e7691323b981c3b94dd331b69d4a7c51bd2caff2df1812562ede",
+  "implementation_equivalence": false,
+  "orcid": "https://orcid.org/0009-0008-3593-2816",
+  "paper_pdf_sha256": "edcfdd9c823d887fe4d0a2c7acd6364e1d0f9476d6bcd0b46043b900df2c3592",
+  "paper_tex_sha256": "47368057ff83347394cc9989bb19b6403c269bf0af55a88ceaeef3a397fc42ee",
+  "predecessors": {
+    "ionizer_decision_catalog_sha256": "768f68a9c67dbf3a9be8ceaa251350dcd63ab59eb8ef4b6902a13b633613796d",
+    "ionizer_srft_v10_theorem_sha256": "bf58f880e75aa4e62052bcefd59ce6c4fd44e80dcd941042f66e124e65de3efe",
+    "paper_ii_candidate_identity": "7a26eebc3dfbb7a98b472612a4eab603667c3aef46027b97e0ba8950bd54b5c7",
+    "paper_iii_candidate_identity": "a02523c49904ea203512eae9aab9e2e90b2c06f444fed397631241636bdeb124",
+    "paper_iv_candidate_identity": "5183b526dc651aca0ad29d2ce0e9af7e2e2e5a063c6417dd9056b3d92adcc6fb",
+    "signed_as_filed_patent_sha256": "e2975c587ae6299f86a84e4630c51a4de19b72abfaf4ec45c853f68775418240"
+  },
+  "publication_authorized": false,
+  "publication_readiness_seal": null,
+  "rendering_revision": 4,
+  "schema_version": "exact-typed-phase-chain-release-manifest-v1",
+  "title": "Exact Typed Phase Chains with Recomputable Route Closure",
+  "upload_ready": false
+}

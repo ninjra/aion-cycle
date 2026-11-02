@@ -1,0 +1,609 @@
+\DocumentMetadata{lang=en-US,pdfversion=2.0}
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xurl}
+\usepackage{hyperref}
+\ExplSyntaxOn
+\sys_gset_rand_seed:n { 1784617200 }
+\ExplSyntaxOff
+\usepackage{tagpdf}
+\tagpdfsetup{activate-all}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\Reject}{\mathsf{REJECT}}
+\newcommand{\OK}{\mathsf{OK}}
+\newcommand{\Enc}{\operatorname{Encode}}
+\newcommand{\Dec}{\operatorname{Decode}}
+\newcommand{\Calc}{\operatorname{Calculate}}
+\newcommand{\Resolve}{\operatorname{Resolve}}
+\newcommand{\Manifest}{\operatorname{Manifest}}
+\newcommand{\Canonical}{\operatorname{Canonical}}
+\newcommand{\CanonicalRecord}{\operatorname{CanonicalRecord}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\hypersetup{
+  hidelinks,
+  pdftitle={Exact Typed Phase Chains with Recomputable Route Closure},
+  pdfauthor={S N Justin Ram; Mushku Nobleworks; sram@mushku.com; ORCID 0009-0008-3593-2816},
+  pdfsubject={Exact typed ordered phase composition with recomputable predecessor-linked route closure},
+  pdfkeywords={typed phase chain, route closure, predecessor binding, canonical tensor, fail-closed verification, exact composition},
+  pdflang={en-US}
+}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\setlist{nosep,topsep=4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Typed Phase Chains}
+\fancyhead[R]{Route Closure}
+\fancyfoot[C]{\thepage}
+
+\title{Exact Typed Phase Chains with\\Recomputable Route Closure}
+\author{S N Justin Ram\\Mushku Nobleworks\\
+\href{mailto:sram@mushku.com}{sram@mushku.com}\\
+\href{https://orcid.org/0009-0008-3593-2816}{ORCID 0009-0008-3593-2816}}
+\date{July 2026\\Candidate publication rendering 4}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper defines a fixed typed phase chain over the canonical sparse residual
+tensor boundary.  The route takes a dense input and a second canonical
+operation tensor, crosses an exact opaque transport boundary, performs typed
+calculation, crosses back, restores the selected result, and atomically
+manifests those exact bytes.  Every transition fixes its epoch, position,
+input and output type, operator, evaluator, predecessor, and canonical value
+commitments.  Exact continuity is established from canonical typed bytes;
+hashes provide separate mutation-detection evidence.  Verification is
+streaming and retains no vector of phase values or alternate mapback.  A
+bounded active-window construction remains an independent tensor-realization
+section rather than an invented bridge into dense restoration.  The result is
+one exact route result or typed rejection.
+\end{abstract}
+
+\noindent\textbf{Keywords:} typed phase chain; route closure; canonical
+tensor; exact composition; streaming verification; fail-closed evidence.
+
+\begingroup\small\tableofcontents\endgroup
+\clearpage
+
+\section{Introduction}
+
+An ordered list of stage names is not a typed route.  Exact composition
+requires each stage to consume precisely the value produced by its
+predecessor, including rejection type and epoch.  It also requires the
+canonical calculation operand to remain data rather than becoming an outer
+opcode, and it requires present verification instead of a stored success flag.
+
+The construction below fixes one main route and one independent bounded
+tensor-realization section.  The main lifecycle is:
+
+\begin{center}\small
+\begin{tabular}{c@{\ }c@{\ }c}
+$C\xrightarrow{\Phi_A,\Enc_A}$
+&\fbox{data bytes}$\xrightarrow{W^{\rm data}_{\rm in,A}}$
+&\fbox{data ingress}\cr
+$D_{\mathrm{op}}\xrightarrow{\Enc_A}$
+&\fbox{operation bytes}$\xrightarrow{W^{\rm op}_{\rm in,A}}$
+&\fbox{operation ingress}\cr
+\multicolumn{3}{c}{$\downarrow\ \Dec_A\times\Dec_A\quad
+\Calc_A(D_{\mathrm{data}},D_{\mathrm{op}})\quad\downarrow$}\cr
+\fbox{result bytes}$\xrightarrow{W^{\rm data}_{\rm out,A}}$
+&\fbox{result egress}
+&\fbox{operation echo}$\xleftarrow{W^{\rm op}_{\rm out,A}}$
+  \fbox{operation bytes}\cr
+\multicolumn{3}{c}{$\downarrow\ \Dec_A,\Resolve_A,\Manifest_{A,N}$\quad
+\fbox{exact published result}}\cr
+\end{tabular}
+\end{center}
+
+Both canonical operands cross complete, separately declared Wire routes.  The
+operation route returns an exact unchanged echo; no calculation operand travels
+beside or around an opaque crossing.
+
+Origamold supplies a bounded realization of a selected tensor closure.  Its
+codomain is a tensor window, not dense restored bytes; it is therefore bound
+as an independent section rather than inserted between Resolve and
+manifestation.  This distinction is what makes the cross-paper composition
+type-correct.
+
+The patent supplies the envelope foundation and fidelity/aperture clamps
+\cite{ram2026patent}.  Ionizer supplies the canonical tensor, exact inverse,
+selector, and two-operand calculation boundary \cite{ram2026srft}.  Papers
+II--IV supply exact transport, bounded tensor realization, and atomic
+manifestation respectively \cite{ram2026transport,ram2026window,ram2026manifest}.
+The internal method of a calculation engine is outside this paper.
+
+\section{Exact imported signatures}
+
+Fix a valid Ionizer epoch $A$.  Let
+\[
+\mathcal C_A=U^*,\qquad
+\mathcal D_A=\operatorname{CanonicalTensor}_A,
+\qquad \mathcal B_A=\operatorname{Image}(\Enc_A).
+\]
+Set $\Enc_A=\operatorname{CanonicalEncoding}_A$ and
+$\Dec_A=\operatorname{CanonicalDecode}_A$.  The imported maps are
+\begin{align}
+\Phi_A &: \mathcal C_A\to\mathcal D_A,\\
+\Enc_A &: \mathcal D_A\to\mathcal B_A,\\
+\Dec_A &: \mathbb B^*\to\mathcal D_A\sqcup\{\Reject\},\\
+\Calc_A &: \mathcal D_A\times\mathcal D_A
+       \to\mathcal D_A\sqcup\{\Reject\},\\
+\Resolve_A &: \mathcal D_A\times\operatorname{Selector}_A
+       \to\mathcal C_A\sqcup\{\Reject\}.
+\end{align}
+In particular, Resolve returns bytes.  The history-valued Ionizer operator is
+$\mu_A$; this paper does not rename its codomain.
+
+Paper II supplies the exact owner signatures
+\begin{align}
+ W_{\mathrm{in},A}(b)&=(b_{\mathrm{in}},\rho,d_{\mathrm{in}}),\\
+ W_{\mathrm{out},A}(\rho,d_{\mathrm{in}},b_{\mathrm{out}})
+  &=(b_{\mathrm{return}},d_{\mathrm{out}}).
+\end{align}
+The theorem is instantiated twice as two complete routes with data projections
+\begin{align}
+ W^{\rm data}_{\mathrm{in},A}(b_d)&=W_{\mathrm{in},A}(b_d)
+   =(b_d,\rho_d,d_{d,\mathrm{in}}),\\
+ W^{\rm data}_{\mathrm{out},A}(\rho_d,d_{d,\mathrm{in}},b_r)
+  &=W_{\mathrm{out},A}(\rho_d,d_{d,\mathrm{in}},b_r)
+    =(b_r,d_{d,\mathrm{out}}),\\
+ W^{\rm op}_{\mathrm{in},A}(b_o)&=W_{\mathrm{in},A}(b_o)
+   =(b_o,\rho_o,d_{o,\mathrm{in}}),\\
+ W^{\rm op}_{\mathrm{out},A}(\rho_o,d_{o,\mathrm{in}},b_o)
+  &=W_{\mathrm{out},A}(\rho_o,d_{o,\mathrm{in}},b_o)
+    =(b_{o,\mathrm{echo}},d_{o,\mathrm{out}}),
+\end{align}
+or typed rejection, with $b_{o,\mathrm{echo}}=b_o$ byte for byte on success.
+The data and operation route states are separate surrounding products, not
+additional fields in either owner tuple.  The two route/digest states are
+distinct and both lifecycles close.  The
+Origamold section uses demand $Q=(q,b)$ and profile $R_A$:
+\[
+ \operatorname{Realize}_A(D,Q;R_A)=(W_q,K_q),
+\qquad \operatorname{Read}(W_q)=\beta_{A,\Lambda}(D|q),
+\]
+or typed rejection, where $\operatorname{ConformingProfile}_A(R_A)$ and
+$0\le |\beta_{A,\Lambda}(D|q)|\le b\le B_{\rm window}$.  The Energizer boundary is
+\[
+\Manifest_{A,N}(D,s,t)=
+\operatorname{PUBLISHED}(t,|C_s|,H(C_s),B^*,\operatorname{epoch}(D),s)
+\]
+or rejection, where $C_s=\Resolve_A(D,s)$.  No companion signature uses a
+``selected history to window to manifestation'' chain.
+
+\section{Typed main route}
+
+\begin{definition}[Route]
+The main route is the fixed vector
+\[
+\begin{aligned}
+ R_A=(&\mathsf{IONIZE},\mathsf{ENCODE\_DATA},\mathsf{WIRE\_DATA\_INGRESS},\\
+&\mathsf{ENCODE\_OPERATION},\mathsf{WIRE\_OPERATION\_INGRESS},
+ \mathsf{DECODE\_OPERANDS},\\
+&\mathsf{CALCULATE},\mathsf{ENCODE\_RESULT},\mathsf{WIRE\_DATA\_EGRESS},\\
+&\mathsf{WIRE\_OPERATION\_EGRESS},\mathsf{DECODE\_RESULT},
+ \mathsf{RESOLVE},\mathsf{MANIFEST},\mathsf{CLOSE}).
+\end{aligned}
+\]
+\end{definition}
+
+This vector is the only admitted main route.  A vector containing
+\textsf{FAKE}, \textsf{BOGUS}, a renamed position, an insertion, deletion,
+duplication, or reordering is rejected even when its adjacent types happen to
+match.
+
+For route input $(C,D_{\mathrm{op}},s,t)$, the adjacent types are listed in
+Table~\ref{tab:types}.  Wire evidence consists only of fixed route and frame
+digests; it is not semantic input to calculation.
+
+\begin{table}[ht]
+\centering\small
+\caption{Exact phase types.}\label{tab:types}
+\begin{tabularx}{\textwidth}{@{}lY@{}}
+\toprule
+Boundary & Canonical product type\\
+\midrule
+$X_0$ & $\mathcal C_A\times\mathcal D_A\times S_A\times T_N$\\
+$X_1$ & $\mathcal D_A\times\mathcal D_A\times S_A\times T_N$\\
+$X_2$ & $\mathcal B_A\times\mathcal D_A\times S_A\times T_N$\\
+$X_3$ & $\mathcal B_A\times\mathcal D_A\times S_A\times T_N\times E^d_{\rm in}$\\
+$X_4$ & $\mathcal B_A\times\mathcal B_A\times S_A\times T_N\times E^d_{\rm in}$\\
+$X_5$ & $\mathcal B_A^2\times S_A\times T_N\times E^d_{\rm in}\times E^o_{\rm in}$\\
+$X_6$ & $\mathcal D_A^2\times\mathcal B_A\times S_A\times T_N\times E^d_{\rm in}\times E^o_{\rm in}$\\
+$X_7$ & $\mathcal D_A\times\mathcal B_A\times S_A\times T_N\times E^d_{\rm in}\times E^o_{\rm in}$\\
+$X_8$ & $\mathcal B_A^2\times S_A\times T_N\times E^d_{\rm in}\times E^o_{\rm in}$\\
+$X_9$ & $\mathcal B_A^2\times S_A\times T_N\times E^d_{\rm out}\times E^o_{\rm in}$\\
+$X_{10}$ & $\mathcal B_A^2\times S_A\times T_N\times E^d_{\rm out}\times E^o_{\rm out}$\\
+$X_{11}$ & $\mathcal D_A\times S_A\times T_N$\\
+$X_{12}$ & $\mathcal D_A\times S_A\times T_N\times\mathcal C_A$\\
+$X_{13}$ & $\operatorname{ManifestReceipt}_{A,N}$\\
+$X_{14}$ & $\operatorname{RouteResult}_{A,N}$\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The phase equations are:
+\begin{align}
+x_1&=(\Phi_A(C),D_{\mathrm{op}},s,t),\\
+x_2&=(\Enc_A(D_{\mathrm{data}}),D_{\mathrm{op}},s,t),\\
+x_3&=(b_d,D_{\mathrm{op}},s,t,(\rho_d,d_{d,\mathrm{in}})),\\
+x_4&=(b_d,\Enc_A(D_{\mathrm{op}}),s,t,(\rho_d,d_{d,\mathrm{in}})),\\
+x_5&=(b_d,b_o,s,t,(\rho_d,d_{d,\mathrm{in}}),(\rho_o,d_{o,\mathrm{in}})),\\
+x_6&=(\Dec_A(b_d),\Dec_A(b_o),b_o,s,t,E^d_{\mathrm{in}},E^o_{\mathrm{in}}),\\
+x_7&=(\Calc_A(D_{\mathrm{data}},D_{\mathrm{op}}),b_o,s,t,E^d_{\mathrm{in}},E^o_{\mathrm{in}}),\\
+x_8&=(\Enc_A(D_{\mathrm{result}}),b_o,s,t,E^d_{\mathrm{in}},E^o_{\mathrm{in}}),\\
+x_9&=(b_r,b_o,s,t,E^d_{\mathrm{out}},E^o_{\mathrm{in}}),\\
+x_{10}&=(b_r,b_{o,\mathrm{echo}},s,t,E^d_{\mathrm{out}},E^o_{\mathrm{out}}),\\
+x_{11}&=(\Dec_A(b_r),s,t),\\
+x_{12}&=(D_{\mathrm{out}},s,t,\Resolve_A(D_{\mathrm{out}},s)).
+\end{align}
+Here the applicable data and operation crossing produces each displayed Wire
+state.  The operation egress additionally requires
+$b_{o,\mathrm{echo}}=b_o$ byte for byte.  Manifestation accepts $x_{12}$ only when
+\begin{equation}
+\Manifest_{A,N}(D_{\mathrm{out}},s,t)=r
+\quad\text{and}\quad
+\operatorname{ReadFinal}_N(t)=C_s.\label{eq:manifest}
+\end{equation}
+Then $x_{13}=r$ and $x_{14}=\operatorname{RouteResult}_{A,N}(r)$.
+
+Each phase declaration fixes its identifier, index, exact $X_i$ and
+$X_{i+1}$ types, operator binding, and evaluator binding before execution.
+All displayed operations propagate typed rejection.  Consumed values are
+released before the next transition unless explicitly present in the next
+product; no complete boundary-value vector is retained.
+
+\section{Independent bounded tensor section}
+
+For $Q=(q,b)$ and conforming profile $R_A$, the bounded section is
+\[
+\operatorname{WindowSection}_A(D,Q;R_A)
+=\operatorname{Realize}_A(D,Q;R_A)=(W_q,K_q)\quad\text{or }\Reject.
+\]
+It binds the same epoch and canonical tensor identity as the relevant main
+route boundary and requires
+$0\le|\beta_{A,\Lambda}(D|q)|\le b\le B_{\rm window}$.  It produces exactly
+the window $W_q$ and continuation set $K_q$.  It does not change $D$, does not
+return $\Resolve_A(D,s)$, and does not feed $\Manifest_{A,N}$.  Its proof may
+be referenced by identity while its values remain outside the main route.
+
+\begin{proposition}[Codomain separation]
+Substitution of $W_q$ for $C_s$ is ill typed.  Binding the independent window
+section to $D$ preserves both companion contracts without adding a conversion
+operator or alternate decoder.
+\end{proposition}
+\begin{proof}
+$W_q$ is a layout-bound selected tensor-closure image, whereas $C_s\in U^*$ is
+the result of Ionizer selected mapback.  Their defining equations and roles
+are distinct.  The separate section uses each at its declared codomain.
+\end{proof}
+
+\section{Optional proof section}
+
+A proof section exists only when a proof profile $P$ is fixed in the route
+declaration.  Its exact signatures are
+\begin{align}
+\operatorname{Prove}_{A,P}&:
+ (\operatorname{Statement}_{A,P},\operatorname{ProverInput}_{A,P})
+ \to\operatorname{ProofBytes}_{A,P}\sqcup\{\Reject\},\\
+\operatorname{Verify}_{A,P}&:
+ (\operatorname{Statement}_{A,P},\operatorname{ProofBytes}_{A,P})
+ \to\operatorname{VerifiedStatement}_{A,P}\sqcup\{\Reject\}.
+\end{align}
+Without $P$, neither phase is present, neither a profile nor a prover value is
+part of $X_0$, and Close consumes $X_{13}$ directly.
+With $P$, the exact suffix is
+\begin{align*}
+X_{14,P}&=\operatorname{ManifestReceipt}_{A,N}\times
+ \operatorname{Statement}_{A,P}\times\operatorname{ProofBytes}_{A,P},\\
+X_{15,P}&=\operatorname{ManifestReceipt}_{A,N}\times
+ \operatorname{VerifiedStatement}_{A,P},\\
+X_{16,P}&=\operatorname{RouteResult}_{A,N}.
+\end{align*}
+Prove derives the canonical statement from the route identity, manifestation
+link digest, and fixed claim, then consumes the prover input derived from the
+fixed profile; it is not a free caller value.
+Verify produces the verified statement, and Close consumes it with the receipt.
+The profile, derived prover input, and both proof phases are route-identity
+bound.  Any partial, reordered, duplicated, or profile-free proof suffix
+rejects.
+The route binds the selected proof relation; it does not extend the soundness
+claim of the proof system or its setup \cite{groth2016}.
+
+\section{Canonical identities and exact equality}
+
+For each phase type $X$, fix one canonical encoding.  Define
+\begin{align}
+\operatorname{type\_id}_A(X)
+ &=H(\mathtt{AION\mbox{-}TYPE\mbox{-}V2}\|A\|\Canonical(X)),\\
+\operatorname{value\_id}_A(X,x)
+ &=H(\mathtt{AION\mbox{-}VALUE\mbox{-}V2}\|A\|
+   \operatorname{type\_id}_A(X)\|\Canonical_X(x)).
+\end{align}
+Exact phase and adjacency equality is byte equality of canonical typed values,
+or identity of the same immutable typed boundary object.  Digest equality is
+not an equality proof.  SHA-256 commitments provide mutation evidence only
+under their collision and second-preimage assumptions \cite{fips1804}.
+
+The derived route identifier binds the epoch, entrypoint, route vector, all
+phase declarations, the exact canonical operation operand, the declared data
+and operation Wire route slots, selector, target namespace, and optional proof
+profile.  The concrete route and digest states produced at both crossings are
+present in the typed values and therefore in the applicable link commitments.
+The caller cannot replace any of those values with a phase label or outer opcode.
+Its exact domain prefix is \texttt{AION-ROUTE-V2}; route, type, value, link,
+chain-start, and link-digest bodies use only their stated V2 domains.  A V1,
+V3, unversioned, or unhashed-type body is distinct and rejects.
+
+\section{Link construction}
+
+For admitted $\operatorname{Eval}_A[i](x_i)=\OK(x_{i+1})$, define the canonical
+link body
+\[
+\begin{split}
+L_i=\CanonicalRecord(&\mathtt{AION\mbox{-}TYPED\mbox{-}LINK\mbox{-}V2},A,
+e_A,\rho_A,\operatorname{phase}_i,i,n,\\
+&\operatorname{type\_id}_A(X_i),\operatorname{type\_id}_A(X_{i+1}),
+o_i,\eta_i,h_{i-1},\\
+&\operatorname{value\_id}_A(X_i,x_i),
+\operatorname{value\_id}_A(X_{i+1},x_{i+1}),\OK),
+\end{split}
+\]
+with
+\[
+h_{-1}=H(\mathtt{AION\mbox{-}CHAIN\mbox{-}START\mbox{-}V2}\|\rho_A\|A\|e_A),
+\qquad
+h_i=H(\mathtt{AION\mbox{-}TYPED\mbox{-}LINK\mbox{-}DIGEST\mbox{-}V2}\|L_i).
+\]
+There is no extension field.  $L_i$ contains declarations and commitments,
+not a phase value, source handle, dictionary, pocket, source-record identifier,
+or restoration recipe.
+
+\section{Streaming verification}
+
+Link verification receives only the current exact input, current exact output,
+one link, and the validated predecessor.  It strictly parses the record,
+checks all declarations, compares canonical bytes, freshly evaluates the
+declared relation, recomputes the value commitments, and recomputes the link
+digest.  The evaluator binding is derived from the actual declared callable
+and checked with its fixed epoch, entrypoint, route identity, route input, and
+canonical phase position; callable or evaluator-environment substitution under
+an unchanged label rejects.  Link and chain verification
+return verified evidence or typed rejection rather than Boolean truth.
+
+Timeout, unavailability, callable-identity mismatch, exception, malformed
+input, and semantic failure are distinct typed rejection results.  None creates
+a successful link or escapes the aggregate result algebra.
+
+Whole-chain verification accepts
+$(C,D_{\mathrm{op}},s,t)$, the ordered links, the terminal result, and expected
+terminal digest.  It does \emph{not} accept a boundary-value vector.  It keeps
+at most $x_i$, $x_{i+1}$, $h_{i-1}$, and explicitly bounded operator state;
+after link $i$ verifies, consumed $x_i$ is released.  Thus link evidence
+cannot become a retained restoration ledger.
+
+\begin{lemma}[Streaming continuity]
+If link $i$ verifies and phase $i+1$ begins, the canonical typed input of phase
+$i+1$ equals the exact output of phase $i$.
+\end{lemma}
+\begin{proof}
+The verifier supplies the freshly evaluated $x_{i+1}$ directly to the next
+phase and compares canonical bytes at the transition.  The hash is recomputed
+for evidence but is not used as the equality premise.
+\end{proof}
+
+\section{Presently verified section re-entry}
+
+A digest alone is not an anchor.  Re-entry at position $j$ requires a
+\emph{VerifiedPrefixAnchor} containing the exact route, epoch, entrypoint,
+index $j-1$, boundary type $X_j$, boundary value $x_j$, predecessor digest,
+and a present prefix-verification receipt.  An independently supplied
+certificate is admissible only after its exact route, epoch, boundary, and
+predecessor relation are currently verified.  Orphan, stale, copied,
+cross-route, or cross-epoch anchors reject.
+
+\begin{proposition}[Section agreement]
+Verification from a presently verified prefix anchor returns the same
+terminal link digest as the corresponding whole-chain segment.
+\end{proposition}
+\begin{proof}
+Both executions start with the same exact boundary value and predecessor, then
+apply the same canonical link equation and fixed evaluator at every position.
+Induction over the section length gives the same digest sequence.
+\end{proof}
+
+\section{Datatype and aperture boundary}
+
+The patent fidelity ladder
+\[
+\mathsf{sint16}\to\mathsf{sint8}\to\mathsf{sint4}
+\to\mathsf{sint2}\to\mathsf{sint1}
+\]
+is distinct from the raw observation-aperture ladder
+\[
+1,2,4,8,16\ \text{bytes}.
+\]
+No route phase has a universal signed-int16 premise.  Clipping, saturation,
+wrapping, truncation, lossy quantization, collision acceptance, and silent
+cross-type coercion are excluded from the exact boundary.
+
+\section{Patent foundation locators}
+
+The signed-as-filed patent (SHA-256
+\nolinkurl{e2975c587ae6299f86a84e4630c51a4de19b72abfaf4ec45c853f68775418240})
+provides technical provenance for the envelope and deterministic-transition
+foundation.  Table~\ref{tab:patent-locators} records the page, specification
+paragraph, and claim locators used here; the present definitions remain the
+phase-chain authority.
+
+\begin{table}[ht]
+\centering\footnotesize
+\caption{Patent foundation locators.}\label{tab:patent-locators}
+\begin{tabularx}{\textwidth}{@{}lY@{}}
+\toprule
+Phase-chain leaf & Exact locator\\
+\midrule
+Fixed route and transition identity & PDF pp. 8--9 / spec pp. 4--5,
+paras. [0023]--[0025]; PDF pp. 28--30 / spec pp. 24--26,
+paras. [0100]--[0109]; claims 12, 14, 19.\\
+Canonical representation and fidelity & PDF pp. 10--11 / spec pp. 6--7,
+paras. [0029]--[0030]; PDF pp. 17--21 / spec pp. 13--17,
+paras. [0058], [0060]--[0070]; claims 2, 9, 10, 17, 18.\\
+Validation and normal form & PDF pp. 18--19 / spec pp. 14--15,
+paras. [0060]--[0064]; claims 1, 2, 17.\\
+Selected mapback & PDF pp. 22--24 / spec pp. 18--20,
+paras. [0076]--[0080]; PDF pp. 33--34 / spec pp. 29--30,
+paras. [0120]--[0124]; claims 8, 20.\\
+Two-operand calculation & PDF pp. 27--28 / spec pp. 23--24,
+paras. [0094]--[0099]; claims 8, 11, 16, 20.\\
+No-smuggling and fail-closed proof binding & PDF pp. 28--30 / spec
+pp. 24--26, paras. [0100]--[0109]; PDF pp. 21--26 / spec pp. 17--22,
+paras. [0071]--[0089]; claims 5--7, 12--15, 19, 20.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Main theorem}
+
+\begin{theorem}[Exact typed phase-chain closure]
+Fix a valid epoch $A$, exact companion contracts, canonical operation tensor
+$D_{\mathrm{op}}$, selector $s$, target $t$, fixed route, and well-typed
+deterministic phase declarations.  Then:
+\begin{enumerate}[label=(\arabic*)]
+\item every admitted transition has one canonical link body and digest;
+\item local verification accepts only its exact declared relation;
+\item whole-chain verification accepts only the fixed ordered route with exact
+canonical-byte continuity;
+\item deletion, insertion, reordering, duplication, cross-route or cross-epoch
+use, entrypoint or phase substitution, type or value mutation, operation
+operand, selector or target mutation, operator or evaluator mutation, terminal
+mutation, and trailing data reject;
+\item a failed phase produces no admitted aggregate chain;
+\item an accepted route returns exactly the result of Equations
+(1)--(10) and \eqref{eq:manifest}, with receipt $B^*$, epoch, selector,
+selected length, digest, and final bytes all equal to the dense Resolve result;
+\item the independent window section returns exactly its declared window and
+continuation-set pair and is never substituted for Resolve or manifestation;
+\item evidence alone cannot restore any phase value;
+\item a presently verified section agrees with whole-chain verification;
+\item exact equality is independent of digest equality;
+\item stored records, old receipts, caches, and prior success do not provide
+present acceptance; and
+\item no retained boundary vector or alternate mapback is admitted.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The table and phase equations prove exact composability.  Wire data identity
+and Ionizer encode/decode identity preserve the data operand, operation
+operand, and result tensor.  The two Wire route/digest states are separately
+typed and linked; exact operation egress proves that the second canonical
+operand completed its own unchanged crossing rather than bypassing transport.
+Resolve and Manifest use the same $(D_{\mathrm{out}},s)$.  The manifestation
+ receipt must bind $B^*$, epoch $A$, selector $s$, target $t$, exact selected length and
+digest, and $\operatorname{ReadFinal}_N(t)=C_s$; exact final bytes are
+compared directly.
+
+Canonical link determinism follows from fixed declarations, canonical field
+order, minimal scalar encodings, and deterministic digest input.  Streaming
+verification establishes adjacency by byte equality and fresh evaluation.
+Induction over route position proves ordered continuity; every listed mutation
+changes a checked field, type, value, relation, position, predecessor, length,
+or terminal comparison.  The verifier's two-value lifetime prevents a
+boundary ledger.  Section agreement follows from the verified-prefix
+proposition.  Codomain separation proves the independent Origamold clause.
+\end{proof}
+
+\section{Failure matrix}
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}YY@{}}
+\toprule
+Case & Rejecting boundary\\
+\midrule
+Missing, extra, reordered, or duplicated link & Exact chain length and position\\
+Wrong route, entrypoint, or epoch & Derived declaration binding\\
+Wrong input or output type & Exact adjacent type equality\\
+Changed operation tensor, selector, or target & Route identity and fresh relation\\
+Canonical value mutation & Direct canonical-byte comparison\\
+Hash collision offered as equality & Equality/hash separation\\
+Stored OK with failed relation & Fresh evaluation\\
+Substituted callable under unchanged evaluator label & Callable identity\\
+Timeout, unavailable evaluator, exception, or semantic failure & Typed rejection algebra\\
+FAKE, BOGUS, or merely well-typed alternate route & Exact fixed route vector\\
+Wrong proof profile or partial proof suffix & Route-bound proof-profile grammar\\
+Wrong $B^*$, epoch, selector, target, final length, digest, or bytes & Energizer receipt and dense Resolve equality\\
+Boundary-value vector supplied as authority & Streaming verifier grammar\\
+Orphan section digest & Present prefix-anchor verification\\
+Window substituted for selected bytes & Codomain separation\\
+Universal signed-int16 interpretation & Typed fidelity/aperture boundary\\
+Calculation or manifestation rejection & No admitted aggregate result\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Position relative to established constructions}
+
+Hash chains and Merkle-style commitments bind ordered evidence
+\cite{merkle1988}; session types describe communication structure and
+compatibility \cite{honda2008}; verified codecs establish precise parser and
+encoder relations \cite{delaware2019}; and state-machine replication studies
+ordered transitions under different fault models \cite{lamport1982}.  The
+present theorem is narrower: it fixes one heterogeneous tensor route, makes
+every companion signature explicit, separates exact equality from digest
+evidence, and excludes any retained inverse ledger.
+
+\section{Scope}
+
+The theorem establishes exact typed route closure and mutation-detecting
+evidence for the declared epoch and route.  It does not establish objective
+truth, permission, confidentiality, availability, calculation-engine safety,
+network delivery, proof-system soundness beyond its premises, physical
+erasure, or correctness outside the route.  Internal cross-repository
+synchronization is not a premise of the mathematics.
+
+\section{Conclusion}
+
+An exact phase chain is a typed composition, not a label sequence.  The
+construction fixes every boundary, carries both canonical calculation operands
+through complete Wire routes, recomputes every relation, and uses hashes only
+as evidence.
+The main route and bounded tensor section now preserve the exact codomains of
+Ionizer, Wire, Origamold, and Energizer without inventing a bridge or alternate
+mapback.
+
+\appendix
+\section{Candidate formal specification}
+
+The complete candidate formal source is distributed beside this paper as
+\path{exact-typed-phase-chain-formal-specification-candidate.md}.  It is not
+embedded because companion identities and owner implementation equivalence
+remain to be frozen.  The release packet records those open gates and makes no
+publication-readiness claim.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

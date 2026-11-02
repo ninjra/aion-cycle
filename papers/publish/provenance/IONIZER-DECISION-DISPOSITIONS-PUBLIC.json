@@ -1,0 +1,713 @@
+{
+  "matrix": [
+    {
+      "category": "theorem_fidelity_and_authority",
+      "disposition": "APPLICABLE",
+      "ordinal": 1,
+      "phase_chain_specific_proof": "Reader-facing mathematics is derived only from the candidate formal specification and exact imported boundaries.",
+      "source_decision_sha256": "84b9f63f004e8288168994e788a981ae05a06ec972186de31fb3b85a6e977846",
+      "source_line_id_sha256": "1dab03253725ffb5239cae01170869439b7fd5b58b20167f6fdbbfb2d2e0541b"
+    },
+    {
+      "category": "theorem_fidelity_and_authority",
+      "disposition": "APPLICABLE_PENDING_OWNER_FREEZE",
+      "ordinal": 2,
+      "phase_chain_specific_proof": "The candidate theorem and rendering remain separate artifacts; dependency freeze, owner equivalence, and release remain fail-closed.",
+      "source_decision_sha256": "738734a90e5a94289b843e67419faf0aa685810cf9c87171efe85af21ee60ba2",
+      "source_line_id_sha256": "12af8fc73e7d588e5ddc52de1a701bd84a887930142f843060c2ac7d6b8a2153"
+    },
+    {
+      "category": "theorem_fidelity_and_authority",
+      "disposition": "APPLICABLE",
+      "ordinal": 3,
+      "phase_chain_specific_proof": "Reader-facing mathematics is derived only from the candidate formal specification and exact imported boundaries.",
+      "source_decision_sha256": "81e6f955962e0b6b1d5516823e9ce9762efd257e6a42e9651b8a15e014d23cfc",
+      "source_line_id_sha256": "3bdfc31980339cf16455b971b0901689f2c2d38df84ec37885d7004670863398"
+    },
+    {
+      "category": "theorem_fidelity_and_authority",
+      "disposition": "APPLICABLE_PENDING_OWNER_FREEZE",
+      "ordinal": 4,
+      "phase_chain_specific_proof": "The candidate theorem and rendering remain separate artifacts; dependency freeze, owner equivalence, and release remain fail-closed.",
+      "source_decision_sha256": "3607fa932959005885bbffc5879942f5b75c10e0219c403c71c33f8bc5ddd6c5",
+      "source_line_id_sha256": "d4b913a5409fc361944f1a0a33e01be01701c39beb4208f01c8a5c7c47add5a0"
+    },
+    {
+      "category": "theorem_fidelity_and_authority",
+      "disposition": "APPLICABLE",
+      "ordinal": 5,
+      "phase_chain_specific_proof": "Reader-facing mathematics is derived only from the candidate formal specification and exact imported boundaries.",
+      "source_decision_sha256": "212428298a1ddf6d594d1e0bd2fc17a9d34d77b9c6b8a6c389588104d11f498f",
+      "source_line_id_sha256": "6d7a414d3de170ae931cc0fe8347ee234a301287c4734ff0f7d35ab5cefdbc22"
+    },
+    {
+      "category": "theorem_fidelity_and_authority",
+      "disposition": "APPLICABLE",
+      "ordinal": 6,
+      "phase_chain_specific_proof": "Reader-facing mathematics is derived only from the candidate formal specification and exact imported boundaries.",
+      "source_decision_sha256": "381d5021983daec04bd5692fc575dd5172c046bac62e347f080887f15ed0f552",
+      "source_line_id_sha256": "7b8bb20393aa73c41a0164532f20ab7ec3c504797611fb27b454f72dc5083729"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 7,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "2303f14afd20879a27a7b6d1f044ab35fe1d42a61d05cd30b7cad0808e1469fd",
+      "source_line_id_sha256": "5cef7156f5446f5a2044b0a278743bb960f0226a8e19c0b72fef620e82f99c00"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 8,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "c22637586ff19b1aeec00a4c5f8f8498877ba092e988bb85a20e409dc3805f7d",
+      "source_line_id_sha256": "8b4de73640146a193d884567e94d9462bafa634fed5a4e321c77d6ac51d44cbd"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 9,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "e958b6013efbf6f08cba8b6e037ffe5d7dc13eddd6eaa4ade6f8194b39c1c01e",
+      "source_line_id_sha256": "db0a01c8d9254ceec2f159958c94e0bd5cd802472f53ff141cea69f1306fef3d"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 10,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "47c2b28e5222ae3ebfa3de47c421107c9e8031efef4afcf124d2a29841ee7f5f",
+      "source_line_id_sha256": "14881b2337c4ea48ec2e412a76c04e368240b76cadbfdd6904fa5495303767ad"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 11,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "24a0a3aeff8ecb3627b2316ee48a953550ac822955f2a68a481427497f1c1679",
+      "source_line_id_sha256": "eb34f94eaca0a8a3c1d39797cc8073a0f7345ddcded3be1055ad4c31bbb1fb0d"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 12,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "ff28dce8e9bd8c967fb710c334b4b88dff7ec3678d015cd3486bc03e0aa53ff9",
+      "source_line_id_sha256": "f554c4907cf502a8c7aa6e8dccaf6e72cdcbc179acf83c038cf6f62ab3b39dc6"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 13,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "dd67503683a835d2187f88631b1759d981b086c39b0a9e52b9ac626ae2cb00a5",
+      "source_line_id_sha256": "bfd0e850e7b7b4964a033af4af8e03535362be7d586c839e646c3b7bafb4d63b"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "IMPORTED_BOUNDARY",
+      "ordinal": 14,
+      "phase_chain_specific_proof": "The phase chain imports this Ionizer precision law and preserves its exact domain and codomain without redefining it.",
+      "source_decision_sha256": "cbb79ce7fc8a48f15458f5b5336c1d20a8905bdba2a9882b4f3bd40828015924",
+      "source_line_id_sha256": "da84d1cf26d7a1eb3151d0e43adc93fb910a20de7692e5f367a1555fd642b068"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "APPLICABLE",
+      "ordinal": 15,
+      "phase_chain_specific_proof": "Every result-valued phase and verifier uses error-propagating typed REJECT with no aggregate partial success.",
+      "source_decision_sha256": "a1307d67204158a1586d5038ef295bb16dfe5f40b9fc5970fb40c7d210b4688b",
+      "source_line_id_sha256": "e0cbfefe6a80aea95da2b26b7048e31e7536598e2de0bc8ec539f97337785948"
+    },
+    {
+      "category": "mathematical_precision_closures",
+      "disposition": "APPLICABLE",
+      "ordinal": 16,
+      "phase_chain_specific_proof": "Pure typed route semantics are separated from evaluator availability, execution evidence, proof artifacts, and stored records.",
+      "source_decision_sha256": "ca167acefc3a0f4c573e9d9c525eb3dfa20173a28e27a3aeb8b87132adb4a578",
+      "source_line_id_sha256": "4840ced78d50ac736c5cd3ffbabd39b18c43a7fc33073b1d998846cd69803ae6"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 17,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "392a7b7f477b8686e13873ecb734f41bb052e9932885cae75b7d47f1b965de5e",
+      "source_line_id_sha256": "4414c5a7bdec6523f997951106afc0217d438e6ad8d33ebd9140220cee109233"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 18,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "34e202a6580f94a959c1a74d4593fb1f4ed7e67b4e118099a80b02b50e216d7c",
+      "source_line_id_sha256": "c184423b1870855f6108a08d0a50c1e12fa18bb7360bfa0296f99aa6fa39f391"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 19,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "4044cac6966a0ceca11fc46aa86e9961893e49178a2907fb5cd7967dedc192aa",
+      "source_line_id_sha256": "353522c019a9254f3d8bcd1078c0799969c337a8d9e16c4ecf3dd410c429bfc4"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 20,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "db2a55d4f9c9de3511900f7f1940b449ea1b29ed7a08c472a022bb18b5bb8cc5",
+      "source_line_id_sha256": "735cb0518b810f80b74cc32f34b4899a2feb3ef81d2bcb3eb26477ea9ba69f30"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 21,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "246fd8a00282d24aec178767a0a66f651f5071f638182051eddff7c5c5906815",
+      "source_line_id_sha256": "5d033551e277673d0c90f1bd99877146d6b7d291c7c550448ef8a2cf036f7e96"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 22,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "fd997ebe45bc42046a0515bba95bc353c33d6b12772a6e1681bbad52a0cc849d",
+      "source_line_id_sha256": "0587c0ce84be4d11da5d06314621d57df91ff29eb852e8463af04093a977fb2d"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 23,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "b62d2f1530231b248c52a2335702df313a61812734e377e42ab15fe0386eb731",
+      "source_line_id_sha256": "fd3d5d18d23c3f6bff8d857edd92aec174822c2b1a602e14cf374b2196c57bc4"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 24,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "ac6b90bc140bbc56a53e306bf502bb95760f92e15090ca63b9bd1bc92cd9f69a",
+      "source_line_id_sha256": "004e0a9ea3a98bff0901204fef7cd5af190bf75ea86be0953a40c9a248489b2f"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 25,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "175c7bde4ffac73a4b233f0d10bc2ad1b5271f40e0ad38482f7fde73ba866d57",
+      "source_line_id_sha256": "ebe2186c265d842cab97406512dc9d1471a3b9eb82e159a1d67850789c3677c7"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 26,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "80cd789b068d9a6eb00e747620af7124597fb6b2ee50252ab2b7e892561e170b",
+      "source_line_id_sha256": "a4474d605711870b71d84e47eb334a7a9027f1c34c6a8a4aa2bc429531354974"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 27,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "44136cc3e776667cc1abb6d4a303f6e835d88ac83846f58f066858d701a92f6f",
+      "source_line_id_sha256": "692ec64f9340f2218285baeb3402c61f70ba8cab497c2acfcb5f60fa5f7678cf"
+    },
+    {
+      "category": "patent_and_representation_clamps",
+      "disposition": "APPLICABLE_IMPORTED_BOUNDARY",
+      "ordinal": 28,
+      "phase_chain_specific_proof": "The route imports the patent/Ionizer envelope and rejects ledgers, source handles, side decoders, lossy numeric projection, and alternate terminal forms.",
+      "source_decision_sha256": "ba4554362ff84022983514116c0288a6766b1c44e375f88f21857076302f2708",
+      "source_line_id_sha256": "4c9824499159d45307fcd88fd3d18cb1b62b8f92a3904641351def0a68730c1d"
+    },
+    {
+      "category": "calculation_engine_boundary",
+      "disposition": "APPLICABLE",
+      "ordinal": 29,
+      "phase_chain_specific_proof": "The calculation component is named only as a calculation engine and appears solely through its typed input-output contract.",
+      "source_decision_sha256": "157a0af8e30c0adf9406d17042e4aadbb37b19fdc6749199ecc7cb8f3035580b",
+      "source_line_id_sha256": "17d654774a03e67e4073e0fc91beaaf302f5582231de13f41ac343e96d87a029"
+    },
+    {
+      "category": "calculation_engine_boundary",
+      "disposition": "APPLICABLE",
+      "ordinal": 30,
+      "phase_chain_specific_proof": "The calculation component is named only as a calculation engine and appears solely through its typed input-output contract.",
+      "source_decision_sha256": "c61c27513c690acea42affe5afd144d9c3bb795df3b062f53bccdc444703643c",
+      "source_line_id_sha256": "b58356e45ee9ab2d2308e111330e89a228ffdf1cee4c9f465c154828099d9311"
+    },
+    {
+      "category": "calculation_engine_boundary",
+      "disposition": "APPLICABLE",
+      "ordinal": 31,
+      "phase_chain_specific_proof": "The calculation component is named only as a calculation engine and appears solely through its typed input-output contract.",
+      "source_decision_sha256": "05f3c9870baafdfd7917a09853d1dfa3939b52c044a4faa42dd1da622c8538bd",
+      "source_line_id_sha256": "f2e8d9616a7839f3c6b535dad67686db0bee31a195627588ad7459de0c13f9a9"
+    },
+    {
+      "category": "calculation_engine_boundary",
+      "disposition": "APPLICABLE",
+      "ordinal": 32,
+      "phase_chain_specific_proof": "The calculation component is named only as a calculation engine and appears solely through its typed input-output contract.",
+      "source_decision_sha256": "3a05db52a65e96206be4529153f5ed9addd8df0d9443549f90b0f9f3e72ea2ab",
+      "source_line_id_sha256": "d762349b952d54320ac63567acfcb3e32de018fa3bcbc1886ec6bf1c7d021d8d"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 33,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "994f39f427c9585bd6d2e49a0bfa9c092d57b30bb60cf6d841b510ea771453d0",
+      "source_line_id_sha256": "88c09a2220e9c42f2ffc40df6eef7a238d025a9c27f4ae7200101f29052a25d2"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 34,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "a0e9a8d6ab53033e13bd94295d1ec4b422aace20f1958ea52052b7c6e0c1bc89",
+      "source_line_id_sha256": "432a1d34db21e73ef8d8fe19fe1f4ac55f46161816a2606ede42e9765850828c"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 35,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "89e85cc70c8f056161e3eccb9b1cc92c5cd2931e9728eab8eb39bf8183a7229d",
+      "source_line_id_sha256": "79fbac4a5378c9c947ee6718eb92f66c2356ce086fb5a2a07e65d0f3d6fd31bf"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 36,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "f11ec8cb11a679c9b3246fe3032005c6281bf90176469a3847e46d8ab41435cb",
+      "source_line_id_sha256": "7457823592214c68d989e276e6aa733690c96d4327a51d1d1031675242fe898e"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 37,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "943edfb71804af96b7769b5f55d3deaf04895a2c2e6b8cfc69a59c195277808a",
+      "source_line_id_sha256": "9c1cbe2a7737757b64eee05d3b2a956cdf266fcc762fd1f19a5c3ed31ebaca8f"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 38,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "8f5f299d6b8c3fd29158b3bd5fa29c3b52dea16df957da805d3bc7ec33fd847e",
+      "source_line_id_sha256": "169e1f19cdf2d6298933f8ec6c450e782de12bafb84b489b31a7d2d53e6678ce"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 39,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "2242b5a74fd8a41b0d72960986c655d9f30f46aa2868818807035a7cf7a8b89d",
+      "source_line_id_sha256": "2cd666dbd9508451f10448be4d4e4969610eb38204517cbaab53cc18fd215983"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 40,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "9abb4b96fcac6c2ea4ba78b56e324dd77372ee66c4c5e499589fe56bf77bfcce",
+      "source_line_id_sha256": "c10c3b4fa6b74f8133fccb8d7976c7340b1857f26c0a37246a2bd9ccfdd975f9"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 41,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "b873b881d9313818fbf9bd40fe408b64a42d3b19d414f098fb4e71b8431cbe77",
+      "source_line_id_sha256": "8fc11dd6e4a06ae44f8717d5899f957e83616311be6d630d3c23d1fe01e41488"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 42,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "dacc1aaf98db94c6f144e7a8d1ddfd9b65e88056e02cf80c4cb211c81192fb5b",
+      "source_line_id_sha256": "61c150f12a054952ad240efd28178122cee67a17eac77cea0a8ff6639d25b500"
+    },
+    {
+      "category": "authorial_voice_and_tone",
+      "disposition": "APPLICABLE",
+      "ordinal": 43,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "1a5ee05f860d13f09b92e142601c191ec8cc4435f9dd64076a28a14ef74e4615",
+      "source_line_id_sha256": "c6457bac8dc852796a516ba957a5ccfe9bff7b43faec7769a95ee9074f5a544c"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 44,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "fcf43876088f761a860db1a6b7dd16b6e559221ab6e8d0e915df098eff413ed8",
+      "source_line_id_sha256": "f5b1d5a2ec4363b445a47f3055b5318418aa9b869c73436a0394b0487edf2122"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 45,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "6214a00750d4f1d106c13d3ea73d9973af838a5b229b35283fbddc58c03a65f3",
+      "source_line_id_sha256": "b98034baa226775acddd6a76a13c522422dc406bdb8afe93accf3380b2aac387"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 46,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "cdf549452e8871479a575784169f8fd5b5e07658bfb225c163ae5f071dbe55bc",
+      "source_line_id_sha256": "05fc577323d4509ed40e0042af44f0959e5d32ff271b5e46c7b80b857b81bb61"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 47,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "b353e628e3da4f035247b9f0022c1228f39cd909d4de74c42055a99bd17c6407",
+      "source_line_id_sha256": "ad53bb8a4d06910174eb857646e15c38f414247a3c343f0602b0e70243cd25d4"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 48,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "eb9e2c5ff39c36f107f0643eca437823442dcfcf53be050f2da62362fa38d6b0",
+      "source_line_id_sha256": "15805958698f036586918ac28c72dd2a005d175e79a6ba38a124188b1739ac19"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 49,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "e8bce81a152f10f7c7159965142880c740092975244c713a5ce4a314bbe7f7eb",
+      "source_line_id_sha256": "9fe12898073e705e2c0be606e7cf71c819efd188eed0092ac282671ccfd0aaee"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 50,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "51f70c0a6d7cc385be39f8c2a495dc4f2a4d48e35901129af94b4ad0ac4cf060",
+      "source_line_id_sha256": "95a3526e1fcc19ee67fa11ec241cf3330454a897cd6e9b45179ef1fca4d49318"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 51,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "3b95c4a3d9e5603072697eb57b7992967cb4e6ab9857948a9a18560134251d4e",
+      "source_line_id_sha256": "0040f6ca8500473a3e367bb70c884989938b1b140322092c8069b1e700936a34"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 52,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "1fa89c1a3d7db7007a85c7f9abafd247a506654f5e149f97d35913c928fdfef0",
+      "source_line_id_sha256": "00efe266cbb5bc5793394f387036516bc57fab35f8dd95a77511726e518a3c2e"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 53,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "59946736d06547890a9151faa462df14cf0472a3cfbac544ca625f57121efaf8",
+      "source_line_id_sha256": "76127e5835740d6050a858aef9774479e1637f10bcabf58468feddd1ee44ee3c"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 54,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "9cac380c42e2d8baaf076ebe716df407bc88c630ece5a869b2aff932ad361cee",
+      "source_line_id_sha256": "6c7ac8a837356a526f1d6f2cc18df957c192d08af07e353a4ad17f8c8cbaab69"
+    },
+    {
+      "category": "paper_architecture_and_design",
+      "disposition": "APPLICABLE",
+      "ordinal": 55,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "c64a168d6e5334ed66dc2263f609dc80241c79e046bc96ff858194875b2ec453",
+      "source_line_id_sha256": "d22b08ab12aff602433affe386ae6f3752dd3145de5a4e5a48f92dcb3793f90e"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 56,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "765cea36f7d2529aafd62ac79ddd1ce3f960c97c40547062ee61b734074e87f1",
+      "source_line_id_sha256": "ac0b1a3a5068c65e9be3c756007567260b1ab9a1142c6c84faad7d500542df07"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 57,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "035efd1487cdf6cc92176e2feba67079a13e341167ef5aa019a6e28f82566052",
+      "source_line_id_sha256": "e49733246eef637b79ba9da330e16ddd025d88b184c46f404a2f9e128732189c"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 58,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "ae981cae069dab1562747cc99205e24bba652583585453b02e59361256d61198",
+      "source_line_id_sha256": "8f0649a93a37bd5c665fc113fabc965fdb038ab752242ab35a9a44fe9b001795"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 59,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "2438047d4de100b3dd1e88c33a949dba42088c52416602c728fcc012bd7f47eb",
+      "source_line_id_sha256": "30e0adf835110a5e368edc8c8c7f3ad2f8802fe482ceab56a767017ca0db300e"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 60,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "c09cb07bbefefd93344cae6bb42b03403e52aebb02b174aa4c5be2b824e5889a",
+      "source_line_id_sha256": "a2a76e53ed1deafda0bc34574f00a3a6c9d636158683415d44d48ddfaf61afa9"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 61,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "3e5a1880c01c864eaa3eaa31556d4c83503df5bcc004d2c7dd6d92a81f1408a7",
+      "source_line_id_sha256": "1d6854221073fe414e6cfac457c26f21945607920c9dc4293e9a16b77b7d643f"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 62,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "ebe856f0659b4ba30bc4f19d1628925c574ad29cf35f11ee9c2064ea9c0caf17",
+      "source_line_id_sha256": "f1e273d1d300a4a79e33701dac7cb7998941a7a08a8e266d873b3518d1668e71"
+    },
+    {
+      "category": "pdf_and_accessibility",
+      "disposition": "APPLICABLE",
+      "ordinal": 63,
+      "phase_chain_specific_proof": "The rendering applies this decision directly; the candidate packet records the corresponding verification surface.",
+      "source_decision_sha256": "7aee6638a090b8012f35ff494ad7e5ed165cf241a01ad8663d20829711a2102a",
+      "source_line_id_sha256": "77e53fbc264778742eeaa86a56d07ffccfaaa5a1561da9d5bd94be3b46b148b7"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 64,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "ce2f828033bc86cf111d55469bfd147336b5739fc115855a7a6aa78e87e7c5e9",
+      "source_line_id_sha256": "6bbca864a6584a5e8870ce9709419a684bec7a930ccc4d3b504436ea7f553297"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 65,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "fef4eba44defbdb435438e3faa2d382a0fccc9cca06ebe05dbb7297a5f3a6c10",
+      "source_line_id_sha256": "342ddcaaaa9e9a07e01621b3b2bb825e856e1f121e4dfbd177b372e665ecf247"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 66,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "3b2da19df87a8fe4f5c6b3ddc4201f1064919b3f6bad3417e319d976a660d616",
+      "source_line_id_sha256": "e4a6218869ec0f141242acfd4de3e3675aaa89bf73465f276c3e722172f36c55"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE_FAIL_CLOSED",
+      "ordinal": 67,
+      "phase_chain_specific_proof": "No release date, DOI, readiness seal, upload, or publication status is inferred for this candidate.",
+      "source_decision_sha256": "205e28c71a4e09817f512e1580e13f04f1b9ff8469b9dfedb29669fb50a1be7a",
+      "source_line_id_sha256": "e44d3f15aea2ce45601635f53739c15fcc476fcf6e8013b0a9f8762130ea6d2c"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 68,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "cc5a6aaf90e8c45c5e2c4e331afa5bab97a5c9080a0b95d5d30eb0f75f4c6e8f",
+      "source_line_id_sha256": "e16a2f3a1f42ad74b71d72d2075d4f96c5de8821293f5e4be760178766d00f53"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 69,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "f2196b45ab40f38182be125197cd5ad2aab4a42a88d1739617bd78d98a4b5025",
+      "source_line_id_sha256": "7e7100f7cfaf1b0ef6de877d08b1f7d8389d5f9b623952cac81befee0eda06cb"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 70,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "768442d1c8fd14ef47706f0f7bf5b99f37178ed19f4a53cc7c915fd8a480c64e",
+      "source_line_id_sha256": "bc27d45e1e58440993a428206bdf297e87f9a79f3de7d6fd824714f1c0ecd5b6"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE_FAIL_CLOSED",
+      "ordinal": 71,
+      "phase_chain_specific_proof": "No release date, DOI, readiness seal, upload, or publication status is inferred for this candidate.",
+      "source_decision_sha256": "cd74df9ea34fa02eac1c5c7e7d816eb7500a7e9ce24eadd65db464b948719d37",
+      "source_line_id_sha256": "35be42d9276319f5e2772de57dcb80a68961322db09e5f644310e2e0c3d3515d"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE_FAIL_CLOSED",
+      "ordinal": 72,
+      "phase_chain_specific_proof": "No release date, DOI, readiness seal, upload, or publication status is inferred for this candidate.",
+      "source_decision_sha256": "a5ac8c8d34d63a5401736ec0969fa4fc156bec91080cc175930e117e11ee6da8",
+      "source_line_id_sha256": "232cb02afa6a655cd1a4919f37adf88a0a0c4f8a41e32de7ea4f8324abbdb605"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE_FAIL_CLOSED",
+      "ordinal": 73,
+      "phase_chain_specific_proof": "No release date, DOI, readiness seal, upload, or publication status is inferred for this candidate.",
+      "source_decision_sha256": "0d198867069efe1f9a1ac314a4c432ba604646a1b3701745bd918d5158768e72",
+      "source_line_id_sha256": "3bda676bea43eeb6a86dbb56d71b24d875841ea708a25c8a4175dccf94a6eb64"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE_FAIL_CLOSED",
+      "ordinal": 74,
+      "phase_chain_specific_proof": "No release date, DOI, readiness seal, upload, or publication status is inferred for this candidate.",
+      "source_decision_sha256": "9656969db72aac01a7ba4dcd3dcbb4d3730c4a03a604f6c14b843c7274d73333",
+      "source_line_id_sha256": "a3b2157bc1d7e4da637dd496d98a35ae62d2a6608d40b46ea0cccc4b4c800c8c"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 75,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "70c56a298fddafa429c4d902b1627d041645938ba8fdb2afdbfdfb3fc03ece6d",
+      "source_line_id_sha256": "bf230b2fa5551f6becda720d79abb712298cc16b788233e2b5b788269b75f9fb"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 76,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "ad4aff11c4f21d88733b9cd2e4a36c859768f7053edd789cbaf470784882cfcf",
+      "source_line_id_sha256": "4f5aff5ae027ed564eeacaa7fad733d4459eeacaf4cd609025fe5d826d6e4ed3"
+    },
+    {
+      "category": "citation_and_release_packet",
+      "disposition": "APPLICABLE",
+      "ordinal": 77,
+      "phase_chain_specific_proof": "The packet follows the inherited citation, destructive-output, recursive-checksum, and one-current-PDF rules.",
+      "source_decision_sha256": "363eea4f4d1ead70ff18fbe9b60f3a6fed7b8011eae1b4c8fefe57a701649091",
+      "source_line_id_sha256": "b2ecc03c50c0fafebfa48d56dde15bbe8f41fe43d96373e6dd40110692a6feaa"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 78,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "e412a0664c12f20c81186e626f629d06c02b14fb2ff13b81db144789d7ebb470",
+      "source_line_id_sha256": "a06cf8b6cec05e012defd179fc79d3a4d0cd56659f76cbfa348efe201b5db134"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 79,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "cf986de1f2f87b8e58b085106bd5e54c4443f1f9786f4ce1721c9e0e29ba1fce",
+      "source_line_id_sha256": "b3cad18c02fea68b69aa4b3c3c47a67ff07bf3866dbbcff8eac6e01e3c8651f9"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 80,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "46ee2e081520818f564934e4177f7d91353eb2346a4b52be6b903341d6c04ff0",
+      "source_line_id_sha256": "162807d116fff802fb9a7cb5950bfbce4b9fbcdd7e5e76342f4d7bfd577cf3e8"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 81,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "459b8114315f07426af25cbda33f7e2437e4507065a952f283a39468b67c9aa2",
+      "source_line_id_sha256": "cad34e6a8935c38f212e7d5fe1862f6046b403a42493bc0f5f2f11966182c34d"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 82,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "5e08843fca28d302a26bc36fc02f92cf8149eecf840da6985a5c6ef7455f5117",
+      "source_line_id_sha256": "51d4a0ab2933f60b4cdbd844ac579a88be6ee5142b6274ae031a7649fb6aa590"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 83,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "8c90c14feb3ca01be2bf18cce61845be343181f2e8b5125fdbfe24899766b1ba",
+      "source_line_id_sha256": "78cfddebf12c03c712eb8f55decaba18eca5243e5b72942d20894407f1533c37"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 84,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "e0298c773c08e2359657a430d23a0550106276543d4757e7748160c1cdacf7bc",
+      "source_line_id_sha256": "74053741b69843c557515b82276aae80e07bb0d94f4c4fa048953e442bd5d27a"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 85,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "458c03fe310d7316f4afc4aed193eab1fe8a8e7c75cfa0a0ec6316d6f1d763c5",
+      "source_line_id_sha256": "8c9806676e2b0ddf4347593a83d3d8c42698d49f86dd2ea80007e3bb63cb7bf3"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 86,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "d774ac2357b50f60a8daea97e6a43a23aab9f60b77260afaaa08c7bb4eb40974",
+      "source_line_id_sha256": "8d5ac8dffdbb76957fb6b295a5126c6a6ae3b3ecb3a86d28faaa7f0a83351a51"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 87,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "eacacdcd2f2d0ebcb251172ad81432c888fc6a50232c21f7de21b85f49851d18",
+      "source_line_id_sha256": "a6f3e3d929da06c8d61ab46782da7d3cc736a46216dfda3bcf7c2cdaa5af8e94"
+    },
+    {
+      "category": "cross_repo_series_synchronization",
+      "disposition": "APPLICABLE_EXTERNAL_SERIES_BOUNDARY",
+      "ordinal": 88,
+      "phase_chain_specific_proof": "The paper consumes the exact Ionizer catalog identity and does not replace the durable cross-repository matrix.",
+      "source_decision_sha256": "e3d471a8c76fcd55a3a1610a5a6e3c5f9f86cac32bb912f198cb63976d60e7c1",
+      "source_line_id_sha256": "f9e326dd30e9f07f09cfd0f71efc16254f52cd891f07e61f2f406be669e277fb"
+    }
+  ],
+  "paper_title": "Exact Typed Phase Chains with Recomputable Route Closure",
+  "release_boundary": "Candidate evidence only; dependency freeze, owner equivalence, and publication authorization remain open.",
+  "row_count": 88,
+  "schema_version": "typed-phase-chain-ionizer-decision-public-projection-v1",
+  "source_catalog_sha256": "768f68a9c67dbf3a9be8ceaa251350dcd63ab59eb8ef4b6902a13b633613796d"
+}

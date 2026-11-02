@@ -1,0 +1,37 @@
+{
+  "schema_version": "exact-typed-phase-chain-owner-freeze-gate-v2",
+  "proof_passed": false,
+  "release_authorized": false,
+  "upload_ready": false,
+  "candidate_theorem_path": "provenance/exact-typed-phase-chain-formal-specification-candidate.md",
+  "executable_candidate_path": "provenance/aion-exact-typed-phase-chain-theorem-candidate.py",
+  "cross_paper_import_gate": "provenance/CROSS-PAPER-IMPORT-MATRIX.json",
+  "current_implementation_identities": {
+    "aion_cycle.py": "3aaddff5b3498e3be1ab27c8f712f93a385bc0f9d55b39a208ab7ef74c315796",
+    "aion.circom": "c34160541549061807635812830cdc6fd16b5d6a6bd08db31f09bf482dbdbd7f",
+    "tests/test_aion_phase_chain.py": "faa72e9ef8235a9a42f9968b1396cb6e404f9141916da44164c5ef0884b24082",
+    "tests/test_emission_chain.py": "921a7f344ceb95be2597037ca147ea8007ce6acab4172a580444b6dd50847cac",
+    "tests/test_redteam.py": "da7bfb98112a5b73ceaca742e6d6386073ab937aae9334411456678201c2c82b",
+    "PUBLIC_CLAIMS.md": "dc3f6309c15bef760a22a4369888baefab27f841284e54e9a1c057aca84d65a1"
+  },
+  "observed_non_equivalence": [
+    "current phase_map_back restores through retained field_to_records and records ledgers",
+    "current route carries source_record_id as an alternate source lookup identity",
+    "current phase-chain receipt and verifier require fixed sint16 as universal hotpath semantics",
+    "current source/circuit implement one fixed legacy fixture rather than the exact imported SRFT typed route",
+    "current route omits the replacement theorem's exact epoch/type/operator/evaluator bindings for every phase",
+    "Paper II, Paper III, and Paper IV identities are not yet owner-frozen dependencies; their exact signatures are checked in the cross-paper import matrix",
+    "no owner-frozen implementation theorem has been designated for bidirectional leaf comparison"
+  ],
+  "exact_remaining_gate": [
+    "owners freeze exact Paper II, Paper III, and Paper IV dependency identities after the cross-paper import matrix proves exact domain, codomain, rejection type, epoch binding, bridge theorem, and whole-route type composition",
+    "owner designates one immutable AION-cycle implementation-theorem byte identity",
+    "the owner theorem implements the exact SRFT typed route without source_record_id, field_to_records, or ledger mapback",
+    "signed-int16 fidelity and raw aperture remain declared typed options rather than universal semantics",
+    "bidirectional theorem-leaf comparison proves no missing, extra, weakened, or contradictory semantic leaf",
+    "positive vectors prove two complete Wire lifecycles with exact operation echo, exact two-operand route closure, streaming verification, exact canonical-byte equality, optional proof-profile typing, bounded-section codomain separation, and section agreement",
+    "one-field mutations prove deletion, insertion, reordering, duplication, cross-route, cross-epoch, entrypoint, type, value, operator, evaluator, predecessor, proof, and terminal rejection",
+    "the owner explicitly authorizes a publication-readiness seal for the exact resulting bytes"
+  ],
+  "boundary": "This gate does not authorize source mutation, git action, APEX action, upload, DOI, release, or publication."
+}

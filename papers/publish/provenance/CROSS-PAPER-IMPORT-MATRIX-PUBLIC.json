@@ -1,0 +1,122 @@
+{
+  "boundary": "Exact signatures, shared owner fragments, executable route identity, and bridge laws are checked from present source. Hash equality alone is insufficient.",
+  "dependencies": {
+    "ionizer": {
+      "bridge": "normative main-route semantic foundation",
+      "epoch_binding": "A",
+      "identity": "bf58f880e75aa4e62052bcefd59ce6c4fd44e80dcd941042f66e124e65de3efe",
+      "imports": [
+        "Phi_A: U* -> CanonicalTensor_A",
+        "Encode_A = CanonicalEncoding_A: CanonicalTensor_A -> CanonicalBytes_A",
+        "Decode_A = CanonicalDecode_A: B* -> CanonicalTensor_A disjoint-union REJECT",
+        "Calculate_A: CanonicalTensor_A x CanonicalTensor_A -> CanonicalTensor_A disjoint-union REJECT",
+        "Resolve_A: CanonicalTensor_A x Selector_A -> U* disjoint-union REJECT"
+      ],
+      "owner_frozen": true
+    },
+    "paper_ii": {
+      "bridge": "data and operation projections are exact identity at both canonical-byte crossings",
+      "epoch_binding": "A",
+      "identity": "7a26eebc3dfbb7a98b472612a4eab603667c3aef46027b97e0ba8950bd54b5c7",
+      "imports": [
+        "W_in,A(b) = (b_in,rho,d_in)",
+        "W_out,A(rho,d_in,b_out) = (b_return,d_out)",
+        "Paper V instantiates two independent complete Wire routes without widening the owner tuples"
+      ],
+      "owner_frozen": false
+    },
+    "paper_iii": {
+      "bridge": "independent bounded tensor-realization section; never substituted for Resolve or Manifest",
+      "epoch_binding": "A",
+      "identity": "a02523c49904ea203512eae9aab9e2e90b2c06f444fed397631241636bdeb124",
+      "imports": [
+        "Q=(q,b); ConformingProfile_A(R_A)",
+        "Realize_A(D,Q;R_A) -> (W_q,K_q) disjoint-union REJECT",
+        "Read(W_q) = beta_A,Lambda(D|q)"
+      ],
+      "owner_frozen": false
+    },
+    "paper_iv": {
+      "bridge": "direct manifestation from canonical D, selector, and target; no Window input",
+      "epoch_binding": "A",
+      "identity": "5183b526dc651aca0ad29d2ce0e9af7e2e2e5a063c6417dd9056b3d92adcc6fb",
+      "imports": [
+        "Manifest_A,N(D,s,t) -> ManifestReceipt_A,N disjoint-union REJECT",
+        "ManifestReceipt_A,N = PUBLISHED(t,len(C_s),H(C_s),B*,epoch(D),s)",
+        "ReadFinal_N(t) = Resolve_A(D,s) on success"
+      ],
+      "owner_frozen": false
+    }
+  },
+  "dependency_freeze_complete": false,
+  "dual_wire_routes_complete": true,
+  "manifest_consumes_tensor_selector_target": true,
+  "origamold_codomain_separated": true,
+  "paper": "Exact Typed Phase Chains with Recomputable Route Closure",
+  "proof_profile_coherent": true,
+  "resolve_returns_dense_bytes": true,
+  "route_v2_identity": true,
+  "schema_version": "aion-cross-paper-import-matrix-public-v3",
+  "two_operand_calculation_present": true,
+  "verified_signature_checks": {
+    "ionizer": {
+      "required_fragments_sha256": [
+        "72cc7274d4c5027856d6ec4b24cfc09460769c72ebeeb9af8c5f1f73ac11910d",
+        "b359ca89318db2f299768d307febef5b3b1975d40c3075c97d33b63ba66c073d",
+        "908c4fea33f93f615462d71e2da470c3ee9b10cbb5fe4e4a0cded016c3fac47c",
+        "407a484a444418572e46bb12dd1706f8e4eb21a48ec2daa34b8e74e4c689a910"
+      ],
+      "source_sha256": "bf58f880e75aa4e62052bcefd59ce6c4fd44e80dcd941042f66e124e65de3efe",
+      "verified": true
+    },
+    "paper_ii": {
+      "required_fragments_sha256": [
+        "b92a865600800f70b43507800b844745f42bcbde85f6223aff004bb746fc7552",
+        "97717e4da7c638d7ef676579b39d1a450863883ee9d94bccd8dc0ebb8bb8fb38",
+        "60506599011bdd7ff4a922cdc9103f47db31bc3fd509918344eca80658fc6f87"
+      ],
+      "source_sha256": "7a26eebc3dfbb7a98b472612a4eab603667c3aef46027b97e0ba8950bd54b5c7",
+      "verified": true
+    },
+    "paper_iii": {
+      "required_fragments_sha256": [
+        "2cdf62f0674b32cf8a69ab3c1f0179486767da8853f05a266f25d32412aa7362",
+        "6bf835be1abc51df95f85ae690af5492653358912528ac040b552d53956561dc",
+        "7ce5b87fa6f5887acbeb98d037c209dab74aa4a8b83f216325bd1516ac1efca0",
+        "1b7447ae2f968b22d352375456ca832f8beb2db491bf27488e659636c37aef85"
+      ],
+      "source_sha256": "a02523c49904ea203512eae9aab9e2e90b2c06f444fed397631241636bdeb124",
+      "verified": true
+    },
+    "paper_iv": {
+      "required_fragments_sha256": [
+        "93205691f0c346269b800a518aefff0e2c1bbc019422556ec7461477d50bbf02",
+        "2463a90ccd270b9176ed372450eb7ec9f3d9c25c9e4e0c036ca0748882a90971",
+        "e5236d9450a21c6e48cfa42915a994d57ba1bff654658280d0907d77a4870205"
+      ],
+      "source_sha256": "5183b526dc651aca0ad29d2ce0e9af7e2e2e5a063c6417dd9056b3d92adcc6fb",
+      "verified": true
+    },
+    "paper_v": {
+      "required_fragments_sha256": [
+        "b92a865600800f70b43507800b844745f42bcbde85f6223aff004bb746fc7552",
+        "97717e4da7c638d7ef676579b39d1a450863883ee9d94bccd8dc0ebb8bb8fb38",
+        "bcf62c1f9aaaeb9fad458cc86cb0faf383ca717beb8262a95f6a7fd88d07be1f",
+        "0455c3cb3f29829cafd81f463ddf2ddc10f921e3dd99e065816748d6dccb6d68",
+        "b16a4657ba21ca847fd642c5d3e1fd1310de4836e676ddb1ec58346c5879a296",
+        "b995a8442f05d0bcc0ac9f7d49e0d934514d8ce6a0a1217451a2346af2c73617",
+        "cb9d8fd243ba4ab962512ebc42c80a30f14e726ea4c84f6bd35b69776770cae3",
+        "e53a6aa2c4efa1211bd19439c33d1a2d415276dabb064cfe5ab584fffeacbc87",
+        "243261b59b1287b8846581304274e86e1c89076ada79fa4236f84f14d803d257",
+        "48f7a680ab7ebf02fb7cab099c0b45f98cd4ea3793381e297bc0d73afe8f5638",
+        "945eb130a31fc26bf0e64f8ae6bff05a0437f19561e193b6b299fd2cfe4c0def",
+        "f251742ac45add8b25fe753dc14446fd848b82d3cfd11030bf5749a6831940fc",
+        "02ec374cc965041ef9f5a4ea570f82e3d7518d3ba6bcb588d951514c26137b7b"
+      ],
+      "source_sha256": "d37eb49d4148bd13dfb0df7bcf98b764e41ca3fdd503fc227be3811eb4049388",
+      "verified": true
+    }
+  },
+  "whole_route_typecheck": true,
+  "wire_owner_signatures_exact": true
+}
