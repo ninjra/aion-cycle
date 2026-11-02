@@ -32,3 +32,7 @@ papers/tmp/
 # Raw owner provenance is preserved in the private companion archive.
 papers/provenance/CROSS-PAPER-IMPORT-MATRIX.json
 papers/provenance/IONIZER-DECISION-DISPOSITIONS.json
+
+# Retain the reviewed paper rendering and its publication-packet copy.
+!papers/exact-typed-phase-chains-with-recomputable-route-closure.pdf
+!papers/publish/papers/exact-typed-phase-chains-with-recomputable-route-closure.pdf
